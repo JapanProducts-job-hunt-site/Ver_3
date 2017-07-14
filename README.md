@@ -1,3 +1,17 @@
+# How to start
+
+
+## Install all dependencies
+```
+npm install
+```
+
+## Start the server
+```
+npm start
+```
+
+
 # API List
 
 ## To create user (Sign up)
