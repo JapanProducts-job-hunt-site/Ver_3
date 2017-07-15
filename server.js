@@ -8,7 +8,7 @@ const morgan      = require('morgan');
 const mongoose    = require('mongoose');
 const jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 const config = require('./config'); // get our config file
-const User   = require('./app/models/user'); // get our mongoose model
+const User   = require('./api/models/user'); // get our mongoose model
 
 // =================================================================
 // configuration ===================================================
