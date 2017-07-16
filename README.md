@@ -22,7 +22,7 @@ http://localhost:8080/api/register
 Send this
  * POST
  * application/x-www-form-urlencoded
- * name
+ * username
  * passport
 
 Return JSON file
@@ -40,7 +40,7 @@ http://localhost:8080/api/authenticate
 Send this
  * POST
  * application/x-www-form-urlencoded
- * name
+ * username
  * passport
 
 Return JSON web token if authorization susscesful

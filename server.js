@@ -59,18 +59,25 @@ var apiRoutes = express.Router();
 
 apiRoutes.post('/register', function(req, res) {
 
-	console.log('Register: ' + req.body.name + ' : ' + req.body.password)
+	console.log('Register: ' + req.body.username + ' : ' + req.body.password)
 	// create a sample user
 	var newUser = new User({ 
-		name: req.body.name, 
+		username: req.body.username, 
 		password: req.body.password,
-		admin: true 
+		admin: false 
 	});
 	newUser.save(function(err) {
-		if (err) throw err;
-
-		console.log('User saved successfully');
-		res.json({ success: true });
+		if (err) {
+			res.status(403).send({
+				success: false,
+				message: err 
+			});
+		} else {
+			// if there is no token
+			// return an error
+			console.log('User saved successfully');
+			res.json({ success: true });
+		}
 	});
 });
 
@@ -84,13 +91,18 @@ apiRoutes.post('/authenticate', function(req, res) {
 
 	// find the user
 	User.findOne({
-		name: req.body.name
+		username: req.body.username
 	}, function(err, user) {
 
-		if (err) throw err;
+		if (err) {
+			res.status(403).send({
+				success: false,
+				message: err 
+			});
+		};
 
 		if (!user) {
-			res.json({ success: false, message: 'Authentication failed. User not found.' });
+			res.json({ success: false, message: 'Authentication failed. Username not found.' });
 		} else if (user) {
 
 			// check if password matches
@@ -122,7 +134,7 @@ apiRoutes.post('/authenticate', function(req, res) {
 apiRoutes.use(function(req, res, next) {
 
 	// check header or url parameters or post parameters for token
-	var token = req.body.token || req.param('token') || req.headers['x-access-token'];
+	var token = req.body.token || req.params.token || req.headers['x-access-token'];
 
 	// decode token
 	if (token) {
