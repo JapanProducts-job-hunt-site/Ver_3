@@ -40,7 +40,13 @@ app.get('/setup', function(req, res) {
 		admin: true 
 	});
 	nick.save(function(err) {
-		if (err) throw err;
+
+		if (err) {
+			res.status(403).send({
+				success: false,
+				message: err 
+			});
+		};
 
 		console.log('User saved successfully');
 		res.json({ success: true });
@@ -122,9 +128,7 @@ apiRoutes.post('/authenticate', function(req, res) {
 					token: token
 				});
 			}		
-
 		}
-
 	});
 });
 
@@ -149,19 +153,15 @@ apiRoutes.use(function(req, res, next) {
 				next();
 			}
 		});
-
 	} 
 	else {
-
 		// if there is no token
 		// return an error
 		return res.status(403).send({
 			success: false,
 			message: 'No token provided.'
 		});
-		
 	}
-	
 });
 
 // ---------------------------------------------------------
