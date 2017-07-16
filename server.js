@@ -91,10 +91,15 @@ apiRoutes.post('/authenticate', function(req, res) {
 
 	// find the user
 	User.findOne({
-		nameuser: req.body.username
+		username: req.body.username
 	}, function(err, user) {
 
-		if (err) throw err;
+		if (err) {
+			res.status(403).send({
+				success: false,
+				message: err 
+			});
+		};
 
 		if (!user) {
 			res.json({ success: false, message: 'Authentication failed. Username not found.' });
