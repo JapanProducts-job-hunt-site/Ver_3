@@ -46,7 +46,7 @@ Send this
 Return JSON web token if authorization susscesful
  
 
-## To Show User page (profile page/dashboard) 
+## To Get User information (can be used for profile/dashboard page) 
 
 ```
 http://localhost:8080/api/user
