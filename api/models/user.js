@@ -12,9 +12,20 @@ module.exports = mongoose.model('User', new Schema({
 		type: String,
 		required: true
 	},
-	admin: Boolean,
 	name: {
 		type: String,
 		required: true
-	}
+	},
+	email: {
+		type: String,
+		unique: true,
+		required: true
+	},
+	schoolName: {
+		type: String,
+	},
+	major: {
+		type: String,
+	},
+	admin: Boolean
 }));
