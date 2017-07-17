@@ -152,7 +152,7 @@ apiRoutes.use(function(req, res, next) {
 			} else {
 				// if everything is good, save to request for use in other routes
 				req.decoded = decoded;	
-				console.log("[JWT authenticated] User: " + decoded.user.username);
+				console.log("[JWT authenticated route] User: " + decoded.user.username);
 				next();
 			}
 		});
@@ -174,12 +174,45 @@ apiRoutes.get('/', function(req, res) {
 	res.json({ message: 'Welcome to the coolest API on earth!' });
 });
 
+// ---------------------------------------------------------
+// This route is used for user profile page (dashboard)
+// ---------------------------------------------------------
+apiRoutes.get('/user', function(req, res) {
+	// find the user by username from JWT payload
+	User.findOne({
+		username: req.decoded.user.username
+	}, function(err, user) {
+
+		if (err) {
+			res.status(403).send({
+				success: false,
+				message: err 
+			});
+		};
+		// User not found
+		if (!user) {
+			res.json({ success: false, message: 'Username not found.' });
+		} 
+		// User found
+		else if (user) {
+			res.json(user);
+		}
+	});
+});
+
+
+// ---------------------------------------------------------
+// This route is to show all the users 
+// ---------------------------------------------------------
 apiRoutes.get('/users', function(req, res) {
 	User.find({}, function(err, users) {
 		res.json(users);
 	});
 });
 
+// ---------------------------------------------------------
+// This route is to check the payload (such as user information)
+// ---------------------------------------------------------
 apiRoutes.get('/check', function(req, res) {
 	res.json(req.decoded);
 });
