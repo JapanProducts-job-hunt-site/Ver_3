@@ -70,6 +70,8 @@ apiRoutes.post('/register', function(req, res) {
 	var newUser = new User({ 
 		username: req.body.username, 
 		password: req.body.password,
+		name: req.body.name,
+		email: req.body.email,
 		admin: false 
 	});
 	newUser.save(function(err) {
