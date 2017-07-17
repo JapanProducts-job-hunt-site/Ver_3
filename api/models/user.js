@@ -12,5 +12,9 @@ module.exports = mongoose.model('User', new Schema({
 		type: String,
 		required: true
 	},
-	admin: Boolean 
+	admin: Boolean,
+	name: {
+		type: String,
+		required: true
+	}
 }));
