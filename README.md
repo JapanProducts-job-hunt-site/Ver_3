@@ -45,6 +45,35 @@ Send this
 
 Return JSON web token if authorization susscesful
  
+
+## To Show User page (profile page/dashboard) 
+
+```
+http://localhost:8080/api/user
+```
+
+Send this in *Header*
+
+x-access-token:JSON web token
+
+return 
+User JSON object
+
+
+## To Check Payload of JWT
+
+```
+http://localhost:8080/api/check
+```
+
+Send this in *Header*
+
+x-access-token:JSON web token
+
+return 
+Decoded Payload such as userinformation
+
+
 ## To show all users
 
 ```
