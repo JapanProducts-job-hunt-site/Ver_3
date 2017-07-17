@@ -45,6 +45,19 @@ Send this
 
 Return JSON web token if authorization susscesful
  
+
+## To Check Payload of JWT
+
+```
+http://localhost:8080/api/check
+```
+
+Send this in *Header*
+
+x-access-token:JSON web token
+
+
+
 ## To show all users
 
 ```

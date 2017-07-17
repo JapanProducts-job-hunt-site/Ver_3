@@ -117,8 +117,10 @@ apiRoutes.post('/authenticate', function(req, res) {
 			} else {
 
 				// if user is found and password is right
-				// create a token
-				var token = jwt.sign(user, app.get('superSecret'), {
+				// create a toke
+				// In the JWT's payload(where all the data stored) send user object
+				// when jwt.verify is called we can obtain user data by decoded.user
+				var token = jwt.sign({ user: user }, app.get('superSecret'), {
 					expiresIn: 86400 // expires in 24 hours
 				});
 
@@ -150,6 +152,7 @@ apiRoutes.use(function(req, res, next) {
 			} else {
 				// if everything is good, save to request for use in other routes
 				req.decoded = decoded;	
+				console.log("[JWT authenticated] User: " + decoded.user.username);
 				next();
 			}
 		});
