@@ -219,6 +219,43 @@ apiRoutes.get('/check', function(req, res) {
 	res.json(req.decoded);
 });
 
+
+// ---------------------------------------------------------
+// This route is for query for students 
+// For example
+// http://localhost:8080/api/search?key1=value1&key2=value2&key3=value3 
+// means 
+// {
+//   "key1": "value1",
+//   "key2": "value2",
+//   "key3": "value3"
+// }
+// so if you want to find student who is Computer Science major and
+// age 21 y.o. then do
+// http://localhost:8080/api/search?major=computer science&age=21 
+// ---------------------------------------------------------
+apiRoutes.get('/search', function(req, res) {
+  console.log(req.query);
+	User.find(req.query, function(err, users) {
+		if (err) {
+			res.status(403).send({
+				success: false,
+				message: err 
+			});
+		}
+		// No match found
+		else if(!users || users.length == 0){
+			res.json({
+				message:"No match found"
+			});
+		}
+		// Found one or more users
+		else {
+			res.json(users);
+		};
+	});
+});
+
 app.use('/api', apiRoutes);
 
 // =================================================================
