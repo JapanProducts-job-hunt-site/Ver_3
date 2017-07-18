@@ -76,10 +76,25 @@ return
 Decoded Payload such as userinformation
 
 
-## To show all users
+## To Show all users
 
 ```
 http://localhost:8080/api/users
+```
+
+Send this in *Header*
+
+x-access-token:JSON web token
+
+## To Search Students
+This route is used to send the query request to API
+```
+http://localhost:8080/api/search
+```
+
+For example, below searchs users whose username is bbbb
+```
+http://localhost:8080/api/search?username=bbbb
 ```
 
 Send this in *Header*
