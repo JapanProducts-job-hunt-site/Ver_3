@@ -235,7 +235,11 @@ apiRoutes.get('/check', function(req, res) {
 // http://localhost:8080/api/search?major=computer science&age=21 
 // ---------------------------------------------------------
 apiRoutes.get('/search', function(req, res) {
-	res.json(req.query);
+  
+  console.log(req.query);
+	User.find(req.query, function(err, users) {
+		res.json(users);
+	});
 });
 
 app.use('/api', apiRoutes);
