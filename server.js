@@ -235,10 +235,23 @@ apiRoutes.get('/check', function(req, res) {
 // http://localhost:8080/api/search?major=computer science&age=21 
 // ---------------------------------------------------------
 apiRoutes.get('/search', function(req, res) {
-  
   console.log(req.query);
 	User.find(req.query, function(err, users) {
-		res.json(users);
+		if (err) {
+			res.status(403).send({
+				success: false,
+				message: err 
+			});
+		}
+		// No match found
+		else if(!users || users.length == 0){
+			res.json({
+				message:"No match found"
+			});
+		}
+		else {
+			res.json(users);
+		};
 	});
 });
 
