@@ -22,8 +22,10 @@ http://localhost:8080/api/register
 Send this
  * POST
  * application/x-www-form-urlencoded
- * username
- * passport
+ * Required properties
+	 * username (Unique)
+	 * password
+	 * email (Unique)
 
 Return JSON file
 
@@ -41,10 +43,39 @@ Send this
  * POST
  * application/x-www-form-urlencoded
  * username
- * passport
+ * password
 
 Return JSON web token if authorization susscesful
  
+
+## To Get User information (can be used for profile/dashboard page) 
+
+```
+http://localhost:8080/api/user
+```
+
+Send this in *Header*
+
+x-access-token:JSON web token
+
+return 
+User JSON object
+
+
+## To Check Payload of JWT
+
+```
+http://localhost:8080/api/check
+```
+
+Send this in *Header*
+
+x-access-token:JSON web token
+
+return 
+Decoded Payload such as userinformation
+
+
 ## To show all users
 
 ```

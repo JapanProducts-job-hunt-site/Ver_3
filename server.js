@@ -70,6 +70,8 @@ apiRoutes.post('/register', function(req, res) {
 	var newUser = new User({ 
 		username: req.body.username, 
 		password: req.body.password,
+		name: req.body.name,
+		email: req.body.email,
 		admin: false 
 	});
 	newUser.save(function(err) {
@@ -117,8 +119,10 @@ apiRoutes.post('/authenticate', function(req, res) {
 			} else {
 
 				// if user is found and password is right
-				// create a token
-				var token = jwt.sign(user, app.get('superSecret'), {
+				// create a toke
+				// In the JWT's payload(where all the data stored) send user object
+				// when jwt.verify is called we can obtain user data by decoded.user
+				var token = jwt.sign({ user: user }, app.get('superSecret'), {
 					expiresIn: 86400 // expires in 24 hours
 				});
 
@@ -150,6 +154,7 @@ apiRoutes.use(function(req, res, next) {
 			} else {
 				// if everything is good, save to request for use in other routes
 				req.decoded = decoded;	
+				console.log("[JWT authenticated route] User: " + decoded.user.username);
 				next();
 			}
 		});
@@ -171,12 +176,45 @@ apiRoutes.get('/', function(req, res) {
 	res.json({ message: 'Welcome to the coolest API on earth!' });
 });
 
+// ---------------------------------------------------------
+// This route is used for user profile page (dashboard)
+// ---------------------------------------------------------
+apiRoutes.get('/user', function(req, res) {
+	// find the user by username from JWT payload
+	User.findOne({
+		username: req.decoded.user.username
+	}, function(err, user) {
+
+		if (err) {
+			res.status(403).send({
+				success: false,
+				message: err 
+			});
+		};
+		// User not found
+		if (!user) {
+			res.json({ success: false, message: 'Username not found.' });
+		} 
+		// User found
+		else if (user) {
+			res.json(user);
+		}
+	});
+});
+
+
+// ---------------------------------------------------------
+// This route is to show all the users 
+// ---------------------------------------------------------
 apiRoutes.get('/users', function(req, res) {
 	User.find({}, function(err, users) {
 		res.json(users);
 	});
 });
 
+// ---------------------------------------------------------
+// This route is to check the payload (such as user information)
+// ---------------------------------------------------------
 apiRoutes.get('/check', function(req, res) {
 	res.json(req.decoded);
 });
