@@ -249,6 +249,7 @@ apiRoutes.get('/search', function(req, res) {
 				message:"No match found"
 			});
 		}
+		// Found one or more users
 		else {
 			res.json(users);
 		};
