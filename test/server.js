@@ -20,11 +20,14 @@ describe('User', () => {
 			done();
 		});
 	});
-
-	// Test /
+  
+	
+	
+	///////////////////////////////////////////
+	//                  GET /                //
+	///////////////////////////////////////////
 	describe('GET /', () => {
-		it('it should say hello', (done) => {
-			// chai.request(server)
+		it('it should say Hello', (done) => {
 			chai.request('http://localhost:' + port)
 				.get('/')    
 				.end((err, res) => {
@@ -37,4 +40,27 @@ describe('User', () => {
 				});
 		});
 	});
+	
+
+	///////////////////////////////////////////
+	//          GET /api/register            //
+	///////////////////////////////////////////
+	
+	describe('GET /api/register', () => {
+		it('it should not POST without username', (done) => {
+			// chai.request(server)
+			chai.request('http://localhost:' + port)
+				.post('/api/register')
+			  .set('content-type', 'application/x-www-form-urlencoded')
+				.end((err, res) => {
+					res.should.have.status(403);
+					res.body.should.be.a('object');
+					res.should.have.property('text');
+					res.text.should.be.a('string');
+					res.text.should.include('Hello!');
+					done();
+				});
+		});
+	});
+	
 });
