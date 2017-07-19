@@ -48,16 +48,27 @@ describe('User', () => {
 	
 	describe('GET /api/register', () => {
 		it('it should not POST without username', (done) => {
-			// chai.request(server)
+			let user = {
+		    password: 'password',
+		    name: 'Yuuki',
+		    email: 'yuuki@yuuki.com'
+			}
 			chai.request('http://localhost:' + port)
 				.post('/api/register')
 			  .set('content-type', 'application/x-www-form-urlencoded')
+			  .send(user)
 				.end((err, res) => {
 					res.should.have.status(403);
 					res.body.should.be.a('object');
-					res.should.have.property('text');
-					res.text.should.be.a('string');
-					res.text.should.include('Hello!');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					console.log(res.body.message);
+					res.body.message.should.have.property('errors');
+					res.body.message.errors.should.have.property('username');
+				  // res.body.message.should.include('username');
+					// res.should.have.property('text');
+					// res.text.should.be.a('string');
+					// res.text.should.include('Hello!');
 					done();
 				});
 		});
