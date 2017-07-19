@@ -15,13 +15,19 @@ const port = process.env.PORT || 8080; // used to create, sign, and verify token
 chai.use(chaiHttp);
 
 describe('User', () => {
-	beforeEach((done) => {
+ 
+	// Remove all the data from test db
+	before((done) => {
 		User.remove({}, (err) => {
 			done();
 		});
 	});
-  
-	
+	// Remove all the data from test db
+	after((done) => {
+		User.remove({}, (err) => {
+			done();
+		});
+	});
 	///////////////////////////////////////////
 	//                  GET /                //
 	///////////////////////////////////////////
@@ -133,11 +139,12 @@ describe('User', () => {
 		});
 	});
 	describe('POST /api/register', () => {
-		it('it should not POST without email', (done) => {
+		it('it should not POST with a duplicate username', (done) => {
 			let user = {
 				username: 'yuuking',
 		    password: 'password',
 		    name: 'Yuuki',
+		    email: 'yuuki@yuuki.com'
 			}
 			chai.request('http://localhost:' + port)
 				.post('/api/register')
@@ -148,8 +155,53 @@ describe('User', () => {
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.false;
 					res.body.should.have.property('message');
-					res.body.message.should.have.property('errors');
-					res.body.message.errors.should.have.property('email');
+					res.body.message.should.have.property('errmsg');
+					res.body.message.errmsg.should.contain('duplicate key');
+					res.body.message.errmsg.should.contain('username');
+					done();
+				});
+		});
+	});
+	describe('POST /api/register', () => {
+		it('it should not POST with a duplicate email', (done) => {
+			let user = {
+				username: 'yuuking2',
+		    password: 'password',
+		    name: 'Yuuki',
+		    email: 'yuuki@yuuki.com'
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/register')
+			  .set('content-type', 'application/x-www-form-urlencoded')
+			  .send(user)
+				.end((err, res) => {
+					res.should.have.status(403);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.have.property('errmsg');
+					res.body.message.errmsg.should.contain('email');
+					done();
+				});
+		});
+	});
+	describe('POST /api/register', () => {
+		it('it should POST with a different username and email', (done) => {
+			let user = {
+				username: 'yuuking2',
+		    password: 'password',
+		    name: 'Yuuki',
+		    email: 'yuuki2@yuuki.com'
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/register')
+			  .set('content-type', 'application/x-www-form-urlencoded')
+			  .send(user)
+				.end((err, res) => {
+					console.log(res.body);
+					res.should.have.status(200);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.true;
 					done();
 				});
 		});
