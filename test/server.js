@@ -198,10 +198,139 @@ describe('User', () => {
 			  .set('content-type', 'application/x-www-form-urlencoded')
 			  .send(user)
 				.end((err, res) => {
-					console.log(res.body);
 					res.should.have.status(200);
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.true;
+					done();
+				});
+		});
+	});
+	describe('POST /api/authenticate', () => {
+		it('it should not POST with a unregistered username', (done) => {
+			let user = {
+				username: 'yuukin',
+		    password: 'password',
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/authenticate')
+			  .set('content-type', 'application/x-www-form-urlencoded')
+			  .send(user)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.message.should.contain('Username not found');
+					done();
+				});
+		});
+	});
+	describe('POST /api/authenticate', () => {
+		it('it should not POST with a wrong password', (done) => {
+			let user = {
+				username: 'yuuking',
+		    password: 'passworda',
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/authenticate')
+			  .set('content-type', 'application/x-www-form-urlencoded')
+			  .send(user)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.message.should.contain('Wrong password');
+					done();
+				});
+		});
+	});
+	describe('POST /api/authenticate', () => {
+		it('it should not POST without username', (done) => {
+			let user = {
+				username: '',
+		    password: 'passworda',
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/authenticate')
+			  .set('content-type', 'application/x-www-form-urlencoded')
+			  .send(user)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.message.should.contain('Enter username');
+					done();
+				});
+		});
+	});
+	describe('POST /api/authenticate', () => {
+		it('it should not POST without password', (done) => {
+			let user = {
+				username: 'aaaa',
+		    password: '',
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/authenticate')
+			  .set('content-type', 'application/x-www-form-urlencoded')
+			  .send(user)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.message.should.contain('Enter password');
+					done();
+				});
+		});
+	});
+	describe('POST /api/authenticate', () => {
+		it('it should POST with the correct username and password', (done) => {
+			let user = {
+				username: 'yuuking',
+		    password: 'password',
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/authenticate')
+			  .set('content-type', 'application/x-www-form-urlencoded')
+			  .send(user)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.true;
+					res.body.message.should.contain('Enjoy your token!');
+					res.body.should.have.property('token');
+					done();
+				});
+		});
+	});
+});
+
+
+describe('JSON Web Token', () => {
+ 
+	// Remove all the data from test db
+	before((done) => {
+		User.remove({}, (err) => {
+			done();
+		});
+	});
+	// Remove all the data from test db
+	after((done) => {
+		User.remove({}, (err) => {
+			done();
+		});
+	});
+	///////////////////////////////////////////
+	//               GET /api                //
+	///////////////////////////////////////////
+	describe('GET /', () => {
+		it('it should say Hello', (done) => {
+			chai.request('http://localhost:' + port)
+				.get('/api')    
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.be.a('object');
+					res.should.have.property('text');
+					res.text.should.be.a('string');
+					res.text.should.include('Hello!');
 					done();
 				});
 		});

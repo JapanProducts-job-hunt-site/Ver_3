@@ -111,6 +111,12 @@ apiRoutes.post('/register', function(req, res) {
 // http://localhost:8080/api/authenticate
 apiRoutes.post('/authenticate', function(req, res) {
 
+	if(!req.body.username){
+		return res.json({ success: false, message: 'Authentication failed. Enter username.' });
+	} else if(!req.body.password){
+		return res.json({ success: false, message: 'Authentication failed. Enter password.' });
+	}
+
 	// find the user
 	User.findOne({
 		username: req.body.username
