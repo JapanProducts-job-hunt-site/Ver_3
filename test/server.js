@@ -22,7 +22,6 @@ describe('User', () => {
 	});
   
 	
-	
 	///////////////////////////////////////////
 	//                  GET /                //
 	///////////////////////////////////////////
@@ -43,10 +42,10 @@ describe('User', () => {
 	
 
 	///////////////////////////////////////////
-	//          GET /api/register            //
+	//          POST /api/register            //
 	///////////////////////////////////////////
 	
-	describe('GET /api/register', () => {
+	describe('POST /api/register', () => {
 		it('it should not POST without username', (done) => {
 			let user = {
 		    password: 'password',
@@ -62,16 +61,97 @@ describe('User', () => {
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.false;
 					res.body.should.have.property('message');
-					console.log(res.body.message);
 					res.body.message.should.have.property('errors');
 					res.body.message.errors.should.have.property('username');
-				  // res.body.message.should.include('username');
-					// res.should.have.property('text');
-					// res.text.should.be.a('string');
-					// res.text.should.include('Hello!');
 					done();
 				});
 		});
 	});
 	
+	describe('POST /api/register', () => {
+		it('it should not POST without name', (done) => {
+			let user = {
+				username: 'yuuking',
+		    password: 'password',
+		    email: 'yuuki@yuuki.com'
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/register')
+			  .set('content-type', 'application/x-www-form-urlencoded')
+			  .send(user)
+				.end((err, res) => {
+					res.should.have.status(403);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.have.property('errors');
+					res.body.message.errors.should.have.property('name');
+					done();
+				});
+		});
+	});
+	describe('POST /api/register', () => {
+		it('it should not POST without email', (done) => {
+			let user = {
+				username: 'yuuking',
+		    password: 'password',
+		    name: 'Yuuki'
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/register')
+			  .set('content-type', 'application/x-www-form-urlencoded')
+			  .send(user)
+				.end((err, res) => {
+					res.should.have.status(403);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.have.property('errors');
+					res.body.message.errors.should.have.property('email');
+					done();
+				});
+		});
+	});
+	describe('POST /api/register', () => {
+		it('it should POST with all properties', (done) => {
+			let user = {
+				username: 'yuuking',
+		    password: 'password',
+		    name: 'Yuuki',
+		    email: 'yuuki@yuuki.com'
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/register')
+			  .set('content-type', 'application/x-www-form-urlencoded')
+			  .send(user)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.true;
+					done();
+				});
+		});
+	});
+	describe('POST /api/register', () => {
+		it('it should not POST without email', (done) => {
+			let user = {
+				username: 'yuuking',
+		    password: 'password',
+		    name: 'Yuuki',
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/register')
+			  .set('content-type', 'application/x-www-form-urlencoded')
+			  .send(user)
+				.end((err, res) => {
+					res.should.have.status(403);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.have.property('errors');
+					res.body.message.errors.should.have.property('email');
+					done();
+				});
+		});
+	});
 });

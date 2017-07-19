@@ -15,6 +15,9 @@ const User   = require('./api/models/user'); // get our mongoose model
 // =================================================================
 const port = process.env.PORT || 8080; // used to create, sign, and verify tokens
 
+// To avoid error of mongoose mpromise DeprecationWarning
+mongoose.Promise = global.Promise;
+
 //don't show the log when it is test
 // Connect to test db when it is test
 if(process.env.NODE_ENV !== 'test') {
@@ -76,7 +79,7 @@ var apiRoutes = express.Router();
 
 apiRoutes.post('/register', function(req, res) {
 
-	console.log('Register: ' + req.body.username + ' : ' + req.body.password)
+	// console.log('Register: ' + req.body.username + ' : ' + req.body.password)
 	// create a sample user
 	var newUser = new User({ 
 		username: req.body.username, 
@@ -94,7 +97,7 @@ apiRoutes.post('/register', function(req, res) {
 		} else {
 			// if there is no token
 			// return an error
-			console.log('User saved successfully');
+			// console.log('User saved successfully');
 			res.json({ success: true });
 		}
 	});
