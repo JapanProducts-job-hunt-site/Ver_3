@@ -441,3 +441,69 @@ describe('JSON Web Token', () => {
 		});
 	});
 });
+
+describe('Search studetns', () => {
+	const users = [];
+	const SIZE = 5;
+	let save_count = 0;
+
+	let user1jwt;
+	before((done) => {
+		User.remove({}, (err) => {
+			console.log("[error] Occured while removing all users from db\n" + err)
+		});
+
+		for(let i = 0; i < SIZE; i++){
+			users.push(
+				new User({ 
+					username: "user" + i, 
+					password: i,
+					name: "User " + i,
+					email: "user" + i + "@yuuki.com",
+					admin: false 
+				})
+			);
+			// register users
+			users[i].save(function(err) {
+				if (err) {
+					console.log("[error] cound not save an user on db\n" + err)
+				};
+				console.log("[Saved] User " + i);
+				save_count++;
+			});
+		}
+		user0jwt = jwt.sign({ user: users[0] }, config.secret, {
+			expiresIn: 86400 // expires in 24 hours
+		});
+
+		while(save_count < SIZE){
+		}
+		done();
+	});
+
+	// Remove all the data from test db
+	after((done) => {
+		User.remove({}, (err) => {
+			done();
+		});
+	});
+
+	///////////////////////////////////////////
+	//            GET /api/search            //
+	///////////////////////////////////////////
+	describe('GET /api/search', () => {
+		it('it should GET all users', (done) => {
+			chai.request('http://localhost:' + port)
+				.get('/api/search')
+			  .set('x-access-token', user0jwt)
+			  .query({})
+				.end((err, res) => {
+					console.log(res.body);
+					res.should.have.status(200);
+					res.body.should.have.lengthOf(SIZE);
+					res.body.should.have.property('username');
+					done();
+				});
+		});
+	});
+});
