@@ -308,9 +308,13 @@ describe('JSON Web Token', () => {
  
 	// Remove all the data from test db
 	before((done) => {
-		User.remove({}, (err) => {
-			done();
-		});
+		// Register users
+		// Authenticate users 
+		// Keep JWT
+		//
+		// User.remove({}, (err) => {
+		// 	done();
+		// });
 	});
 	// Remove all the data from test db
 	after((done) => {
