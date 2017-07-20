@@ -74,9 +74,6 @@ describe('User', () => {
 					done();
 				});
 		});
-	});
-	
-	describe('POST /api/register', () => {
 		it('it should not POST without name', (done) => {
 			let user = {
 				username: 'yuuking',
@@ -97,8 +94,6 @@ describe('User', () => {
 					done();
 				});
 		});
-	});
-	describe('POST /api/register', () => {
 		it('it should not POST without email', (done) => {
 			let user = {
 				username: 'yuuking',
@@ -119,8 +114,6 @@ describe('User', () => {
 					done();
 				});
 		});
-	});
-	describe('POST /api/register', () => {
 		it('it should POST with all properties', (done) => {
 			let user = {
 				username: 'yuuking',
@@ -139,8 +132,6 @@ describe('User', () => {
 					done();
 				});
 		});
-	});
-	describe('POST /api/register', () => {
 		it('it should not POST with a duplicate username', (done) => {
 			let user = {
 				username: 'yuuking',
@@ -163,8 +154,6 @@ describe('User', () => {
 					done();
 				});
 		});
-	});
-	describe('POST /api/register', () => {
 		it('it should not POST with a duplicate email', (done) => {
 			let user = {
 				username: 'yuuking2',
@@ -186,8 +175,6 @@ describe('User', () => {
 					done();
 				});
 		});
-	});
-	describe('POST /api/register', () => {
 		it('it should POST with a different username and email', (done) => {
 			let user = {
 				username: 'yuuking2',
@@ -225,8 +212,6 @@ describe('User', () => {
 					done();
 				});
 		});
-	});
-	describe('POST /api/authenticate', () => {
 		it('it should not POST with a wrong password', (done) => {
 			let user = {
 				username: 'yuuking',
@@ -244,8 +229,6 @@ describe('User', () => {
 					done();
 				});
 		});
-	});
-	describe('POST /api/authenticate', () => {
 		it('it should not POST without username', (done) => {
 			let user = {
 				username: '',
@@ -263,8 +246,6 @@ describe('User', () => {
 					done();
 				});
 		});
-	});
-	describe('POST /api/authenticate', () => {
 		it('it should not POST without password', (done) => {
 			let user = {
 				username: 'aaaa',
@@ -282,8 +263,6 @@ describe('User', () => {
 					done();
 				});
 		});
-	});
-	describe('POST /api/authenticate', () => {
 		it('it should POST with the correct username and password', (done) => {
 			let user = {
 				username: 'yuuking',
@@ -350,6 +329,7 @@ describe('JSON Web Token', () => {
 			done();
 		});
 	});
+
 	///////////////////////////////////////////
 	//               GET /api                //
 	///////////////////////////////////////////
@@ -366,15 +346,12 @@ describe('JSON Web Token', () => {
 					done();
 				});
 		});
-	});
-	describe('GET /api', () => {
 		it('it should GET with correct JWT', (done) => {
 			chai.request('http://localhost:' + port)
 				.get('/api')
 			  .set('x-access-token', user1jwt)
 				.end((err, res) => {
 					res.should.have.status(200);
-					console.log(res.body);
 					res.body.should.be.a('object');
 					res.body.should.have.property('message');
 					res.body.message.should.contain('Welcome to the coolest API on earth!');
@@ -382,6 +359,7 @@ describe('JSON Web Token', () => {
 				});
 		});
 	});
+
 	///////////////////////////////////////////
 	//             GET /api/user             //
 	///////////////////////////////////////////
@@ -399,8 +377,6 @@ describe('JSON Web Token', () => {
 					done();
 				});
 		});
-	});
-	describe('GET /api/user', () => {
 		it('it should not GET with incorrect JWT', (done) => {
 			chai.request('http://localhost:' + port)
 				.get('/api/user')
@@ -411,6 +387,55 @@ describe('JSON Web Token', () => {
 					res.body.should.have.property('success').that.to.be.false;
 					res.body.should.have.property('message');
 					res.body.message.should.contain('Failed to authenticate token.');
+					done();
+				});
+		});
+		it('it should GET with correct JWT', (done) => {
+			chai.request('http://localhost:' + port)
+				.get('/api/user')
+			  .set('x-access-token', user1jwt)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.be.a('object');
+					res.body.should.have.property('username');
+					res.body.should.have.property('name');
+					res.body.should.have.property('email');
+					res.body.username.should.be.eql('user1');
+					res.body.name.should.be.eql('User 1');
+					res.body.email.should.be.eql('user1@yuuki.com');
+					done();
+				});
+		});
+		it('it should GET correct user information', (done) => {
+			chai.request('http://localhost:' + port)
+				.get('/api/user')
+			  .set('x-access-token', user2jwt)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.be.a('object');
+					res.body.should.have.property('username');
+					res.body.should.have.property('name');
+					res.body.should.have.property('email');
+					res.body.username.should.be.eql('user2');
+					res.body.name.should.be.eql('User 2');
+					res.body.email.should.be.eql('user2@yuuki.com');
+					done();
+				});
+		});
+	});
+
+	///////////////////////////////////////////
+	//             GET /api/check            //
+	///////////////////////////////////////////
+	describe('GET /api/check', () => {
+		it('it should GET decoded JWT', (done) => {
+			chai.request('http://localhost:' + port)
+				.get('/api/check')
+			  .set('x-access-token', user1jwt)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.be.a('object');
+					res.body.should.have.property('user');
 					done();
 				});
 		});
