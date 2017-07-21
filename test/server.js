@@ -6,10 +6,10 @@ const User = require('../api/models/user');
 const jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
 //Require the dev-dependencies
-let chai = require('chai');
-let chaiHttp = require('chai-http');
-let server = require('../server');
-let should = chai.should();
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const server = require('../server');
+const should = chai.should();
 
 const port = process.env.PORT || 8080; // used to create, sign, and verify tokens
 const config = require('../config'); // get our config file
