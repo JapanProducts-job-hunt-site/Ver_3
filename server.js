@@ -7,9 +7,9 @@ const bodyParser  = require('body-parser');
 const morgan      = require('morgan');
 const mongoose    = require('mongoose');
 const jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
-// const config = require('./config'); // get our config file
 const User   = require('./api/models/user'); // get our mongoose model
 
+// To use .env file
 require('dotenv').config();
 
 // =================================================================
@@ -26,16 +26,13 @@ if(process.env.NODE_ENV !== 'test') {
 	//use morgan to log at command line
 	app.use(morgan('dev'));
 	// Connect to read database
-	//mongoose.connect(config.database);
 	mongoose.connect(process.env.database);
 }
 else if(process.env.NODE_ENV === 'test') {
 	// Connect to test database
-	// mongoose.connect(config.test_db); 
 	mongoose.connect(process.env.test_db); 
 }
 
-// app.set('superSecret', config.secret); // secret variable
 app.set('superSecret', process.env.secret); // secret variable
 
 // use body parser so we can get info from POST and/or URL parameters
