@@ -7,22 +7,38 @@ const bodyParser  = require('body-parser');
 const morgan      = require('morgan');
 const mongoose    = require('mongoose');
 const jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
-const config = require('./config'); // get our config file
 const User   = require('./api/models/user'); // get our mongoose model
+
+// To use .env file
+require('dotenv').config();
 
 // =================================================================
 // configuration ===================================================
 // =================================================================
 const port = process.env.PORT || 8080; // used to create, sign, and verify tokens
-mongoose.connect(config.database); // connect to database
-app.set('superSecret', config.secret); // secret variable
+
+// To avoid error of mongoose mpromise DeprecationWarning
+mongoose.Promise = global.Promise;
+
+//don't show the log when it is test
+// Connect to test db when it is test
+if(process.env.NODE_ENV !== 'test') {
+	//use morgan to log at command line
+	app.use(morgan('dev'));
+	// Connect to read database
+	mongoose.connect(process.env.database);
+}
+else if(process.env.NODE_ENV === 'test') {
+	// Connect to test database
+	mongoose.connect(process.env.test_db); 
+}
+
+app.set('superSecret', process.env.secret); // secret variable
 
 // use body parser so we can get info from POST and/or URL parameters
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// use morgan to log requests to the console
-app.use(morgan('dev'));
 
 // Tell the server to look at these directories to look for static files
 app.use(express.static('./static/'));
@@ -54,9 +70,9 @@ app.get('/setup', function(req, res) {
 });
 
 // basic route (http://localhost:8080)
-// app.get('/', function(req, res) {
-// 	res.send('Hello! The API is at http://localhost:' + port + '/api');
-// });
+app.get('/', function(req, res) {
+	res.send('Hello! The API is at http://localhost:' + port + '/api');
+});
 
 // ---------------------------------------------------------
 // get an instance of the router for api routes
@@ -65,7 +81,7 @@ var apiRoutes = express.Router();
 
 apiRoutes.post('/register', function(req, res) {
 
-	console.log('Register: ' + req.body.username + ' : ' + req.body.password)
+	// console.log('Register: ' + req.body.username + ' : ' + req.body.password)
 	// create a sample user
 	var newUser = new User({ 
 		username: req.body.username, 
@@ -83,7 +99,7 @@ apiRoutes.post('/register', function(req, res) {
 		} else {
 			// if there is no token
 			// return an error
-			console.log('User saved successfully');
+			// console.log('User saved successfully');
 			res.json({ success: true });
 		}
 	});
@@ -96,6 +112,12 @@ apiRoutes.post('/register', function(req, res) {
 // ---------------------------------------------------------
 // http://localhost:8080/api/authenticate
 apiRoutes.post('/authenticate', function(req, res) {
+
+	if(!req.body.username){
+		return res.json({ success: false, message: 'Authentication failed. Enter username.' });
+	} else if(!req.body.password){
+		return res.json({ success: false, message: 'Authentication failed. Enter password.' });
+	}
 
 	// find the user
 	User.findOne({
@@ -154,7 +176,6 @@ apiRoutes.use(function(req, res, next) {
 			} else {
 				// if everything is good, save to request for use in other routes
 				req.decoded = decoded;	
-				console.log("[JWT authenticated route] User: " + decoded.user.username);
 				next();
 			}
 		});
@@ -202,7 +223,6 @@ apiRoutes.get('/user', function(req, res) {
 	});
 });
 
-
 // ---------------------------------------------------------
 // This route is to show all the users 
 // ---------------------------------------------------------
@@ -235,7 +255,6 @@ apiRoutes.get('/check', function(req, res) {
 // http://localhost:8080/api/search?major=computer science&age=21 
 // ---------------------------------------------------------
 apiRoutes.get('/search', function(req, res) {
-  console.log(req.query);
 	User.find(req.query, function(err, users) {
 		if (err) {
 			res.status(403).send({

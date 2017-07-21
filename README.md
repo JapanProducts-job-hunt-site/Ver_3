@@ -1,6 +1,5 @@
 # How to start
 
-
 ## Install all dependencies
 ```
 npm install
