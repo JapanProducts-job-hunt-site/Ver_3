@@ -1,6 +1,8 @@
 // Set the enviroment variable to test
 process.env.NODE_ENV = 'test';
 
+require('dotenv').config();
+
 const mongoose = require('mongoose');
 const User = require('../api/models/user');
 const jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
@@ -12,7 +14,7 @@ const server = require('../server');
 const should = chai.should();
 
 const port = process.env.PORT || 8080; // used to create, sign, and verify tokens
-const config = require('../config'); // get our config file
+// const config = require('../config'); // get our config file
 
 chai.use(chaiHttp);
 
@@ -315,10 +317,10 @@ describe('JSON Web Token', () => {
 				console.log("[error] cound not save an user on db")
 			};
 		});
-		user1jwt = jwt.sign({ user: newuser1 }, config.secret, {
+		user1jwt = jwt.sign({ user: newuser1 }, process.env.secret, {
 			expiresIn: 86400 // expires in 24 hours
 		});
-		user2jwt = jwt.sign({ user: newuser2 }, config.secret, {
+		user2jwt = jwt.sign({ user: newuser2 }, process.env.secret, {
 			expiresIn: 86400 // expires in 24 hours
 		});
 		done();
@@ -476,7 +478,7 @@ describe('Search studetns', () => {
 				}
 			});
 		}
-		user0jwt = jwt.sign({ user: users[0] }, config.secret, {
+		user0jwt = jwt.sign({ user: users[0] }, process.env.secret, {
 			expiresIn: 86400 // expires in 24 hours
 		});
 	});
