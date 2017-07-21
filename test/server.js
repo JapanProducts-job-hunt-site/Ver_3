@@ -1,9 +1,9 @@
 // Set the enviroment variable to test
 process.env.NODE_ENV = 'test';
 
-let mongoose = require("mongoose");
-let User = require('../api/models/user');
-let jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
+const mongoose = require('mongoose');
+const User = require('../api/models/user');
+const jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
 //Require the dev-dependencies
 let chai = require('chai');
