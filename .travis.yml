@@ -1,6 +1,7 @@
 language: node_js
 
 install:
+        npm i mongoose
         npm install 
 
 script:
