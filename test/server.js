@@ -289,7 +289,6 @@ describe('JSON Web Token', () => {
 	let user2jwt;
 	before((done) => {
 		User.remove({}, (err) => {
-			done();
 		});
 		// register users
 		var newuser1 = new User({ 
@@ -322,6 +321,7 @@ describe('JSON Web Token', () => {
 		user2jwt = jwt.sign({ user: newuser2 }, config.secret, {
 			expiresIn: 86400 // expires in 24 hours
 		});
+		done();
 	});
 	// Remove all the data from test db
 	after((done) => {
@@ -442,15 +442,15 @@ describe('JSON Web Token', () => {
 	});
 });
 
+
 describe('Search studetns', () => {
 	const users = [];
-	const SIZE = 5;
+	const SIZE = 10;
 	let save_count = 0;
 
-	let user1jwt;
+	let user0jwt;
 	before((done) => {
 		User.remove({}, (err) => {
-			console.log("[error] Occured while removing all users from db\n" + err)
 		});
 
 		for(let i = 0; i < SIZE; i++){
@@ -468,17 +468,17 @@ describe('Search studetns', () => {
 				if (err) {
 					console.log("[error] cound not save an user on db\n" + err)
 				};
-				console.log("[Saved] User " + i);
+
 				save_count++;
+				//Wait all saving is done
+				if(save_count == SIZE) {
+					done();
+				}
 			});
 		}
 		user0jwt = jwt.sign({ user: users[0] }, config.secret, {
 			expiresIn: 86400 // expires in 24 hours
 		});
-
-		while(save_count < SIZE){
-		}
-		done();
 	});
 
 	// Remove all the data from test db
@@ -492,16 +492,66 @@ describe('Search studetns', () => {
 	//            GET /api/search            //
 	///////////////////////////////////////////
 	describe('GET /api/search', () => {
-		it('it should GET all users', (done) => {
+		it('{} empty query should GET all users', (done) => {
 			chai.request('http://localhost:' + port)
 				.get('/api/search')
-			  .set('x-access-token', user0jwt)
-			  .query({})
+				.set('x-access-token', user0jwt)
+				.query({})
 				.end((err, res) => {
-					console.log(res.body);
 					res.should.have.status(200);
 					res.body.should.have.lengthOf(SIZE);
-					res.body.should.have.property('username');
+					res.body[0].should.have.property('username');
+					res.body[0].should.have.property('name');
+					res.body[0].should.have.property('email');
+					done();
+				});
+		});
+		it('{ username:"user9" } should GET only user9', (done) => {
+			chai.request('http://localhost:' + port)
+				.get('/api/search')
+				.set('x-access-token', user0jwt)
+				.query({ username: "user9" })
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.have.lengthOf(1);
+					res.body[0].should.have.property('username');
+					res.body[0].username.should.be.eql('user9');
+					res.body[0].should.have.property('name');
+					res.body[0].name.should.be.eql('User 9');
+					res.body[0].should.have.property('email');
+					res.body[0].email.should.be.eql('user9@yuuki.com');
+					done();
+				});
+		});
+		it('{ name:"User 9" } should GET only user9', (done) => {
+			chai.request('http://localhost:' + port)
+				.get('/api/search')
+				.set('x-access-token', user0jwt)
+				.query({ username: "user9" })
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.have.lengthOf(1);
+					res.body[0].should.have.property('username');
+					res.body[0].username.should.be.eql('user9');
+					res.body[0].should.have.property('name');
+					res.body[0].name.should.be.eql('User 9');
+					res.body[0].should.have.property('email');
+					done();
+				});
+		});
+		it('{ username:"user9" } should GET only user9', (done) => {
+			chai.request('http://localhost:' + port)
+				.get('/api/search')
+				.set('x-access-token', user0jwt)
+				.query({ username: "user9" })
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.have.lengthOf(1);
+					res.body[0].should.have.property('username');
+					res.body[0].username.should.be.eql('user9');
+					res.body[0].should.have.property('name');
+					res.body[0].name.should.be.eql('User 9');
+					res.body[0].should.have.property('email');
 					done();
 				});
 		});
