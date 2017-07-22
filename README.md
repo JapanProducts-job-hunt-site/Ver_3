@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/JapanProducts-job-hunt-site/Ver_3.svg?branch=master)](https://travis-ci.org/JapanProducts-job-hunt-site/Ver_3)
+
 # How to start
 
 ## Install all dependencies
