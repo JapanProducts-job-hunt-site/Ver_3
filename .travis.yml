@@ -4,8 +4,8 @@ node_js:
         - "7"
 
 notifications:
-        - slack: jobhuntingtalk:bveGHNUNEBm3bTSntQYG5PzD
-        - email: false
+        slack: jobhuntingtalk:bveGHNUNEBm3bTSntQYG5PzD
+        email: false
 install:
         - npm install 
 
