@@ -732,6 +732,82 @@ describe('Company', () => {
 	});
 });
 
+
+	///////////////////////////////////////////
+	//             GET /api/update           //
+	///////////////////////////////////////////
+
+describe('Update student information', () => {
+	const users = [];
+	const userJWTs = [];
+	const SIZE = 10;
+	let save_count = 0;
+
+	before((done) => {
+		User.remove({}, (err) => {
+		});
+
+		for(let i = 0; i < SIZE; i++){
+			users.push(
+				new User({ 
+					username: "user" + i, 
+					password: i,
+					name: "User " + i,
+					email: "user" + i + "@yuuki.com",
+					admin: false 
+				})
+			);
+			// register users
+			users[i].save(function(err) {
+				if (err) {
+					console.log("[error] cound not save an user on db\n" + err)
+				};
+
+				save_count++;
+				//Wait all saving is done
+				if(save_count == SIZE) {
+					done();
+				}
+			});
+			userJWTs.push(
+				jwt.sign({ user: users[i] }, process.env.secret, {
+					expiresIn: 86400 // expires in 24 hours
+				})
+			);
+		}
+	});
+
+	// Remove all the data from test db
+	after((done) => {
+		User.remove({}, (err) => {
+			console.log(err);
+			done();
+		});
+	});
+
+	describe('GET /api/update', () => {
+		it('Update username "user 0" to "Updated"', (done) => {
+			chai.request('http://localhost:' + port)
+				.put('/api/update')
+				.set('x-access-token', userJWTs[0])
+				.end((err, res) => {
+					console.log(res.body)
+					res.should.have.status(200);
+					res.body[0].should.have.property('username');
+					res.body[0].should.have.property('name');
+					res.body[0].should.have.property('email');
+					done();
+				});
+		});
+	});
+});
+
+
+  
+	///////////////////////////////////////////
+	//             GET /api/search           //
+	///////////////////////////////////////////
+
 describe('Search studetns', () => {
 	const users = [];
 	const SIZE = 10;
