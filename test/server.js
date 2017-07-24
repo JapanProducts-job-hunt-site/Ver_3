@@ -19,7 +19,7 @@ const port = process.env.PORT || 8080; // used to create, sign, and verify token
 chai.use(chaiHttp);
 
 describe('User', () => {
- 
+
 	// Remove all the data from test db
 	before((done) => {
 		User.remove({}, (err) => {
@@ -49,23 +49,23 @@ describe('User', () => {
 				});
 		});
 	});
-	
+
 
 	///////////////////////////////////////////
 	//          POST /api/register            //
 	///////////////////////////////////////////
-	
+
 	describe('POST /api/register', () => {
 		it('it should not POST without username', (done) => {
 			let user = {
-		    password: 'password',
-		    name: 'Yuuki',
-		    email: 'yuuki@yuuki.com'
+				password: 'password',
+				name: 'Yuuki',
+				email: 'yuuki@yuuki.com'
 			}
 			chai.request('http://localhost:' + port)
 				.post('/api/register')
-			  .set('content-type', 'application/x-www-form-urlencoded')
-			  .send(user)
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
 				.end((err, res) => {
 					res.should.have.status(403);
 					res.body.should.be.a('object');
@@ -79,13 +79,13 @@ describe('User', () => {
 		it('it should not POST without name', (done) => {
 			let user = {
 				username: 'yuuking',
-		    password: 'password',
-		    email: 'yuuki@yuuki.com'
+				password: 'password',
+				email: 'yuuki@yuuki.com'
 			}
 			chai.request('http://localhost:' + port)
 				.post('/api/register')
-			  .set('content-type', 'application/x-www-form-urlencoded')
-			  .send(user)
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
 				.end((err, res) => {
 					res.should.have.status(403);
 					res.body.should.be.a('object');
@@ -99,13 +99,13 @@ describe('User', () => {
 		it('it should not POST without email', (done) => {
 			let user = {
 				username: 'yuuking',
-		    password: 'password',
-		    name: 'Yuuki'
+				password: 'password',
+				name: 'Yuuki'
 			}
 			chai.request('http://localhost:' + port)
 				.post('/api/register')
-			  .set('content-type', 'application/x-www-form-urlencoded')
-			  .send(user)
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
 				.end((err, res) => {
 					res.should.have.status(403);
 					res.body.should.be.a('object');
@@ -119,14 +119,14 @@ describe('User', () => {
 		it('it should POST with all properties', (done) => {
 			let user = {
 				username: 'yuuking',
-		    password: 'password',
-		    name: 'Yuuki',
-		    email: 'yuuki@yuuki.com'
+				password: 'password',
+				name: 'Yuuki',
+				email: 'yuuki@yuuki.com'
 			}
 			chai.request('http://localhost:' + port)
 				.post('/api/register')
-			  .set('content-type', 'application/x-www-form-urlencoded')
-			  .send(user)
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.be.a('object');
@@ -137,14 +137,14 @@ describe('User', () => {
 		it('it should not POST with a duplicate username', (done) => {
 			let user = {
 				username: 'yuuking',
-		    password: 'password',
-		    name: 'Yuuki',
-		    email: 'yuuki@yuuki.com'
+				password: 'password',
+				name: 'Yuuki',
+				email: 'yuuki@yuuki.com'
 			}
 			chai.request('http://localhost:' + port)
 				.post('/api/register')
-			  .set('content-type', 'application/x-www-form-urlencoded')
-			  .send(user)
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
 				.end((err, res) => {
 					res.should.have.status(403);
 					res.body.should.be.a('object');
@@ -159,14 +159,14 @@ describe('User', () => {
 		it('it should not POST with a duplicate email', (done) => {
 			let user = {
 				username: 'yuuking2',
-		    password: 'password',
-		    name: 'Yuuki',
-		    email: 'yuuki@yuuki.com'
+				password: 'password',
+				name: 'Yuuki',
+				email: 'yuuki@yuuki.com'
 			}
 			chai.request('http://localhost:' + port)
 				.post('/api/register')
-			  .set('content-type', 'application/x-www-form-urlencoded')
-			  .send(user)
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
 				.end((err, res) => {
 					res.should.have.status(403);
 					res.body.should.be.a('object');
@@ -180,14 +180,14 @@ describe('User', () => {
 		it('it should POST with a different username and email', (done) => {
 			let user = {
 				username: 'yuuking2',
-		    password: 'password',
-		    name: 'Yuuki',
-		    email: 'yuuki2@yuuki.com'
+				password: 'password',
+				name: 'Yuuki',
+				email: 'yuuki2@yuuki.com'
 			}
 			chai.request('http://localhost:' + port)
 				.post('/api/register')
-			  .set('content-type', 'application/x-www-form-urlencoded')
-			  .send(user)
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.be.a('object');
@@ -200,12 +200,12 @@ describe('User', () => {
 		it('it should not POST with a unregistered username', (done) => {
 			let user = {
 				username: 'yuukin',
-		    password: 'password',
+				password: 'password',
 			}
 			chai.request('http://localhost:' + port)
 				.post('/api/authenticate')
-			  .set('content-type', 'application/x-www-form-urlencoded')
-			  .send(user)
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.be.a('object');
@@ -217,12 +217,12 @@ describe('User', () => {
 		it('it should not POST with a wrong password', (done) => {
 			let user = {
 				username: 'yuuking',
-		    password: 'passworda',
+				password: 'passworda',
 			}
 			chai.request('http://localhost:' + port)
 				.post('/api/authenticate')
-			  .set('content-type', 'application/x-www-form-urlencoded')
-			  .send(user)
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.be.a('object');
@@ -234,12 +234,12 @@ describe('User', () => {
 		it('it should not POST without username', (done) => {
 			let user = {
 				username: '',
-		    password: 'passworda',
+				password: 'passworda',
 			}
 			chai.request('http://localhost:' + port)
 				.post('/api/authenticate')
-			  .set('content-type', 'application/x-www-form-urlencoded')
-			  .send(user)
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.be.a('object');
@@ -251,12 +251,12 @@ describe('User', () => {
 		it('it should not POST without password', (done) => {
 			let user = {
 				username: 'aaaa',
-		    password: '',
+				password: '',
 			}
 			chai.request('http://localhost:' + port)
 				.post('/api/authenticate')
-			  .set('content-type', 'application/x-www-form-urlencoded')
-			  .send(user)
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.be.a('object');
@@ -268,12 +268,12 @@ describe('User', () => {
 		it('it should POST with the correct username and password', (done) => {
 			let user = {
 				username: 'yuuking',
-		    password: 'password',
+				password: 'password',
 			}
 			chai.request('http://localhost:' + port)
 				.post('/api/authenticate')
-			  .set('content-type', 'application/x-www-form-urlencoded')
-			  .send(user)
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.be.a('object');
@@ -351,7 +351,7 @@ describe('JSON Web Token', () => {
 		it('it should GET with correct JWT', (done) => {
 			chai.request('http://localhost:' + port)
 				.get('/api')
-			  .set('x-access-token', user1jwt)
+				.set('x-access-token', user1jwt)
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.be.a('object');
@@ -369,7 +369,7 @@ describe('JSON Web Token', () => {
 		it('it should not GET without JWT', (done) => {
 			chai.request('http://localhost:' + port)
 				.get('/api/user')
-			  .set('content-type', 'application/x-www-form-urlencoded')
+				.set('content-type', 'application/x-www-form-urlencoded')
 				.end((err, res) => {
 					res.should.have.status(403);
 					res.body.should.be.a('object');
@@ -382,7 +382,7 @@ describe('JSON Web Token', () => {
 		it('it should not GET with incorrect JWT', (done) => {
 			chai.request('http://localhost:' + port)
 				.get('/api/user')
-			  .set('x-access-token', 'Wrong Token')
+				.set('x-access-token', 'Wrong Token')
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.be.a('object');
@@ -395,7 +395,7 @@ describe('JSON Web Token', () => {
 		it('it should GET with correct JWT', (done) => {
 			chai.request('http://localhost:' + port)
 				.get('/api/user')
-			  .set('x-access-token', user1jwt)
+				.set('x-access-token', user1jwt)
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.be.a('object');
@@ -411,7 +411,7 @@ describe('JSON Web Token', () => {
 		it('it should GET correct user information', (done) => {
 			chai.request('http://localhost:' + port)
 				.get('/api/user')
-			  .set('x-access-token', user2jwt)
+				.set('x-access-token', user2jwt)
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.be.a('object');
@@ -433,7 +433,7 @@ describe('JSON Web Token', () => {
 		it('it should GET decoded JWT', (done) => {
 			chai.request('http://localhost:' + port)
 				.get('/api/check')
-			  .set('x-access-token', user1jwt)
+				.set('x-access-token', user1jwt)
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.be.a('object');
@@ -447,7 +447,7 @@ describe('JSON Web Token', () => {
 
 
 describe('Company', () => {
- 
+
 	// Remove all the data from test db
 	before((done) => {
 		Company.remove({}, (err) => {
@@ -478,12 +478,12 @@ describe('Company', () => {
 				});
 		});
 	});
-	
+
 
 	///////////////////////////////////////////
 	//      POST /api/company/register       //
 	///////////////////////////////////////////
-	
+
 	describe('POST /api/company/register', () => {
 		it('it should return 403 without form data', (done) => {
 			chai.request('http://localhost:' + port)
@@ -620,114 +620,114 @@ describe('Company', () => {
 					done();
 				});
 		});
+	});
 
-		///////////////////////////////////////////
-		//    POST /api/company/authenticate     //
-		///////////////////////////////////////////
+	///////////////////////////////////////////
+	//    POST /api/company/authenticate     //
+	///////////////////////////////////////////
 
-		describe('POST /api/company/authenticate', () => {
-			it('it should not POST with a wrong password', (done) => {
-				let company = {
-					username: 'Company 1',
-					password: 'passworda',
-				}
-				chai.request('http://localhost:' + port)
-					.post('/api/company/authenticate')
-					.set('content-type', 'application/x-www-form-urlencoded')
-					.send(company)
-					.end((err, res) => {
-						res.should.have.status(200);
-						res.body.should.be.a('object');
-						res.body.should.have.property('success').that.to.be.false;
-						res.body.message.should.contain('Wrong password');
-						done();
-					});
-			});
-			it('it should not POST without username', (done) => {
-				let company = {
-					password: 'password'
-				}
-				chai.request('http://localhost:' + port)
-					.post('/api/company/authenticate')
-					.set('content-type', 'application/x-www-form-urlencoded')
-					.send(company)
-					.end((err, res) => {
-						res.should.have.status(200);
-						res.body.should.be.a('object');
-						res.body.should.have.property('success').that.to.be.false;
-						res.body.message.should.contain('Enter username');
-						done();
-					});
-			});
-			it('it should not POST with wrong password', (done) => {
-				let company = {
-					username: 'Company 1',
-					password: 'passwordq'
-				}
-				chai.request('http://localhost:' + port)
-					.post('/api/company/authenticate')
-					.set('content-type', 'application/x-www-form-urlencoded')
-					.send(company)
-					.end((err, res) => {
-						res.should.have.status(200);
-						res.body.should.be.a('object');
-						res.body.should.have.property('success').that.to.be.false;
-						res.body.message.should.contain('Wrong password');
-						done();
-					});
-			});
-			it('it should not POST without password', (done) => {
-				let company = {
-					username: 'aaaa'
-				}
-				chai.request('http://localhost:' + port)
-					.post('/api/company/authenticate')
-					.set('content-type', 'application/x-www-form-urlencoded')
-					.send(company)
-					.end((err, res) => {
-						res.should.have.status(200);
-						res.body.should.be.a('object');
-						res.body.should.have.property('success').that.to.be.false;
-						res.body.message.should.contain('Enter password');
-						done();
-					});
-			});
-			it('it should POST with the correct username and password', (done) => {
-				let company = {
-					username: 'Company 1',
-					password: 'password',
-				}
-				chai.request('http://localhost:' + port)
-					.post('/api/company/authenticate')
-					.set('content-type', 'application/x-www-form-urlencoded')
-					.send(company)
-					.end((err, res) => {
-						res.should.have.status(200);
-						res.body.should.be.a('object');
-						res.body.should.have.property('success').that.to.be.true;
-						res.body.message.should.contain('Enjoy your token for your company!');
-						res.body.should.have.property('token');
-						done();
-					});
-			});
-			it('it should POST with all properties', (done) => {
-				let company = {
-					username: 'Company 1',
-					password: 'password',
-					name: 'Yuuki',
-					email: 'yuuki@yuuki.com'
-				}
-				chai.request('http://localhost:' + port)
-					.post('/api/company/authenticate')
-					.set('content-type', 'application/x-www-form-urlencoded')
-					.send(company)
-					.end((err, res) => {
-						res.should.have.status(200);
-						res.body.should.be.a('object');
-						res.body.should.have.property('success').that.to.be.true;
-						done();
-					});
-			});
+	describe('POST /api/company/authenticate', () => {
+		it('it should not POST with a wrong password', (done) => {
+			let company = {
+				username: 'Company 1',
+				password: 'passworda',
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/company/authenticate')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(company)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.message.should.contain('Wrong password');
+					done();
+				});
+		});
+		it('it should not POST without username', (done) => {
+			let company = {
+				password: 'password'
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/company/authenticate')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(company)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.message.should.contain('Enter username');
+					done();
+				});
+		});
+		it('it should not POST with a wrong username', (done) => {
+			let company = {
+				username: 'Company 1 ',
+				password: 'password'
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/company/authenticate')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(company)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.message.should.contain('Username not found');
+					done();
+				});
+		});
+		it('it should not POST without password', (done) => {
+			let company = {
+				username: 'aaaa'
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/company/authenticate')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(company)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.message.should.contain('Enter password');
+					done();
+				});
+		});
+		it('it should POST with the correct username and password', (done) => {
+			let company = {
+				username: 'Company 1',
+				password: 'password',
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/company/authenticate')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(company)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.true;
+					res.body.message.should.contain('Enjoy your token for your company!');
+					res.body.should.have.property('token');
+					done();
+				});
+		});
+		it('it should POST with all properties', (done) => {
+			let company = {
+				username: 'Company 1',
+				password: 'password',
+				name: 'Yuuki',
+				email: 'yuuki@yuuki.com'
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/company/authenticate')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(company)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.true;
+					done();
+				});
 		});
 	});
 });
