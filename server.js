@@ -81,7 +81,6 @@ var apiRoutes = express.Router();
 
 apiRoutes.post('/register', function(req, res) {
 
-	// console.log('Register: ' + req.body.username + ' : ' + req.body.password)
 	// create a sample user
 	var newUser = new User({ 
 		username: req.body.username, 
@@ -99,7 +98,6 @@ apiRoutes.post('/register', function(req, res) {
 		} else {
 			// if there is no token
 			// return an error
-			// console.log('User saved successfully');
 			res.json({ success: true });
 		}
 	});
@@ -156,6 +154,13 @@ apiRoutes.post('/authenticate', function(req, res) {
 			}		
 		}
 	});
+});
+
+// ---------------------------------------------------------
+// Root API route for companye (http://localhost:8080/api/company)
+// ---------------------------------------------------------
+apiRoutes.get('/company', function(req, res) {
+	res.send('Hello! This is API for company http://localhost:' + port + '/api/company/register to create your company account');
 });
 
 // ---------------------------------------------------------

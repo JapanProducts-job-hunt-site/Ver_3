@@ -5,6 +5,7 @@ require('dotenv').config();
 
 const mongoose = require('mongoose');
 const User = require('../api/models/user');
+const Company = require('../api/models/company');
 const jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
 //Require the dev-dependencies
@@ -443,6 +444,69 @@ describe('JSON Web Token', () => {
 	});
 });
 
+
+
+describe('Company', () => {
+ 
+	// Remove all the data from test db
+	before((done) => {
+		Company.remove({}, (err) => {
+			done();
+		});
+	});
+	// Remove all the data from test db
+	after((done) => {
+		Company.remove({}, (err) => {
+			done();
+		});
+	});
+	///////////////////////////////////////////
+	//             GET /company              //
+	///////////////////////////////////////////
+	describe('GET /company', () => {
+		it('it should say Hello', (done) => {
+			chai.request('http://localhost:' + port)
+				.get('/api/company')
+				.end((err, res) => {
+					console.log(res.text)
+					res.should.have.status(200);
+					res.body.should.be.a('object');
+					res.should.have.property('text');
+					res.text.should.be.a('string');
+					res.text.should.include('Hello! This is API for company');
+					done();
+				});
+		});
+	});
+	
+
+	///////////////////////////////////////////
+	//      POST /api/company/register       //
+	///////////////////////////////////////////
+/*	
+	describe('POST /api/company/register', () => {
+		it('it should not POST without username', (done) => {
+			let user = {
+		    password: 'password',
+		    name: 'Yuuki',
+		    email: 'yuuki@yuuki.com'
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/register')
+			  .set('content-type', 'application/x-www-form-urlencoded')
+			  .send(user)
+				.end((err, res) => {
+					res.should.have.status(403);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.have.property('errors');
+					res.body.message.errors.should.have.property('username');
+					done();
+				});
+		});
+	});*/
+});
 
 describe('Search studetns', () => {
 	const users = [];
