@@ -8,6 +8,7 @@ const morgan      = require('morgan');
 const mongoose    = require('mongoose');
 const jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 const User   = require('./api/models/user'); // get our mongoose model
+const Company   = require('./api/models/company'); // get our mongoose model
 
 // To use .env file
 require('dotenv').config();
@@ -81,7 +82,6 @@ var apiRoutes = express.Router();
 
 apiRoutes.post('/register', function(req, res) {
 
-	// console.log('Register: ' + req.body.username + ' : ' + req.body.password)
 	// create a sample user
 	var newUser = new User({ 
 		username: req.body.username, 
@@ -99,7 +99,6 @@ apiRoutes.post('/register', function(req, res) {
 		} else {
 			// if there is no token
 			// return an error
-			// console.log('User saved successfully');
 			res.json({ success: true });
 		}
 	});
@@ -151,6 +150,93 @@ apiRoutes.post('/authenticate', function(req, res) {
 				res.json({
 					success: true,
 					message: 'Enjoy your token!',
+					token: token
+				});
+			}		
+		}
+	});
+});
+
+// ---------------------------------------------------------
+// Root API route for company (http://localhost:8080/api/company)
+// ---------------------------------------------------------
+apiRoutes.get('/company', function(req, res) {
+	res.send('Hello! This is API for company http://localhost:' + port + '/api/company/register to create your company account');
+});
+
+
+// ---------------------------------------------------------
+// Root API route for company to create an account (http://localhost:8080/api/company)
+// ---------------------------------------------------------
+apiRoutes.post('/company/register', function(req, res) {
+
+	// create a sample user
+	var newCompany = new Company({ 
+		username: req.body.username, 
+		password: req.body.password,
+		name: req.body.name,
+		email: req.body.email,
+		admin: false 
+	});
+	newCompany.save(function(err) {
+		if (err) {
+			res.status(403).send({
+				success: false,
+				message: err 
+			});
+		} else {
+			// if there is no token
+			// return an error
+			res.json({ success: true });
+		}
+	});
+});
+
+
+// ---------------------------------------------------------
+// authentication (no middleware necessary since this isnt authenticated)
+// ---------------------------------------------------------
+// http://localhost:8080/api/company/authenticate
+apiRoutes.post('/company/authenticate', function(req, res) {
+
+	if(!req.body.username){
+		return res.json({ success: false, message: 'Authentication failed. Enter username.' });
+	} else if(!req.body.password){
+		return res.json({ success: false, message: 'Authentication failed. Enter password.' });
+	}
+
+	// find the user
+	Company.findOne({
+		username: req.body.username
+	}, function(err, company) {
+
+		if (err) {
+			res.status(403).send({
+				success: false,
+				message: err 
+			});
+		};
+
+		if (!company) {
+			res.json({ success: false, message: 'Authentication failed. Username not found.' });
+		} else if (company) {
+
+			// check if password matches
+			if (company.password != req.body.password) {
+				res.json({ success: false, message: 'Authentication failed. Wrong password.' });
+			} else {
+
+				// if user is found and password is right
+				// create a toke
+				// In the JWT's payload(where all the data stored) send user object
+				// when jwt.verify is called we can obtain user data by decoded.user
+				var token = jwt.sign({ company: company }, app.get('superSecret'), {
+					expiresIn: 86400 // expires in 24 hours
+				});
+
+				res.json({
+					success: true,
+					message: 'Enjoy your token for your company!',
 					token: token
 				});
 			}		
@@ -211,10 +297,10 @@ apiRoutes.get('/user', function(req, res) {
 				success: false,
 				message: err 
 			});
-		};
+		}
 		// User not found
-		if (!user) {
-			res.json({ success: false, message: 'Username not found.' });
+		else if (!user) {
+			return res.json({ success: false, message: 'Username not found.' });
 		} 
 		// User found
 		else if (user) {

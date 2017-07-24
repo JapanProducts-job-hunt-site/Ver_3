@@ -5,6 +5,7 @@ require('dotenv').config();
 
 const mongoose = require('mongoose');
 const User = require('../api/models/user');
+const Company = require('../api/models/company');
 const jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
 //Require the dev-dependencies
@@ -315,6 +316,7 @@ describe('JSON Web Token', () => {
 			if (err) {
 				console.log("[error] cound not save an user on db")
 			};
+			done();
 		});
 		user1jwt = jwt.sign({ user: newuser1 }, process.env.secret, {
 			expiresIn: 86400 // expires in 24 hours
@@ -322,7 +324,6 @@ describe('JSON Web Token', () => {
 		user2jwt = jwt.sign({ user: newuser2 }, process.env.secret, {
 			expiresIn: 86400 // expires in 24 hours
 		});
-		done();
 	});
 	// Remove all the data from test db
 	after((done) => {
@@ -444,6 +445,293 @@ describe('JSON Web Token', () => {
 });
 
 
+
+describe('Company', () => {
+ 
+	// Remove all the data from test db
+	before((done) => {
+		Company.remove({}, (err) => {
+			done();
+		});
+	});
+	// Remove all the data from test db
+	after((done) => {
+		Company.remove({}, (err) => {
+			console.log(err);
+			done();
+		});
+	});
+	///////////////////////////////////////////
+	//             GET /company              //
+	///////////////////////////////////////////
+	describe('GET /company', () => {
+		it('it should say Hello', (done) => {
+			chai.request('http://localhost:' + port)
+				.get('/api/company')
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.be.a('object');
+					res.should.have.property('text');
+					res.text.should.be.a('string');
+					res.text.should.include('Hello! This is API for company');
+					done();
+				});
+		});
+	});
+	
+
+	///////////////////////////////////////////
+	//      POST /api/company/register       //
+	///////////////////////////////////////////
+	
+	describe('POST /api/company/register', () => {
+		it('it should return 403 without form data', (done) => {
+			chai.request('http://localhost:' + port)
+				.post('/api/company/register')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.end((err, res) => {
+					res.should.have.status(403);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.have.property('errors');
+					res.body.message.errors.should.have.property('username');
+					res.body.message.errors.should.have.property('name');
+					res.body.message.errors.should.have.property('password');
+					res.body.message.errors.should.have.property('email');
+					done();
+				});
+		});
+		it('it should not POST and Company size should be 0', (done) => {
+			chai.request('http://localhost:' + port)
+				.post('/api/company/register')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.end((err, res) => {
+					res.should.have.status(403);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.have.property('errors');
+					res.body.message.errors.should.have.property('username');
+					res.body.message.errors.should.have.property('name');
+					res.body.message.errors.should.have.property('password');
+					res.body.message.errors.should.have.property('email');
+					Company.count({}, (err, c)=> {
+						c.should.eql(0);
+					});
+					done();
+				});
+		});
+		it('it should not POST without username', (done) => {
+			let user = {
+				password: 'password',
+				name: 'Yuuki',
+				email: 'yuuki@yuuki.com'
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/company/register')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
+				.end((err, res) => {
+					res.should.have.status(403);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.have.property('errors');
+					res.body.message.errors.should.have.property('username');
+					done();
+				});
+		});
+		it('it should not POST without password', (done) => {
+			let user = {
+				username: 'Company 1',
+				name: 'Yuuki',
+				email: 'yuuki@yuuki.com'
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/company/register')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
+				.end((err, res) => {
+					res.should.have.status(403);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.have.property('errors');
+					res.body.message.errors.should.have.property('password');
+					done();
+				});
+		});
+		it('it should not POST without name', (done) => {
+			let user = {
+				username: 'Company 1',
+				password: 'password',
+				email: 'yuuki@yuuki.com'
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/company/register')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
+				.end((err, res) => {
+					res.should.have.status(403);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.have.property('errors');
+					res.body.message.errors.should.have.property('name');
+					done();
+				});
+		});
+		it('it should not POST without email', (done) => {
+			let user = {
+				username: 'Company 1',
+				password: 'password',
+				name: 'Yuuki'
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/company/register')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
+				.end((err, res) => {
+					res.should.have.status(403);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.have.property('errors');
+					res.body.message.errors.should.have.property('email');
+					done();
+				});
+		});
+		it('it should POST with all properties', (done) => {
+			let user = {
+				username: 'Company 1',
+				password: 'password',
+				name: 'Yuuki',
+				email: 'yuuki@yuuki.com'
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/company/register')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.true;
+					done();
+				});
+		});
+
+		///////////////////////////////////////////
+		//    POST /api/company/authenticate     //
+		///////////////////////////////////////////
+
+		describe('POST /api/company/authenticate', () => {
+			it('it should not POST with a wrong password', (done) => {
+				let company = {
+					username: 'Company 1',
+					password: 'passworda',
+				}
+				chai.request('http://localhost:' + port)
+					.post('/api/company/authenticate')
+					.set('content-type', 'application/x-www-form-urlencoded')
+					.send(company)
+					.end((err, res) => {
+						res.should.have.status(200);
+						res.body.should.be.a('object');
+						res.body.should.have.property('success').that.to.be.false;
+						res.body.message.should.contain('Wrong password');
+						done();
+					});
+			});
+			it('it should not POST without username', (done) => {
+				let company = {
+					password: 'password'
+				}
+				chai.request('http://localhost:' + port)
+					.post('/api/company/authenticate')
+					.set('content-type', 'application/x-www-form-urlencoded')
+					.send(company)
+					.end((err, res) => {
+						res.should.have.status(200);
+						res.body.should.be.a('object');
+						res.body.should.have.property('success').that.to.be.false;
+						res.body.message.should.contain('Enter username');
+						done();
+					});
+			});
+			it('it should not POST with wrong password', (done) => {
+				let company = {
+					username: 'Company 1',
+					password: 'passwordq'
+				}
+				chai.request('http://localhost:' + port)
+					.post('/api/company/authenticate')
+					.set('content-type', 'application/x-www-form-urlencoded')
+					.send(company)
+					.end((err, res) => {
+						res.should.have.status(200);
+						res.body.should.be.a('object');
+						res.body.should.have.property('success').that.to.be.false;
+						res.body.message.should.contain('Wrong password');
+						done();
+					});
+			});
+			it('it should not POST without password', (done) => {
+				let company = {
+					username: 'aaaa'
+				}
+				chai.request('http://localhost:' + port)
+					.post('/api/company/authenticate')
+					.set('content-type', 'application/x-www-form-urlencoded')
+					.send(company)
+					.end((err, res) => {
+						res.should.have.status(200);
+						res.body.should.be.a('object');
+						res.body.should.have.property('success').that.to.be.false;
+						res.body.message.should.contain('Enter password');
+						done();
+					});
+			});
+			it('it should POST with the correct username and password', (done) => {
+				let company = {
+					username: 'Company 1',
+					password: 'password',
+				}
+				chai.request('http://localhost:' + port)
+					.post('/api/company/authenticate')
+					.set('content-type', 'application/x-www-form-urlencoded')
+					.send(company)
+					.end((err, res) => {
+						res.should.have.status(200);
+						res.body.should.be.a('object');
+						res.body.should.have.property('success').that.to.be.true;
+						res.body.message.should.contain('Enjoy your token for your company!');
+						res.body.should.have.property('token');
+						done();
+					});
+			});
+			it('it should POST with all properties', (done) => {
+				let company = {
+					username: 'Company 1',
+					password: 'password',
+					name: 'Yuuki',
+					email: 'yuuki@yuuki.com'
+				}
+				chai.request('http://localhost:' + port)
+					.post('/api/company/authenticate')
+					.set('content-type', 'application/x-www-form-urlencoded')
+					.send(company)
+					.end((err, res) => {
+						res.should.have.status(200);
+						res.body.should.be.a('object');
+						res.body.should.have.property('success').that.to.be.true;
+						done();
+					});
+			});
+		});
+	});
+});
+
 describe('Search studetns', () => {
 	const users = [];
 	const SIZE = 10;
@@ -485,6 +773,7 @@ describe('Search studetns', () => {
 	// Remove all the data from test db
 	after((done) => {
 		User.remove({}, (err) => {
+			console.log(err);
 			done();
 		});
 	});
