@@ -49,6 +49,38 @@ Send this
 Return JSON web token if authorization susscesful
  
 
+## To create an account for a company (Sign up)
+
+```
+http://localhost:8080/api/company/register
+```
+Send this
+ * POST
+ * application/x-www-form-urlencoded
+ * Required properties
+	 * username (Unique)
+	 * password
+	 * email (Unique)
+
+Return JSON file
+
+true if authentication succseede 
+false  if authentication did not succseede 
+
+
+## To authentiate a company's user account (Log in)
+
+```
+http://localhost:8080/api/company/authenticate
+```
+
+Send this
+ * POST
+ * application/x-www-form-urlencoded
+ * username
+ * password
+
+Return JSON web token if authorization susscesful
 ## To Get User information (can be used for profile/dashboard page) 
 
 ```
