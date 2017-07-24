@@ -316,6 +316,7 @@ describe('JSON Web Token', () => {
 			if (err) {
 				console.log("[error] cound not save an user on db")
 			};
+			done();
 		});
 		user1jwt = jwt.sign({ user: newuser1 }, process.env.secret, {
 			expiresIn: 86400 // expires in 24 hours
@@ -323,7 +324,6 @@ describe('JSON Web Token', () => {
 		user2jwt = jwt.sign({ user: newuser2 }, process.env.secret, {
 			expiresIn: 86400 // expires in 24 hours
 		});
-		done();
 	});
 	// Remove all the data from test db
 	after((done) => {
@@ -414,6 +414,7 @@ describe('JSON Web Token', () => {
 			  .set('x-access-token', user2jwt)
 				.end((err, res) => {
 					res.should.have.status(200);
+					console.log(res)
 					res.body.should.be.a('object');
 					res.body.should.have.property('username');
 					res.body.should.have.property('name');
@@ -457,6 +458,7 @@ describe('Company', () => {
 	// Remove all the data from test db
 	after((done) => {
 		Company.remove({}, (err) => {
+			console.log(err);
 			done();
 		});
 	});
@@ -468,7 +470,6 @@ describe('Company', () => {
 			chai.request('http://localhost:' + port)
 				.get('/api/company')
 				.end((err, res) => {
-					console.log(res.text)
 					res.should.have.status(200);
 					res.body.should.be.a('object');
 					res.should.have.property('text');
@@ -483,18 +484,55 @@ describe('Company', () => {
 	///////////////////////////////////////////
 	//      POST /api/company/register       //
 	///////////////////////////////////////////
-/*	
+	
 	describe('POST /api/company/register', () => {
+		it('it should return 403 without form data', (done) => {
+			chai.request('http://localhost:' + port)
+				.post('/api/company/register')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.end((err, res) => {
+					res.should.have.status(403);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.have.property('errors');
+					res.body.message.errors.should.have.property('username');
+					res.body.message.errors.should.have.property('name');
+					res.body.message.errors.should.have.property('password');
+					res.body.message.errors.should.have.property('email');
+					done();
+				});
+		});
+		it('it should not POST and Company size should be 0', (done) => {
+			chai.request('http://localhost:' + port)
+				.post('/api/company/register')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.end((err, res) => {
+					res.should.have.status(403);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.have.property('errors');
+					res.body.message.errors.should.have.property('username');
+					res.body.message.errors.should.have.property('name');
+					res.body.message.errors.should.have.property('password');
+					res.body.message.errors.should.have.property('email');
+					Company.count({}, (err, c)=> {
+						c.should.eql(0);
+					});
+					done();
+				});
+		});
 		it('it should not POST without username', (done) => {
 			let user = {
-		    password: 'password',
-		    name: 'Yuuki',
-		    email: 'yuuki@yuuki.com'
+				password: 'password',
+				name: 'Yuuki',
+				email: 'yuuki@yuuki.com'
 			}
 			chai.request('http://localhost:' + port)
-				.post('/api/register')
-			  .set('content-type', 'application/x-www-form-urlencoded')
-			  .send(user)
+				.post('/api/company/register')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
 				.end((err, res) => {
 					res.should.have.status(403);
 					res.body.should.be.a('object');
@@ -505,7 +543,85 @@ describe('Company', () => {
 					done();
 				});
 		});
-	});*/
+		it('it should not POST without password', (done) => {
+			let user = {
+				username: 'Company 1',
+				name: 'Yuuki',
+				email: 'yuuki@yuuki.com'
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/company/register')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
+				.end((err, res) => {
+					res.should.have.status(403);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.have.property('errors');
+					res.body.message.errors.should.have.property('password');
+					done();
+				});
+		});
+		it('it should not POST without name', (done) => {
+			let user = {
+				username: 'Company 1',
+				password: 'password',
+				email: 'yuuki@yuuki.com'
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/company/register')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
+				.end((err, res) => {
+					res.should.have.status(403);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.have.property('errors');
+					res.body.message.errors.should.have.property('name');
+					done();
+				});
+		});
+		it('it should not POST without email', (done) => {
+			let user = {
+				username: 'Company 1',
+				password: 'password',
+				name: 'Yuuki'
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/company/register')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
+				.end((err, res) => {
+					res.should.have.status(403);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.have.property('errors');
+					res.body.message.errors.should.have.property('email');
+					done();
+				});
+		});
+		it('it should POST with all properties', (done) => {
+			let user = {
+				username: 'Company 1',
+				password: 'password',
+				name: 'Yuuki',
+				email: 'yuuki@yuuki.com'
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/company/register')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.true;
+					done();
+				});
+		});
+	});
 });
 
 describe('Search studetns', () => {
@@ -549,6 +665,7 @@ describe('Search studetns', () => {
 	// Remove all the data from test db
 	after((done) => {
 		User.remove({}, (err) => {
+			console.log(err);
 			done();
 		});
 	});

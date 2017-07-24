@@ -11,7 +11,7 @@ module.exports = mongoose.model('Company', new Schema({
 	password: {
 		type: String,
 		required: true
-	}/*,
+	},
 	name: {
 		type: String,
 		required: true
@@ -20,6 +20,6 @@ module.exports = mongoose.model('Company', new Schema({
 		type: String,
 		unique: true,
 		required: true
-	}*/,
+	},
 	admin: Boolean
 }));
