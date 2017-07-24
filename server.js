@@ -193,6 +193,56 @@ apiRoutes.post('/company/register', function(req, res) {
 });
 
 
+// ---------------------------------------------------------
+// authentication (no middleware necessary since this isnt authenticated)
+// ---------------------------------------------------------
+// http://localhost:8080/api/company/authenticate
+apiRoutes.post('/company/authenticate', function(req, res) {
+
+	if(!req.body.username){
+		return res.json({ success: false, message: 'Authentication failed. Enter username.' });
+	} else if(!req.body.password){
+		return res.json({ success: false, message: 'Authentication failed. Enter password.' });
+	}
+
+	// find the user
+	Company.findOne({
+		username: req.body.username
+	}, function(err, company) {
+
+		if (err) {
+			res.status(403).send({
+				success: false,
+				message: err 
+			});
+		};
+
+		if (!company) {
+			res.json({ success: false, message: 'Authentication failed. Username not found.' });
+		} else if (company) {
+
+			// check if password matches
+			if (company.password != req.body.password) {
+				res.json({ success: false, message: 'Authentication failed. Wrong password.' });
+			} else {
+
+				// if user is found and password is right
+				// create a toke
+				// In the JWT's payload(where all the data stored) send user object
+				// when jwt.verify is called we can obtain user data by decoded.user
+				var token = jwt.sign({ company: company }, app.get('superSecret'), {
+					expiresIn: 86400 // expires in 24 hours
+				});
+
+				res.json({
+					success: true,
+					message: 'Enjoy your token for your company!',
+					token: token
+				});
+			}		
+		}
+	});
+});
 
 // ---------------------------------------------------------
 // route middleware to authenticate and check token
@@ -250,7 +300,7 @@ apiRoutes.get('/user', function(req, res) {
 		}
 		// User not found
 		else if (!user) {
-			res.json({ success: false, message: 'Username not found.' });
+			return res.json({ success: false, message: 'Username not found.' });
 		} 
 		// User found
 		else if (user) {

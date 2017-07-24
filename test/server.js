@@ -414,7 +414,6 @@ describe('JSON Web Token', () => {
 			  .set('x-access-token', user2jwt)
 				.end((err, res) => {
 					res.should.have.status(200);
-					console.log(res)
 					res.body.should.be.a('object');
 					res.body.should.have.property('username');
 					res.body.should.have.property('name');
@@ -620,6 +619,115 @@ describe('Company', () => {
 					res.body.should.have.property('success').that.to.be.true;
 					done();
 				});
+		});
+
+		///////////////////////////////////////////
+		//    POST /api/company/authenticate     //
+		///////////////////////////////////////////
+
+		describe('POST /api/company/authenticate', () => {
+			it('it should not POST with a wrong password', (done) => {
+				let company = {
+					username: 'Company 1',
+					password: 'passworda',
+				}
+				chai.request('http://localhost:' + port)
+					.post('/api/company/authenticate')
+					.set('content-type', 'application/x-www-form-urlencoded')
+					.send(company)
+					.end((err, res) => {
+						res.should.have.status(200);
+						res.body.should.be.a('object');
+						res.body.should.have.property('success').that.to.be.false;
+						res.body.message.should.contain('Wrong password');
+						done();
+					});
+			});
+			it('it should not POST without username', (done) => {
+				let company = {
+					password: 'password'
+				}
+				chai.request('http://localhost:' + port)
+					.post('/api/company/authenticate')
+					.set('content-type', 'application/x-www-form-urlencoded')
+					.send(company)
+					.end((err, res) => {
+						res.should.have.status(200);
+						res.body.should.be.a('object');
+						res.body.should.have.property('success').that.to.be.false;
+						res.body.message.should.contain('Enter username');
+						done();
+					});
+			});
+			it('it should not POST with wrong password', (done) => {
+				let company = {
+					username: 'Company 1',
+					password: 'passwordq'
+				}
+				chai.request('http://localhost:' + port)
+					.post('/api/company/authenticate')
+					.set('content-type', 'application/x-www-form-urlencoded')
+					.send(company)
+					.end((err, res) => {
+						res.should.have.status(200);
+						res.body.should.be.a('object');
+						res.body.should.have.property('success').that.to.be.false;
+						res.body.message.should.contain('Wrong password');
+						done();
+					});
+			});
+			it('it should not POST without password', (done) => {
+				let company = {
+					username: 'aaaa'
+				}
+				chai.request('http://localhost:' + port)
+					.post('/api/company/authenticate')
+					.set('content-type', 'application/x-www-form-urlencoded')
+					.send(company)
+					.end((err, res) => {
+						res.should.have.status(200);
+						res.body.should.be.a('object');
+						res.body.should.have.property('success').that.to.be.false;
+						res.body.message.should.contain('Enter password');
+						done();
+					});
+			});
+			it('it should POST with the correct username and password', (done) => {
+				let company = {
+					username: 'Company 1',
+					password: 'password',
+				}
+				chai.request('http://localhost:' + port)
+					.post('/api/company/authenticate')
+					.set('content-type', 'application/x-www-form-urlencoded')
+					.send(company)
+					.end((err, res) => {
+						res.should.have.status(200);
+						res.body.should.be.a('object');
+						res.body.should.have.property('success').that.to.be.true;
+						res.body.message.should.contain('Enjoy your token for your company!');
+						res.body.should.have.property('token');
+						done();
+					});
+			});
+			it('it should POST with all properties', (done) => {
+				let company = {
+					username: 'Company 1',
+					password: 'password',
+					name: 'Yuuki',
+					email: 'yuuki@yuuki.com'
+				}
+				chai.request('http://localhost:' + port)
+					.post('/api/company/authenticate')
+					.set('content-type', 'application/x-www-form-urlencoded')
+					.send(company)
+					.end((err, res) => {
+						res.should.have.status(200);
+						res.body.should.be.a('object');
+						res.body.should.have.property('success').that.to.be.true;
+						done();
+					});
+			});
 		});
 	});
 });
