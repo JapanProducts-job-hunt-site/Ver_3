@@ -287,26 +287,38 @@ apiRoutes.get('/', function(req, res) {
 // This route is to update student account information 
 // ---------------------------------------------------------
 apiRoutes.put('/update', function(req, res) {
+	console.log('Update')
+	console.log('Update' + req.body)
 	User.findOneAndUpdate(
 		//Query
 		{ _id: req.decoded.user._id },
 		//Update
-		req.decoded.user,
-		(err, original) => {
+		// req.body.user,
+    { $set: req.body.user },
+		{new: true},
+		(err, updated) => {
 			if(err) {
+				console.log(err)
 				res.json(err);
 			} else {
-				User.findOne({_id: req.decoded.user._id}, (err, updated) => {
-					if(err) {
-						res.json(err);
-					} else {
-						res.json(updated);
-					}
-				});
+				res.json(updated);
 			}
 		}
-	);
-});
+		// (err, original) => {
+			// 	if(err) {
+			// 		res.json(err);
+			// 	} else {
+			// 		User.findOne({_id: req.decoded.user._id}, (err, updated) => {
+			// 			if(err) {
+			// 				res.json(err);
+			// 			} else {
+			// 				res.json(updated);
+			// 			}
+			// 		});
+			// 	}
+			// }
+		);
+		});
 
 // ---------------------------------------------------------
 // This route is used for user profile page (dashboard)

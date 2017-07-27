@@ -786,16 +786,21 @@ describe('Update student information', () => {
 	});
 
 	describe('GET /api/update', () => {
-		it('Update username "user 0" to "Updated"', (done) => {
+		it('Update username "user0" to "Updated"', (done) => {
+			const user = {
+				username: 'Updated',
+			}
 			chai.request('http://localhost:' + port)
 				.put('/api/update')
+				.set('content-type', 'application/x-www-form-urlencoded')
 				.set('x-access-token', userJWTs[0])
+			  .send(user)
 				.end((err, res) => {
 					console.log(res.body)
 					res.should.have.status(200);
-					res.body[0].should.have.property('username');
-					res.body[0].should.have.property('name');
-					res.body[0].should.have.property('email');
+					res.body.should.have.property('username');
+					res.body.should.have.property('name');
+					res.body.should.have.property('email');
 					done();
 				});
 		});
