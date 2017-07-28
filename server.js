@@ -300,7 +300,11 @@ apiRoutes.put('/update', function(req, res) {
 			$set: req.body.user 
 		},
 		// When true the return is updated data
-		{ new: true },
+		// Run validators when updating
+		{ 
+			new: true,
+		  runValidators: true
+		},
 		(err, updated) => {
 			if(err) {
 				res.json(err);

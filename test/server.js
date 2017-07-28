@@ -76,6 +76,90 @@ describe('User', () => {
 					done();
 				});
 		});
+		it('it should not POST with an empty username', (done) => {
+			let user = {
+				username: '',
+				password: 'password',
+				name: 'Yuuki',
+				email: 'yuuki@yuuki.com'
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/register')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
+				.end((err, res) => {
+					res.should.have.status(403);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.have.property('errors');
+					res.body.message.errors.should.have.property('username');
+					done();
+				});
+		});
+		it('it should not POST with an empty name', (done) => {
+			let user = {
+				username: 'yuuki',
+				password: '',
+				name: '',
+				email: 'yuuki@yuuki.com'
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/register')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
+				.end((err, res) => {
+					res.should.have.status(403);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.have.property('errors');
+					res.body.message.errors.should.have.property('name');
+					done();
+				});
+		});
+		it('it should not POST with an empty password', (done) => {
+			let user = {
+				username: 'yuuki',
+				password: '',
+				name: 'Yuuki',
+				email: 'yuuki@yuuki.com'
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/register')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
+				.end((err, res) => {
+					res.should.have.status(403);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.have.property('errors');
+					res.body.message.errors.should.have.property('password');
+					done();
+				});
+		});
+		it('it should not POST with an empty email', (done) => {
+			let user = {
+				username: 'yuuki',
+				password: 'yuuukii',
+				name: 'Yuuki',
+				email: ''
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/register')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
+				.end((err, res) => {
+					res.should.have.status(403);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.have.property('errors');
+					res.body.message.errors.should.have.property('email');
+					done();
+				});
+		});
 		it('it should not POST without name', (done) => {
 			let user = {
 				username: 'yuuking',
@@ -882,7 +966,6 @@ describe('Update student information', () => {
 			  .send(DATA)
 				.end((err, res) => {
 					res.should.have.status(200);
-					console.log(res.body);
 					res.body.should.have.property('message');
 					res.body.message.should.contain('duplicate key error');
 					res.body.message.should.contain('username');
@@ -903,7 +986,6 @@ describe('Update student information', () => {
 			  .send(DATA)
 				.end((err, res) => {
 					res.should.have.status(200);
-					console.log(res.body);
 					res.body.should.have.property('message');
 					res.body.message.should.contain('duplicate key error');
 					res.body.message.should.contain('email');
@@ -924,14 +1006,13 @@ describe('Update student information', () => {
 			  .send(DATA)
 				.end((err, res) => {
 					res.should.have.status(200);
-					console.log(res.body);
 					res.body.should.have.property('message');
 					res.body.message.should.contain('duplicate key error');
 					res.body.message.should.contain('username');
 					done();
 				});
 		});
-		it('Should return if one value is empty', (done) => {
+		it('Should return if username is empty', (done) => {
 			const USER_INDEX = 3;
 			const DATA = {
 				"user": {
@@ -944,12 +1025,70 @@ describe('Update student information', () => {
 			 	.set('x-access-token', userJWTs[USER_INDEX])
 			  .send(DATA)
 				.end((err, res) => {
-					console.log(res)
 					res.should.have.status(200);
-					console.log(res.body);
 					res.body.should.have.property('message');
-					res.body.message.should.contain('duplicate key error');
+					res.body.message.should.contain('required');
 					res.body.message.should.contain('username');
+					done();
+				});
+		});
+		it('Should return if name is empty', (done) => {
+			const USER_INDEX = 3;
+			const DATA = {
+				"user": {
+					"name": "",
+				}
+			}
+			chai.request('http://localhost:' + port)
+				.put('/api/update')
+				.set('Content-Type', 'application/json')
+			 	.set('x-access-token', userJWTs[USER_INDEX])
+			  .send(DATA)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.have.property('message');
+					res.body.message.should.contain('required');
+					res.body.message.should.contain('name');
+					done();
+				});
+		});
+		it('Should return if email is empty', (done) => {
+			const USER_INDEX = 3;
+			const DATA = {
+				"user": {
+					"email": "",
+				}
+			}
+			chai.request('http://localhost:' + port)
+				.put('/api/update')
+				.set('Content-Type', 'application/json')
+			 	.set('x-access-token', userJWTs[USER_INDEX])
+			  .send(DATA)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.have.property('message');
+					res.body.message.should.contain('required');
+					res.body.message.should.contain('email');
+					done();
+				});
+		});
+		it('Should return if password is empty', (done) => {
+			const USER_INDEX = 3;
+			const DATA = {
+				"user": {
+					"password": "",
+				}
+			}
+			chai.request('http://localhost:' + port)
+				.put('/api/update')
+				.set('Content-Type', 'application/json')
+			 	.set('x-access-token', userJWTs[USER_INDEX])
+			  .send(DATA)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.have.property('message');
+					res.body.message.should.contain('required');
+					res.body.message.should.contain('password');
 					done();
 				});
 		});
