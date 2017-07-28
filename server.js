@@ -46,12 +46,18 @@ app.use(express.static(__dirname + '/client/app'));
 app.use('/dist', express.static(__dirname + '/client/dist'));
 app.use('/scripts', express.static(__dirname + '/node_modules/riot/'));
 
+
+app.get('/test', (req, res) => {
+  console.log('Testing from /test')
+  res.send('Testing from /test')
+})
 // =================================================================
 // routes ==========================================================
 // =================================================================
 app.get('/setup', function(req, res) {
 
 	// create a sample user
+	console.log('Setpu')
 	var nick = new User({ 
 		name: 'Nick Cerminara', 
 		password: 'password',
