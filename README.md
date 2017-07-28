@@ -48,6 +48,29 @@ Send this
 
 Return JSON web token if authorization susscesful
  
+## To update user information
+
+```
+http://localhost:8080/api/update
+```
+
+Send this
+ * PUT
+ * application/update
+ * JSON that contains key and value to be updated
+
+Below JSON will update user's name to "Updated name" and password "Updated password"
+``` 
+{
+  "user": {
+    "name":"Updated name",
+    "password":"Updated password"
+  }
+}
+``` 
+
+
+Return JSON web token if update susscesful
 
 ## To create an account for a company (Sign up)
 
