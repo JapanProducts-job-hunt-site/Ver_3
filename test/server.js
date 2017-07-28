@@ -944,6 +944,7 @@ describe('Update student information', () => {
 			 	.set('x-access-token', userJWTs[USER_INDEX])
 			  .send(DATA)
 				.end((err, res) => {
+					console.log(res)
 					res.should.have.status(200);
 					console.log(res.body);
 					res.body.should.have.property('message');
@@ -953,10 +954,12 @@ describe('Update student information', () => {
 				});
 		});
 		it('it should return error if json is empty', (done) => {
+			const DATA = {}
 			chai.request('http://localhost:' + port)
 				.put('/api/update')
 				.set('Content-Type', 'application/json')
 				.set('x-access-token', userJWTs[0])
+			  .send(DATA)
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.have.property('success').that.to.be.false;

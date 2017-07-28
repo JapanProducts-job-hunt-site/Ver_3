@@ -5,19 +5,23 @@ var Schema = mongoose.Schema;
 module.exports = mongoose.model('User', new Schema({ 
 	username: {
 		type: String,
+		minlength: 1,
 		unique: true,
 		required: true
 	}, 
 	password: {
 		type: String,
+		minlength: 1,
 		required: true
 	},
 	name: {
 		type: String,
+		minlength: 1,
 		required: true
 	},
 	email: {
 		type: String,
+		minlength: 1,
 		unique: true,
 		required: true
 	},
