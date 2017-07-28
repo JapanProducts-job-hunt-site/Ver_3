@@ -46,7 +46,7 @@ Send this
  * username
  * password
 
-Return JSON web token if authorization susscesful
+Return JWT if authorization susscesful
  
 ## To update user information
 
@@ -69,8 +69,7 @@ Below JSON will update user's name to "Updated name" and password "Updated passw
 }
 ``` 
 
-
-Return JSON web token if update susscesful
+Return updated user data in JSON if update susscesful
 
 ## To create an account for a company (Sign up)
 
