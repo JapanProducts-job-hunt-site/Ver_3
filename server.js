@@ -287,38 +287,46 @@ apiRoutes.get('/', function(req, res) {
 // This route is to update student account information 
 // ---------------------------------------------------------
 apiRoutes.put('/update', function(req, res) {
-	console.log('Update')
-	console.log('Update' + req.body)
+	console.log('Update' + req.body.user.name)
 	User.findOneAndUpdate(
 		//Query
-		{ _id: req.decoded.user._id },
+	  { _id: req.decoded.user._id },
 		//Update
-		// req.body.user,
-    { $set: req.body.user },
-		{new: true},
+		{
+			$set: req.body.user 
+		},
+		{ new: true },
 		(err, updated) => {
 			if(err) {
-				console.log(err)
 				res.json(err);
+			} else if (!updated){
+				res.json(
+					{ 
+						success: false, 
+						message: "Could not find user information"
+					}
+				);
 			} else {
+				console.log("Updated " + updated);
 				res.json(updated);
 			}
 		}
 		// (err, original) => {
-			// 	if(err) {
-			// 		res.json(err);
-			// 	} else {
-			// 		User.findOne({_id: req.decoded.user._id}, (err, updated) => {
-			// 			if(err) {
-			// 				res.json(err);
-			// 			} else {
-			// 				res.json(updated);
-			// 			}
-			// 		});
-			// 	}
-			// }
-		);
-		});
+		// 	 	if(err) {
+		// 	 		res.json(err);
+		// 	 	} else {
+		// 	 		User.findOne({_id: req.decoded.user._id}, (err, updated) => {
+		// 	 			if(err) {
+		// 	 				res.json(err);
+		// 	 			} else {
+		// 	 				res.json(updated);
+		// 	 			}
+		// 	 		});
+		// 	 	}
+		// 	 }
+		// );
+	);
+});
 
 // ---------------------------------------------------------
 // This route is used for user profile page (dashboard)
