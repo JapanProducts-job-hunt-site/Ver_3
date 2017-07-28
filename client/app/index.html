@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Hello World</title>
+
+	</head>
+	<body>
+		<!-- mount point -->
+		<h1>riot.js will be mounted here</h1>
+		<hello-world></hello-world>
+
+		<!-- include riot.js -->
+		<script src="/scripts/riot.min.js"></script>
+		<script src="/dist/hello-world.js"></script>
+
+		<!-- mount normally -->
+		<script>
+			riot.mount('*', {title: 'Say hello!'});
+		</script>
+	</body>
+</html>

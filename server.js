@@ -42,8 +42,9 @@ app.use(bodyParser.json());
 
 
 // Tell the server to look at these directories to look for static files
-app.use(express.static('./static/'));
-app.use(express.static('./client/dist/'));
+app.use(express.static(__dirname + '/client/app'));
+app.use('/dist', express.static(__dirname + '/client/dist'));
+app.use('/scripts', express.static(__dirname + '/node_modules/riot/'));
 
 // =================================================================
 // routes ==========================================================
