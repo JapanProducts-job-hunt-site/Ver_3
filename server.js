@@ -281,6 +281,45 @@ apiRoutes.use(function(req, res, next) {
 // ---------------------------------------------------------
 apiRoutes.get('/', function(req, res) {
 	res.json({ message: 'Welcome to the coolest API on earth!' });
+}); 
+// ---------------------------------------------------------
+// This route is to update student account information 
+// ---------------------------------------------------------
+apiRoutes.put('/update', function(req, res) {
+	if(!req.body.user) {
+		return res.json({
+			success: false,
+			message: "No data to update"
+		})
+	}
+	User.findOneAndUpdate(
+		//Query
+	  { _id: req.decoded.user._id },
+		//Update
+		{
+			$set: req.body.user 
+		},
+		// When true the return is updated data
+		// Run validators when updating
+		{ 
+			new: true,
+		  runValidators: true
+		},
+		(err, updated) => {
+			if(err) {
+				res.json(err);
+			} else if (!updated){
+				res.json(
+					{ 
+						success: false, 
+						message: "Could not find user information"
+					}
+				);
+			} else {
+				res.json(updated);
+			}
+		}
+	);
 });
 
 // ---------------------------------------------------------

@@ -76,6 +76,90 @@ describe('User', () => {
 					done();
 				});
 		});
+		it('it should not POST with an empty username', (done) => {
+			let user = {
+				username: '',
+				password: 'password',
+				name: 'Yuuki',
+				email: 'yuuki@yuuki.com'
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/register')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
+				.end((err, res) => {
+					res.should.have.status(403);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.have.property('errors');
+					res.body.message.errors.should.have.property('username');
+					done();
+				});
+		});
+		it('it should not POST with an empty name', (done) => {
+			let user = {
+				username: 'yuuki',
+				password: '',
+				name: '',
+				email: 'yuuki@yuuki.com'
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/register')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
+				.end((err, res) => {
+					res.should.have.status(403);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.have.property('errors');
+					res.body.message.errors.should.have.property('name');
+					done();
+				});
+		});
+		it('it should not POST with an empty password', (done) => {
+			let user = {
+				username: 'yuuki',
+				password: '',
+				name: 'Yuuki',
+				email: 'yuuki@yuuki.com'
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/register')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
+				.end((err, res) => {
+					res.should.have.status(403);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.have.property('errors');
+					res.body.message.errors.should.have.property('password');
+					done();
+				});
+		});
+		it('it should not POST with an empty email', (done) => {
+			let user = {
+				username: 'yuuki',
+				password: 'yuuukii',
+				name: 'Yuuki',
+				email: ''
+			}
+			chai.request('http://localhost:' + port)
+				.post('/api/register')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
+				.end((err, res) => {
+					res.should.have.status(403);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.have.property('errors');
+					res.body.message.errors.should.have.property('email');
+					done();
+				});
+		});
 		it('it should not POST without name', (done) => {
 			let user = {
 				username: 'yuuking',
@@ -731,6 +815,319 @@ describe('Company', () => {
 		});
 	});
 });
+
+
+	///////////////////////////////////////////
+	//             GET /api/update           //
+	///////////////////////////////////////////
+
+describe('Update student information', () => {
+	const users = [];
+	const userJWTs = [];
+	const SIZE = 10;
+	let save_count = 0;
+
+	before((done) => {
+		User.remove({}, (err) => {
+		});
+
+		for(let i = 0; i < SIZE; i++){
+			users.push(
+				new User({ 
+					username: "user" + i, 
+					password: i,
+					name: "User " + i,
+					email: "user" + i + "@yuuki.com",
+					admin: false 
+				})
+			);
+			// register users
+			users[i].save(function(err) {
+				if (err) {
+					console.log("[error] cound not save an user on db\n" + err)
+				};
+
+				save_count++;
+				//Wait all saving is done
+				if(save_count == SIZE) {
+					done();
+				}
+			});
+			userJWTs.push(
+				jwt.sign({ user: users[i] }, process.env.secret, {
+					expiresIn: 86400 // expires in 24 hours
+				})
+			);
+		}
+	});
+
+	// Remove all the data from test db
+	after((done) => {
+		User.remove({}, (err) => {
+			console.log(err);
+			done();
+		});
+	});
+
+	describe('GET /api/update', () => {
+		it('Update username "user0" to "Updated"', (done) => {
+			const USER_INDEX = 0;
+			const DATA = {
+				"user": {
+					"username": "Updated"
+				}
+			}
+			chai.request('http://localhost:' + port)
+				.put('/api/update')
+				.set('Content-Type', 'application/json')
+			 	.set('x-access-token', userJWTs[USER_INDEX])
+			  .send(DATA)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.have.property('username');
+					res.body.should.have.property('name');
+					res.body.should.have.property('email');
+					res.body.should.have.property('password');
+					res.body.username.should.be.eql('Updated');
+					res.body.name.should.be.eql(users[USER_INDEX].name);
+					res.body.email.should.be.eql(users[USER_INDEX].email);
+					res.body.password.should.be.eql(users[USER_INDEX].password);
+					done();
+				});
+		});
+		it('Update username "user1" to "Updated 1" and email "updated1@yuuki.com"', (done) => {
+			const USER_INDEX = 1;
+			const DATA = {
+				"user": {
+					"username": "Updated 1",
+					"email": "updated1@yuuki.com"
+				}
+			}
+			chai.request('http://localhost:' + port)
+				.put('/api/update')
+				.set('Content-Type', 'application/json')
+			 	.set('x-access-token', userJWTs[USER_INDEX])
+			  .send(DATA)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.have.property('username');
+					res.body.should.have.property('name');
+					res.body.should.have.property('email');
+					res.body.should.have.property('password');
+					res.body.username.should.be.eql('Updated 1');
+					res.body.name.should.be.eql(users[USER_INDEX].name);
+					res.body.email.should.be.eql('updated1@yuuki.com');
+					res.body.password.should.be.eql(users[USER_INDEX].password);
+					done();
+				});
+		});
+		it('Update all properties to "Updated 2"', (done) => {
+			const USER_INDEX = 2;
+			const DATA = {
+				"user": {
+					"username": "Updated 2",
+					"name": "Updated 2",
+					"email": "Updated 2",
+					"password": "Updated 2"
+				}
+			}
+			chai.request('http://localhost:' + port)
+				.put('/api/update')
+				.set('Content-Type', 'application/json')
+			 	.set('x-access-token', userJWTs[USER_INDEX])
+			  .send(DATA)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.have.property('username');
+					res.body.should.have.property('name');
+					res.body.should.have.property('email');
+					res.body.should.have.property('password');
+					res.body.username.should.be.eql('Updated 2');
+					res.body.name.should.be.eql('Updated 2');
+					res.body.email.should.be.eql('Updated 2');
+					res.body.password.should.be.eql('Updated 2');
+					done();
+				});
+		});
+		it('Should return error if trying to set duplicate value', (done) => {
+			const USER_INDEX = 3;
+			const DATA = {
+				"user": {
+					"username": "Updated 2",
+					"name": "Updated 2",
+					"email": "Updated 2",
+					"password": "Updated 2"
+				}
+			}
+			chai.request('http://localhost:' + port)
+				.put('/api/update')
+				.set('Content-Type', 'application/json')
+			 	.set('x-access-token', userJWTs[USER_INDEX])
+			  .send(DATA)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.have.property('message');
+					res.body.message.should.contain('duplicate key error');
+					res.body.message.should.contain('username');
+					done();
+				});
+		});
+		it('Should return duplicate email error if trying to set duplicate value', (done) => {
+			const USER_INDEX = 3;
+			const DATA = {
+				"user": {
+					"email": "Updated 2",
+				}
+			}
+			chai.request('http://localhost:' + port)
+				.put('/api/update')
+				.set('Content-Type', 'application/json')
+			 	.set('x-access-token', userJWTs[USER_INDEX])
+			  .send(DATA)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.have.property('message');
+					res.body.message.should.contain('duplicate key error');
+					res.body.message.should.contain('email');
+					done();
+				});
+		});
+		it('Should return duplicate username error if trying to set duplicate value', (done) => {
+			const USER_INDEX = 3;
+			const DATA = {
+				"user": {
+					"username": "user9",
+				}
+			}
+			chai.request('http://localhost:' + port)
+				.put('/api/update')
+				.set('Content-Type', 'application/json')
+			 	.set('x-access-token', userJWTs[USER_INDEX])
+			  .send(DATA)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.have.property('message');
+					res.body.message.should.contain('duplicate key error');
+					res.body.message.should.contain('username');
+					done();
+				});
+		});
+		it('Should return if username is empty', (done) => {
+			const USER_INDEX = 3;
+			const DATA = {
+				"user": {
+					"username": "",
+				}
+			}
+			chai.request('http://localhost:' + port)
+				.put('/api/update')
+				.set('Content-Type', 'application/json')
+			 	.set('x-access-token', userJWTs[USER_INDEX])
+			  .send(DATA)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.have.property('message');
+					res.body.message.should.contain('required');
+					res.body.message.should.contain('username');
+					done();
+				});
+		});
+		it('Should return if name is empty', (done) => {
+			const USER_INDEX = 3;
+			const DATA = {
+				"user": {
+					"name": "",
+				}
+			}
+			chai.request('http://localhost:' + port)
+				.put('/api/update')
+				.set('Content-Type', 'application/json')
+			 	.set('x-access-token', userJWTs[USER_INDEX])
+			  .send(DATA)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.have.property('message');
+					res.body.message.should.contain('required');
+					res.body.message.should.contain('name');
+					done();
+				});
+		});
+		it('Should return if email is empty', (done) => {
+			const USER_INDEX = 3;
+			const DATA = {
+				"user": {
+					"email": "",
+				}
+			}
+			chai.request('http://localhost:' + port)
+				.put('/api/update')
+				.set('Content-Type', 'application/json')
+			 	.set('x-access-token', userJWTs[USER_INDEX])
+			  .send(DATA)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.have.property('message');
+					res.body.message.should.contain('required');
+					res.body.message.should.contain('email');
+					done();
+				});
+		});
+		it('Should return if password is empty', (done) => {
+			const USER_INDEX = 3;
+			const DATA = {
+				"user": {
+					"password": "",
+				}
+			}
+			chai.request('http://localhost:' + port)
+				.put('/api/update')
+				.set('Content-Type', 'application/json')
+			 	.set('x-access-token', userJWTs[USER_INDEX])
+			  .send(DATA)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.have.property('message');
+					res.body.message.should.contain('required');
+					res.body.message.should.contain('password');
+					done();
+				});
+		});
+		it('it should return error if json is empty', (done) => {
+			const DATA = {}
+			chai.request('http://localhost:' + port)
+				.put('/api/update')
+				.set('Content-Type', 'application/json')
+				.set('x-access-token', userJWTs[0])
+			  .send(DATA)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message')
+					res.body.message.should.contain("No data to update");
+					done();
+				});
+		});
+		it('it should return error if no json is sent', (done) => {
+			chai.request('http://localhost:' + port)
+				.put('/api/update')
+				.set('Content-Type', 'application/json')
+				.set('x-access-token', userJWTs[0])
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message')
+					res.body.message.should.contain("No data to update");
+					done();
+				});
+		});
+	});
+});
+
+
+  
+	///////////////////////////////////////////
+	//             GET /api/search           //
+	///////////////////////////////////////////
 
 describe('Search studetns', () => {
 	const users = [];
