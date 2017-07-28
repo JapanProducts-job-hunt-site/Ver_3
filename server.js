@@ -281,8 +281,7 @@ apiRoutes.use(function(req, res, next) {
 // ---------------------------------------------------------
 apiRoutes.get('/', function(req, res) {
 	res.json({ message: 'Welcome to the coolest API on earth!' });
-});
-
+}); 
 // ---------------------------------------------------------
 // This route is to update student account information 
 // ---------------------------------------------------------
@@ -313,7 +312,6 @@ apiRoutes.put('/update', function(req, res) {
 					}
 				);
 			} else {
-				console.log("Updated " + updated);
 				res.json(updated);
 			}
 		}
