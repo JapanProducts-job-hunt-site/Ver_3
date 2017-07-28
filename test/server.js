@@ -787,20 +787,141 @@ describe('Update student information', () => {
 
 	describe('GET /api/update', () => {
 		it('Update username "user0" to "Updated"', (done) => {
-			const user = {
-				username: 'Updated',
+			const USER_INDEX = 0;
+			const DATA = {
+				"user": {
+					"username": "Updated"
+				}
 			}
 			chai.request('http://localhost:' + port)
 				.put('/api/update')
-				.set('content-type', 'application/x-www-form-urlencoded')
-				.set('x-access-token', userJWTs[0])
-			  .send(user)
+				.set('Content-Type', 'application/json')
+			 	.set('x-access-token', userJWTs[USER_INDEX])
+			  .send(DATA)
 				.end((err, res) => {
-					console.log(res.body)
 					res.should.have.status(200);
 					res.body.should.have.property('username');
 					res.body.should.have.property('name');
 					res.body.should.have.property('email');
+					res.body.should.have.property('password');
+					res.body.username.should.be.eql('Updated');
+					res.body.name.should.be.eql(users[USER_INDEX].name);
+					res.body.email.should.be.eql(users[USER_INDEX].email);
+					res.body.password.should.be.eql(users[USER_INDEX].password);
+					done();
+				});
+		});
+		it('Update username "user1" to "Updated 1" and email "updated1@yuuki.com"', (done) => {
+			const USER_INDEX = 1;
+			const DATA = {
+				"user": {
+					"username": "Updated 1",
+					"email": "updated1@yuuki.com"
+				}
+			}
+			chai.request('http://localhost:' + port)
+				.put('/api/update')
+				.set('Content-Type', 'application/json')
+			 	.set('x-access-token', userJWTs[USER_INDEX])
+			  .send(DATA)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.have.property('username');
+					res.body.should.have.property('name');
+					res.body.should.have.property('email');
+					res.body.should.have.property('password');
+					res.body.username.should.be.eql('Updated 1');
+					res.body.name.should.be.eql(users[USER_INDEX].name);
+					res.body.email.should.be.eql('updated1@yuuki.com');
+					res.body.password.should.be.eql(users[USER_INDEX].password);
+					done();
+				});
+		});
+		it('Update all properties to "Updated 2"', (done) => {
+			const USER_INDEX = 2;
+			const DATA = {
+				"user": {
+					"username": "Updated 2",
+					"name": "Updated 2",
+					"email": "Updated 2",
+					"password": "Updated 2"
+				}
+			}
+			chai.request('http://localhost:' + port)
+				.put('/api/update')
+				.set('Content-Type', 'application/json')
+			 	.set('x-access-token', userJWTs[USER_INDEX])
+			  .send(DATA)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.have.property('username');
+					res.body.should.have.property('name');
+					res.body.should.have.property('email');
+					res.body.should.have.property('password');
+					res.body.username.should.be.eql('Updated 2');
+					res.body.name.should.be.eql('Updated 2');
+					res.body.email.should.be.eql('Updated 2');
+					res.body.password.should.be.eql('Updated 2');
+					done();
+				});
+		});
+		it('it should return error if try to set duplicate username', (done) => {
+			const data = {
+				"name": ""
+			}
+			chai.request('http://localhost:' + port)
+				.put('/api/update')
+				.set('Content-Type', 'application/json')
+				.set('x-access-token', userJWTs[0])
+			  .send(data)
+				.end((err, res) => {
+					res.should.have.status(2000);
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message')
+					res.body.message.should.contain("No data to update");
+					done();
+				});
+		});
+		it('it should return error if one value is empty', (done) => {
+			const data = {
+				"name": ""
+			}
+			chai.request('http://localhost:' + port)
+				.put('/api/update')
+				.set('Content-Type', 'application/json')
+				.set('x-access-token', userJWTs[0])
+			  .send(data)
+				.end((err, res) => {
+					res.should.have.status(2000);
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message')
+					res.body.message.should.contain("No data to update");
+					done();
+				});
+		});
+		it('it should return error if json is empty', (done) => {
+			chai.request('http://localhost:' + port)
+				.put('/api/update')
+				.set('Content-Type', 'application/json')
+				.set('x-access-token', userJWTs[0])
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message')
+					res.body.message.should.contain("No data to update");
+					done();
+				});
+		});
+		it('it should return error if no json is sent', (done) => {
+			chai.request('http://localhost:' + port)
+				.put('/api/update')
+				.set('Content-Type', 'application/json')
+				.set('x-access-token', userJWTs[0])
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message')
+					res.body.message.should.contain("No data to update");
 					done();
 				});
 		});

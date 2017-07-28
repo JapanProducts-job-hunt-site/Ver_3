@@ -287,7 +287,12 @@ apiRoutes.get('/', function(req, res) {
 // This route is to update student account information 
 // ---------------------------------------------------------
 apiRoutes.put('/update', function(req, res) {
-	console.log('Update' + req.body.user.name)
+	if(!req.body.user) {
+		return res.json({
+			success: false,
+			message: "No data to update"
+		})
+	}
 	User.findOneAndUpdate(
 		//Query
 	  { _id: req.decoded.user._id },
@@ -295,6 +300,7 @@ apiRoutes.put('/update', function(req, res) {
 		{
 			$set: req.body.user 
 		},
+		// When true the return is updated data
 		{ new: true },
 		(err, updated) => {
 			if(err) {
@@ -311,20 +317,6 @@ apiRoutes.put('/update', function(req, res) {
 				res.json(updated);
 			}
 		}
-		// (err, original) => {
-		// 	 	if(err) {
-		// 	 		res.json(err);
-		// 	 	} else {
-		// 	 		User.findOne({_id: req.decoded.user._id}, (err, updated) => {
-		// 	 			if(err) {
-		// 	 				res.json(err);
-		// 	 			} else {
-		// 	 				res.json(updated);
-		// 	 			}
-		// 	 		});
-		// 	 	}
-		// 	 }
-		// );
 	);
 });
 
