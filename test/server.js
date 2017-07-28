@@ -931,20 +931,24 @@ describe('Update student information', () => {
 					done();
 				});
 		});
-		it('it should return error if one value is empty', (done) => {
-			const data = {
-				"name": ""
+		it('Should return if one value is empty', (done) => {
+			const USER_INDEX = 3;
+			const DATA = {
+				"user": {
+					"username": "",
+				}
 			}
 			chai.request('http://localhost:' + port)
 				.put('/api/update')
 				.set('Content-Type', 'application/json')
-				.set('x-access-token', userJWTs[0])
-			  .send(data)
+			 	.set('x-access-token', userJWTs[USER_INDEX])
+			  .send(DATA)
 				.end((err, res) => {
-					res.should.have.status(2000);
-					res.body.should.have.property('success').that.to.be.false;
-					res.body.should.have.property('message')
-					res.body.message.should.contain("No data to update");
+					res.should.have.status(200);
+					console.log(res.body);
+					res.body.should.have.property('message');
+					res.body.message.should.contain('duplicate key error');
+					res.body.message.should.contain('username');
 					done();
 				});
 		});
