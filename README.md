@@ -46,7 +46,7 @@ Send this
  * username
  * password
 
-Return JSON web token if authorization susscesful
+Return updated user JSON if authorization susscesful
  
 ## To update user information
 
