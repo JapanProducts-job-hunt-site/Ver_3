@@ -89,6 +89,7 @@ var apiRoutes = express.Router();
 
 apiRoutes.post('/register', function(req, res) {
 
+	console.log('In register ' + req.body.username)
 	// create a sample user
 	var newUser = new User({ 
 		username: req.body.username, 

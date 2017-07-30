@@ -42,6 +42,6 @@
 		"watch": "riot -w --type es6 client/app client/dist",
 		"browsersync": "browser-sync start --server --files 'client/dist/*.js, client/app/*.html' --startPath app",
 		"serve": "parallelshell 'npm run watch' 'npm run browsersync'",
-		"riot":"riot -w --type es6 ./client/app ./client/dist"
+		"riot": "riot -w --type es6 ./client/app ./client/dist/bundle.js"
 	}
 }

@@ -1,31 +1,39 @@
 <SignUp>
 	<h1>Sign Up</h1>
-
-	<input ref="username" placeholder="Enter your username">
-	<input ref="name" placeholder="Enter your name">
-	<input ref="password" placeholder="Enter your password">
-	<input ref="email" placeholder="Enter your email">
-	<button onclick='{submit}'>Sign Up</button>
+  
+		<input ref="username"  placeholder="Enter your username">
+		<input ref="name"  placeholder="Enter your name">
+		<input ref="password"  placeholder="Enter your password">
+		<input ref="email"  placeholder="Enter your email">
+		<input onclick={ submit } type="submit" value="Submit">
 
 	<script type='es6'>
-		this.submit = () => {
-			console.log('Clicked submit' + this.refs.username.value)
+		this.submit = (e) => {
+      console.log('Submit clicked ' + this.refs.username.value)
 
-			const url = '/test'
+			const url = '/api/register';
 			const xhr = new XMLHttpRequest();
+			// const data = FormData(formData);
 
-			xhr.open("GET", '/test', true);
+			xhr.open('POST', url, true);
 
-			//Send the proper header information along with the request
+			// //Send the proper header information along with the request
 			xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-			xhr.onreadystatechange = function() {//Call a function when the state changes.
+			// //Call a function when the state changes.
+			xhr.onreadystatechange = () => {
 				if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
 					// Request finished. Do processing here.
-          console.log('Response ' + xhr.responseText)
+						console.log('Response ' + xhr.responseText)
+				} else if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 403) {
+						console.log('Response ' + xhr.responseText)
 				}
 			}
-      xhr.send();
+			xhr.send(this.queryStringify(this.refs.username.value, this.refs.name.value, this.refs.password.value, this.refs.email.value));
 		}
+
+    this.queryStringify = (username, name, password, email) => {
+      return `username=${username}&name=${name}&email=${email}&password=${password}`
+    }
 	</script>
 </SignUp>
