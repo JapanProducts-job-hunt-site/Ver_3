@@ -5,10 +5,8 @@
 		<title>Hello World</title>
 	</head>
 	<body>
-        <div id="here">Mount here</div>
-        <div class="hereclass">Mount here</div>
 
-		<App></App>
+		<div id="app-view"></div>
 
 		<!-- include riot.js -->
 		<script src="/scripts/riot/riot.min.js"></script>
@@ -16,7 +14,9 @@
 		<script src="/dist/bundle.js"></script>
 
 		<script>
-		    riot.mount('App')
+			window.onload = () => {
+				riot.mount('div#app-view', 'app')
+			}
 		</script>
 	</body>
 </html>
