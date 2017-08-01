@@ -10,7 +10,7 @@
       localStorage.removeItem('token');
 			// go to dashboard page after logging in
 			route('login')
-      // riot.update();
+      riot.update();
     }
   </script>
 </LogOut>
