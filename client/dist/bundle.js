@@ -1,4 +1,4 @@
-riot.tag2('app', '<div id="nav-tag"></div> <div id="content-tag"></div>', '', '', function(opts) {
+riot.tag2('app', '<div id="nav-tag"></div> <div class="container"> <div id="content-tag"></div> <div id="footer-tag"></div> </div>', '', '', function(opts) {
 'use strict';
 
 var _this = this;
@@ -9,6 +9,7 @@ this.is_authenticated = function () {
 
 this.on('mount', function () {
 	riot.mount('#nav-tag', 'navi', { is_authenticated: _this.is_authenticated });
+	riot.mount('#footer-tag', 'footer-tag');
 	route.start(true);
 });
 
@@ -84,7 +85,10 @@ this.on('mount', function () {
 });
 });
 
-riot.tag2('landing', '<h1>Landing</h1>', '', '', function(opts) {
+riot.tag2('footer-tag', '<footer> <div class="row"> <div class="col-lg-12"> <p>Copyright &copy; Job Hunt 2017</p> </div> </div> </footer>', '', '', function(opts) {
+});
+
+riot.tag2('landing', '<header class="jumbotron hero-spacer"> <h1>Job Hunt</h1> <p>Explain Job Hunt Page</p> <p><a href="#signup" class="btn btn-primary btn-large">Sign Up Now!</a></p> </header> <hr> <div class="row"> <div class="col-lg-12"> <h3>Latest Features</h3> </div> </div> <div class="row text-center"> <div class="col-md-3 col-sm-6 hero-feature"> <div class="thumbnail"> <img src="http://placehold.it/800x500" alt=""> <div class="caption"> <h3>Feature Label</h3> <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p> <p> <a href="#" class="btn btn-primary">Buy Now!</a> <a href="#" class="btn btn-default">More Info</a> </p> </div> </div> </div> <div class="col-md-3 col-sm-6 hero-feature"> <div class="thumbnail"> <img src="http://placehold.it/800x500" alt=""> <div class="caption"> <h3>Feature Label</h3> <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p> <p> <a href="#" class="btn btn-primary">Buy Now!</a> <a href="#" class="btn btn-default">More Info</a> </p> </div> </div> </div> <hr class="featurette-divider"> <div class="row featurette"> <div class="col-md-7"> <h2 class="featurette-heading">First featurette heading. <span class="text-muted">It\'ll blow your mind.</span></h2> <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p> </div> <div class="col-md-5"> <img class="featurette-image img-responsive center-block" src="http://placehold.it/500x500" alt="Generic placeholder image"> </div> </div> <hr class="featurette-divider"> <div class="row featurette"> <div class="col-md-7 col-md-push-5"> <h2 class="featurette-heading">Oh yeah, it\'s that good. <span class="text-muted">See for yourself.</span></h2> <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p> </div> <div class="col-md-5 col-md-pull-7"> <img class="featurette-image img-responsive center-block" data-src="holder.js/500x500/auto" alt="Generic placeholder image"> </div> </div> <hr class="featurette-divider"> <div class="row featurette"> <div class="col-md-7"> <h2 class="featurette-heading">And lastly, this one. <span class="text-muted">Checkmate.</span></h2> <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p> </div> <div class="col-md-5"> <img class="featurette-image img-responsive center-block" data-src="holder.js/500x500/auto" alt="Generic placeholder image"> </div> </div> <hr class="featurette-divider"> </div> <hr>', '', '', function(opts) {
 });
 
 riot.tag2('login', '<h1>Log In</h1> <input ref="username" placeholder="Enter your username"> <input ref="password" placeholder="Enter your password"> <input onclick="{submit}" type="submit" value="Log In">', '', '', function(opts) {
@@ -141,12 +145,11 @@ this.submit = function () {
 };
 });
 
-riot.tag2('navi', '<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"> <div class="container"> <div class="navbar-header"> <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> <a class="navbar-brand" href="#">Job Hunt Japan</a> </div> <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1"> <ul if="{opts.is_authenticated()}" class="nav navbar-nav"> <li> <a href="#companies">Companies</a> </li> <li> <a href="#dashboard">Dashboard</a> </li> <li> <a href="#logout">Log Out</a> </li> </ul> <ul if="{opts.is_authenticated() === false}" class="nav navbar-nav"> <li> <a href="#landing">Landing</a> </li> <li> <a href="#signup">Sign Up</a> </li> <li> <a href="#login">Log In</a> </li> <li> <a href="#company">You are not student</a> </li> </ul> </div> </div> </nav>', '', '', function(opts) {
+riot.tag2('navi', '<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"> <div class="container"> <div class="navbar-header"> <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> <a class="navbar-brand" href="#">Job Hunt Japan</a> </div> <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1"> <ul if="{opts.is_authenticated()}" class="nav navbar-nav"> <li> <a href="#companies">Companies</a> </li> <li> <a href="#dashboard">Dashboard</a> </li> <li> <a href="#logout">Log Out</a> </li> </ul> <ul if="{opts.is_authenticated() === false}" class="nav navbar-nav"> <li> <a href="#landing">Landing</a> </li> <li> <a href="#signup">Sign Up</a> </li> <li> <a href="#login">Log In</a> </li> <li> <a href="#company">Hiring?</a> </li> </ul> </div> </div> </nav>', '', '', function(opts) {
 'use strict';
 
 this.on('mount', function () {
 	riot.mount('#login-tag', 'login');
-	console.log(opts.is_authenticated());
 });
 });
 

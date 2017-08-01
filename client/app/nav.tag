@@ -36,7 +36,7 @@
 						<a href="#login">Log In</a>
 					</li>
 					<li>
-						<a href="#company">You are not student</a>
+						<a href="#company">Hiring?</a>
 					</li>
 				</ul>
 			</div>
@@ -47,6 +47,5 @@
 
 	this.on('mount', () => {
 		riot.mount('#login-tag', 'login')
-    console.log(opts.is_authenticated())
 	})
 </navi>
