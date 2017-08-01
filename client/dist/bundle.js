@@ -46,34 +46,41 @@ var _this = this;
 
 // Right after the tag is mounted
 this.on('mount', function () {
-	console.log('Dashboard mounted');
+  console.log('Dashboard mounted');
 
-	var url = '/api/user';
-	var xhr = new XMLHttpRequest();
+  // Check if token exist
+  // if not exist
+  if (localStorage.getItem('token') === null) {
+    route('login');
+  }
 
-	xhr.open('GET', url, true);
-	// //Send the proper header information along with the request
-	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhr.setRequestHeader("x-access-token", localStorage.getItem('token'));
+  var url = '/api/user';
+  var xhr = new XMLHttpRequest();
 
-	// //Call a function when the state changes.
-	xhr.onreadystatechange = function () {
-		if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
-			// Request finished. Do processing here.
-			var responseObject = JSON.parse(xhr.response);
+  xhr.open('GET', url, true);
+  // //Send the proper header information along with the request
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.setRequestHeader("x-access-token", localStorage.getItem('token'));
 
-			_this.name = responseObject.name;
-			_this.username = responseObject.username;
-			_this.password = responseObject.password;
-			_this.email = responseObject.email;
+  // //Call a function when the state changes.
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+      // Request finished. Do processing here.
+      var responseObject = JSON.parse(xhr.response);
 
-			console.log('JSON' + responseObject.name);
-			_this.update();
-		} else if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 403) {
-			console.log('Response ' + xhr.responseText);
-		}
-	};
-	xhr.send();
+      _this.name = responseObject.name;
+      _this.username = responseObject.username;
+      _this.password = responseObject.password;
+      _this.email = responseObject.email;
+
+      console.log('JSON' + responseObject.name);
+      _this.update();
+    } else if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 403) {
+      console.log('Response ' + xhr.responseText);
+      route('login');
+    }
+  };
+  xhr.send();
 });
 });
 
@@ -106,6 +113,9 @@ this.submit = function (e) {
 			localStorage.setItem('token', JWT);
 			riot.update();
 			console.log('JWT ' + JWT);
+
+			// go to dashboard page after logging in
+			route('dashboard');
 		} else if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 403) {
 			console.log('Response ' + xhr.responseText);
 		}
@@ -125,7 +135,9 @@ var self = this;
 this.submit = function () {
   console.log('Log Out clicked');
   localStorage.removeItem('token');
-  riot.update();
+  // go to dashboard page after logging in
+  route('login');
+  // riot.update();
 };
 });
 

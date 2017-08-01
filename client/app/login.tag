@@ -27,6 +27,9 @@
           localStorage.setItem('token', JWT);
           riot.update();
 					console.log('JWT ' + JWT)
+
+          // go to dashboard page after logging in
+          route('dashboard')
 				} else if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 403) {
 					console.log('Response ' + xhr.responseText)
 				}

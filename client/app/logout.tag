@@ -8,7 +8,9 @@
     this.submit = () => {
       console.log('Log Out clicked')
       localStorage.removeItem('token');
-      riot.update();
+			// go to dashboard page after logging in
+			route('login')
+      // riot.update();
     }
   </script>
 </LogOut>

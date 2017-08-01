@@ -11,6 +11,12 @@
     // Right after the tag is mounted
     this.on('mount', () => {
       console.log('Dashboard mounted')
+     
+      // Check if token exist
+      // if not exist
+      if(localStorage.getItem('token') === null) {
+        route('login')
+      }
        
 			const url = '/api/user';
 			const xhr = new XMLHttpRequest();
@@ -35,6 +41,7 @@
           this.update();
 				} else if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 403) {
 					console.log('Response ' + xhr.responseText)
+					route('login')
 				}
 			}
 			xhr.send();
