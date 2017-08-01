@@ -4,8 +4,12 @@
 	<div id="content-tag"></div>
 
 	<script type='es6'>
+    this.is_authenticated = () => {
+			return localStorage.getItem('token') !== null;
+		}
+
     this.on('mount', () => {
-			riot.mount('#nav-tag', 'navi')
+			riot.mount('#nav-tag', 'navi', {is_authenticated: this.is_authenticated})
 			route.start(true)
     })
 
@@ -14,8 +18,8 @@
 				riot.mount('#content-tag', 'landing')
 			} else if (path === "companies"){
 				riot.mount('#content-tag', 'companies')
-			} else if (path === "profile"){
-				riot.mount('#content-tag', 'profile')
+			} else if (path === "dashboard"){
+				riot.mount('#content-tag', 'dashboard')
 			} else if (path === "logout"){
 				riot.mount('#content-tag', 'logout')
 			} else if (path === "signup"){

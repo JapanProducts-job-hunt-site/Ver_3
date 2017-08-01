@@ -1,8 +1,14 @@
 riot.tag2('app', '<div id="nav-tag"></div> <div id="content-tag"></div>', '', '', function(opts) {
 'use strict';
 
+var _this = this;
+
+this.is_authenticated = function () {
+	return localStorage.getItem('token') !== null;
+};
+
 this.on('mount', function () {
-	riot.mount('#nav-tag', 'navi');
+	riot.mount('#nav-tag', 'navi', { is_authenticated: _this.is_authenticated });
 	route.start(true);
 });
 
@@ -11,8 +17,8 @@ route(function (path) {
 		riot.mount('#content-tag', 'landing');
 	} else if (path === "companies") {
 		riot.mount('#content-tag', 'companies');
-	} else if (path === "profile") {
-		riot.mount('#content-tag', 'profile');
+	} else if (path === "dashboard") {
+		riot.mount('#content-tag', 'dashboard');
 	} else if (path === "logout") {
 		riot.mount('#content-tag', 'logout');
 	} else if (path === "signup") {
@@ -123,11 +129,12 @@ this.submit = function () {
 };
 });
 
-riot.tag2('navi', '<a href="#companies">Companies</a> <a href="#profile">Profile</a> <a href="#logout">Log Out</a> <a href="#landing">Landing</a> <a href="#signup">Sign Up</a> <a href="#login">Log In</a> <a href="#company">You are not student</a>', '', '', function(opts) {
+riot.tag2('navi', '<div if="{opts.is_authenticated()}"> <a href="#companies">Companies</a> <a href="#dashboard">Dashboard</a> <a href="#logout">Log Out</a> </div> <div if="{opts.is_authenticated() === false}"> <a href="#landing">Landing</a> <a href="#signup">Sign Up</a> <a href="#login">Log In</a> <a href="#company">You are not student</a> </div>', '', '', function(opts) {
 'use strict';
 
 this.on('mount', function () {
 	riot.mount('#login-tag', 'login');
+	console.log(opts.is_authenticated());
 });
 });
 
