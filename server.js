@@ -45,6 +45,7 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname + '/client/app'));
 app.use('/dist', express.static(__dirname + '/client/dist'));
 app.use('/scripts', express.static(__dirname + '/node_modules/'));
+app.use('/static', express.static(__dirname + '/client/static/'));
 
 
 app.get('/test', (req, res) => {
