@@ -1,4 +1,4 @@
-riot.tag2('app', '<h1>From App</h1> <div id="nav-tag"></div> <div id="content-tag"></div>', '', '', function(opts) {
+riot.tag2('app', '<div id="nav-tag"></div> <div id="content-tag"></div>', '', '', function(opts) {
 'use strict';
 
 this.on('mount', function () {
@@ -7,14 +7,30 @@ this.on('mount', function () {
 });
 
 route(function (path) {
-	if (path === "signup") {
+	if (path === "landing") {
+		riot.mount('#content-tag', 'landing');
+	} else if (path === "companies") {
+		riot.mount('#content-tag', 'companies');
+	} else if (path === "profile") {
+		riot.mount('#content-tag', 'profile');
+	} else if (path === "logout") {
+		riot.mount('#content-tag', 'logout');
+	} else if (path === "signup") {
 		riot.mount('#content-tag', 'signup');
+	} else if (path === "login") {
+		riot.mount('#content-tag', 'login');
 	} else if (path === "company") {
 		riot.mount('#content-tag', 'company');
 	} else {
-		riot.mount('#content-tag', 'signup');
+		riot.mount('#content-tag', 'landing');
 	}
 });
+});
+
+riot.tag2('companies', '<h1>Companies</h1>', '', '', function(opts) {
+});
+
+riot.tag2('company', '<h1>Company</h1>', '', '', function(opts) {
 });
 
 riot.tag2('dashboard', '<h1>Dashboard</h1> <h2>You are logged in</h2> <p>Name : {name}</p> <p>Username : {username}</p> <p>Password : {password}</p> <p>email : {email}</p>', '', '', function(opts) {
@@ -53,6 +69,9 @@ this.on('mount', function () {
 	};
 	xhr.send();
 });
+});
+
+riot.tag2('landing', '<h1>Landing</h1>', '', '', function(opts) {
 });
 
 riot.tag2('login', '<h1>Log In</h1> <input ref="username" placeholder="Enter your username"> <input ref="password" placeholder="Enter your password"> <input onclick="{submit}" type="submit" value="Log In">', '', '', function(opts) {
@@ -104,7 +123,15 @@ this.submit = function () {
 };
 });
 
-riot.tag2('navi', '<a href="#">Home</a> <a href="#signup">Sign Up</a> <a href="#company">You are not student</a>', '', '', function(opts) {
+riot.tag2('navi', '<a href="#companies">Companies</a> <a href="#profile">Profile</a> <a href="#logout">Log Out</a> <a href="#landing">Landing</a> <a href="#signup">Sign Up</a> <a href="#login">Log In</a> <a href="#company">You are not student</a>', '', '', function(opts) {
+'use strict';
+
+this.on('mount', function () {
+	riot.mount('#login-tag', 'login');
+});
+});
+
+riot.tag2('profile', '<h1>Profile</h1>', '', '', function(opts) {
 });
 
 riot.tag2('signup', '<h1>Sign Up</h1> <input ref="username" placeholder="Enter your username"> <input ref="name" placeholder="Enter your name"> <input ref="password" placeholder="Enter your password"> <input ref="email" placeholder="Enter your email"> <input onclick="{submit}" type="submit" value="Submit">', '', '', function(opts) {

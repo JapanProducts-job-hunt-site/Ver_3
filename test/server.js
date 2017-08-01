@@ -36,15 +36,11 @@ describe('User', () => {
 	//                  GET /                //
 	///////////////////////////////////////////
 	describe('GET /', () => {
-		it('it should say Hello', (done) => {
+		it('it should return 200', (done) => {
 			chai.request('http://localhost:' + port)
 				.get('/')    
 				.end((err, res) => {
 					res.should.have.status(200);
-					res.body.should.be.a('object');
-					res.should.have.property('text');
-					res.text.should.be.a('string');
-					res.text.should.include('Hello!');
 					done();
 				});
 		});
