@@ -50,6 +50,12 @@
 	this.submit = (e) => {
 		console.log('Submit clicked ' + this.refs.username.value)
 
+  // this.jsonData("Update username", "Update name","Update password","Update email")
+  // this.jsonData("", "Update name","Update password","Update email")
+  // this.jsonData("", "Update name","","Update email")
+  // this.jsonData(null, "Update name","Update password","Update email")
+  // this.jsonData(null, "Update name", null,"Update email")
+
 		const url = '/api/users';
 		const xhr = new XMLHttpRequest();
 
@@ -57,27 +63,41 @@
 
 		// //Send the proper header information along with the request
 		xhr.setRequestHeader("Content-type", "application/json");
+		xhr.setRequestHeader("x-access-token", localStorage.getItem('token'));
 
 		// //Call a function when the state changes.
 		xhr.onreadystatechange = () => {
 			if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
 				// Request finished. Do processing here.
 				console.log('Response ' + xhr.responseText)
+        this.update();
 			} else if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 403) {
 				console.log('Response ' + xhr.responseText)
 			}
 		}
-		xhr.send(this.queryStringify(this.refs.username.value, this.refs.name.value, this.refs.password.value, this.refs.email.value));
+		xhr.send(this.jsonData(this.refs.username.value, this.refs.name.value, this.refs.password.value, this.refs.email.value));
 	}
 
-	this.queryStringify = (username, name, password, email) => {
+	this.jsonData = (username, name, password, email) => {
+    const arr = []    
     let updateJson = '{ "user": {'
     if (username) {
-      updateJson+= `"username": ${username} `
+      arr.push(`"username": "${username}"`)
+    }
+    if (name) {
+      arr.push(`"name": "${name}"`)
+    }
+    if (password) {
+      arr.push(`"password": "${password}"`)
+    }
+    if (email) {
+      arr.push(`"email": "${email}"`)
     }
 
+    updateJson+= arr.join();
     updateJson+='} }'
-		return `username=${username}&name=${name}&email=${email}&password=${password}`
+    console.log("updateJson" + updateJson)
+    return updateJson
 	}
 
 // Right after the tag is mounted

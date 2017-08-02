@@ -295,6 +295,7 @@ apiRoutes.get('/', function(req, res) {
 // This route is to update student account information 
 // ---------------------------------------------------------
 apiRoutes.put('/users', function(req, res) {
+	console.log('JSON' + req)
 	if(!req.body.user) {
 		return res.json({
 			success: false,
