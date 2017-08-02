@@ -12,8 +12,15 @@ npm install
 npm start
 ```
 
-
 # API List
+
+```
+POST /api/register
+POST /api/authenticate
+PUT  /api/users
+GET  /api/users
+GET  /api/user
+```
 
 ## To create user (Sign up)
 
@@ -51,7 +58,7 @@ Return JWT if authorization susscesful
 ## To update user information
 
 ```
-http://localhost:8080/api/update
+PUT /api/users
 ```
 
 Send this
