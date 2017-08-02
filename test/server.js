@@ -865,7 +865,8 @@ describe('Update student information', () => {
 		});
 	});
 
-	describe('GET /api/update', () => {
+	const URI = "/api/users" 
+	describe('GET ' + URI, () => {
 		it('Update username "user0" to "Updated"', (done) => {
 			const USER_INDEX = 0;
 			const DATA = {
@@ -874,7 +875,7 @@ describe('Update student information', () => {
 				}
 			}
 			chai.request('http://localhost:' + port)
-				.put('/api/update')
+				.put(URI)
 				.set('Content-Type', 'application/json')
 			 	.set('x-access-token', userJWTs[USER_INDEX])
 			  .send(DATA)
@@ -900,7 +901,7 @@ describe('Update student information', () => {
 				}
 			}
 			chai.request('http://localhost:' + port)
-				.put('/api/update')
+				.put(URI)
 				.set('Content-Type', 'application/json')
 			 	.set('x-access-token', userJWTs[USER_INDEX])
 			  .send(DATA)
@@ -928,7 +929,7 @@ describe('Update student information', () => {
 				}
 			}
 			chai.request('http://localhost:' + port)
-				.put('/api/update')
+				.put(URI)
 				.set('Content-Type', 'application/json')
 			 	.set('x-access-token', userJWTs[USER_INDEX])
 			  .send(DATA)
@@ -956,7 +957,7 @@ describe('Update student information', () => {
 				}
 			}
 			chai.request('http://localhost:' + port)
-				.put('/api/update')
+				.put(URI)
 				.set('Content-Type', 'application/json')
 			 	.set('x-access-token', userJWTs[USER_INDEX])
 			  .send(DATA)
@@ -976,7 +977,7 @@ describe('Update student information', () => {
 				}
 			}
 			chai.request('http://localhost:' + port)
-				.put('/api/update')
+				.put(URI)
 				.set('Content-Type', 'application/json')
 			 	.set('x-access-token', userJWTs[USER_INDEX])
 			  .send(DATA)
@@ -996,7 +997,7 @@ describe('Update student information', () => {
 				}
 			}
 			chai.request('http://localhost:' + port)
-				.put('/api/update')
+				.put(URI)
 				.set('Content-Type', 'application/json')
 			 	.set('x-access-token', userJWTs[USER_INDEX])
 			  .send(DATA)
@@ -1016,7 +1017,7 @@ describe('Update student information', () => {
 				}
 			}
 			chai.request('http://localhost:' + port)
-				.put('/api/update')
+				.put(URI)
 				.set('Content-Type', 'application/json')
 			 	.set('x-access-token', userJWTs[USER_INDEX])
 			  .send(DATA)
@@ -1036,7 +1037,7 @@ describe('Update student information', () => {
 				}
 			}
 			chai.request('http://localhost:' + port)
-				.put('/api/update')
+				.put(URI)
 				.set('Content-Type', 'application/json')
 			 	.set('x-access-token', userJWTs[USER_INDEX])
 			  .send(DATA)
@@ -1056,7 +1057,7 @@ describe('Update student information', () => {
 				}
 			}
 			chai.request('http://localhost:' + port)
-				.put('/api/update')
+				.put(URI)
 				.set('Content-Type', 'application/json')
 			 	.set('x-access-token', userJWTs[USER_INDEX])
 			  .send(DATA)
@@ -1076,7 +1077,7 @@ describe('Update student information', () => {
 				}
 			}
 			chai.request('http://localhost:' + port)
-				.put('/api/update')
+				.put(URI)
 				.set('Content-Type', 'application/json')
 			 	.set('x-access-token', userJWTs[USER_INDEX])
 			  .send(DATA)
@@ -1091,7 +1092,7 @@ describe('Update student information', () => {
 		it('it should return error if json is empty', (done) => {
 			const DATA = {}
 			chai.request('http://localhost:' + port)
-				.put('/api/update')
+				.put(URI)
 				.set('Content-Type', 'application/json')
 				.set('x-access-token', userJWTs[0])
 			  .send(DATA)
@@ -1105,7 +1106,7 @@ describe('Update student information', () => {
 		});
 		it('it should return error if no json is sent', (done) => {
 			chai.request('http://localhost:' + port)
-				.put('/api/update')
+				.put(URI)
 				.set('Content-Type', 'application/json')
 				.set('x-access-token', userJWTs[0])
 				.end((err, res) => {
