@@ -1,9 +1,7 @@
 <footer-tag>
-	<!-- Footer -->
-	<footer>
-		<div class="row">
-			<div class="col-lg-12">
-				<p>Copyright &copy; Job Hunt 2017</p> </div>
+	<footer class="footer">
+		<div class="container">
+			<p class="text-muted">Place sticky footer content here.</p>
 		</div>
 	</footer>
 </footer-tag>

@@ -122,9 +122,9 @@ apiRoutes.post('/register', function(req, res) {
 apiRoutes.post('/authenticate', function(req, res) {
 
 	if(!req.body.username){
-		return res.json({ success: false, message: 'Authentication failed. Enter username.' });
+		return res.status(403).json({ success: false, message: 'Authentication failed. Enter username.' });
 	} else if(!req.body.password){
-		return res.json({ success: false, message: 'Authentication failed. Enter password.' });
+		return res.status(403).json({ success: false, message: 'Authentication failed. Enter password.' });
 	}
 
 	// find the user
@@ -140,12 +140,12 @@ apiRoutes.post('/authenticate', function(req, res) {
 		};
 
 		if (!user) {
-			res.json({ success: false, message: 'Authentication failed. Username not found.' });
+			res.status(403).send({ success: false, message: 'Authentication failed. Username not found.' });
 		} else if (user) {
 
 			// check if password matches
 			if (user.password != req.body.password) {
-				res.json({ success: false, message: 'Authentication failed. Wrong password.' });
+				res.status(403).json({ success: false, message: 'Authentication failed. Wrong password.' });
 			} else {
 
 				// if user is found and password is right
