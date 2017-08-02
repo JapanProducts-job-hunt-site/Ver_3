@@ -155,7 +155,7 @@ this.on('mount', function () {
 });
 });
 
-riot.tag2('setting', '<head> <link href="/static/css/dashboard.css" rel="stylesheet"> </head> <div class="container-fluid"> <div class="row"> <div class="col-sm-3 col-md-2 sidebar"> <ul class="nav nav-sidebar"> <li class="active"><a href="#">Profile<span class="sr-only">(current)</span></a></li> <li><a href="#">Password</a></li> <li><a href="#">Another setting</a></li> </ul> <ul class="nav nav-sidebar"> <li><a href="">Nav item</a></li> <li><a href="">Another nav item</a></li> </ul> </div> <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"> <h1 class="page-header">Setting</h1> <form class="form-signin"> <h2 class="form-signin-heading">Public profile</h2> <label for="inputName">Name</label> <input ref="name" type="text" id="inputName" class="form-control" placeholder="{name}"> <label for="inputUsername">Username</label> <input ref="username" type="text" id="inputUsername" class="form-control" placeholder="{username}"> <label for="inputEmail">Email address</label> <input ref="email" id="inputEmail" class="form-control" placeholder="{email}" type="email"> <label for="inputPassword">Password</label> <input ref="password" type="password" id="inputPassword" class="form-control"> <button class="btn btn-lg btn-primary btn-block" onclick="{submit}" type="submit">Update Changes</button> </form> </div> </div> </div>', '', '', function(opts) {
+riot.tag2('setting', '<head> <link href="/static/css/dashboard.css" rel="stylesheet"> </head> <div class="container-fluid"> <div class="row"> <div class="col-sm-3 col-md-2 sidebar"> <ul class="nav nav-sidebar"> <li class="active"><a href="#">Profile<span class="sr-only">(current)</span></a></li> <li><a href="#">Password</a></li> <li><a href="#">Another setting</a></li> </ul> <ul class="nav nav-sidebar"> <li><a href="">Nav item</a></li> <li><a href="">Another nav item</a></li> </ul> </div> <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"> <h1 class="page-header">Setting</h1> <form role="form" data-toggle="validator" class="form-signin"> <h2 class="form-signin-heading">Public profile</h2> <label for="inputName">Name</label> <input ref="name" type="text" id="inputName" class="form-control" placeholder="{name}"> <label for="inputUsername">Username</label> <input ref="username" type="text" id="inputUsername" class="form-control" placeholder="{username}"> <label for="inputEmail">Email address</label> <input ref="email" id="inputEmail" class="form-control" placeholder="{email}" type="email"> <label for="inputPassword">Password</label> <input ref="password" type="password" id="inputPassword" class="form-control"> <label for="inputPassword">Confirm Password</label> <input ref="password2" type="password" id="inputPassword2" class="form-control"> <button class="btn btn-lg btn-primary" onclick="{submit}" type="submit">Update Changes</button> </form> </div> </div> </div>', '', '', function(opts) {
 'use strict';
 
 var _this = this;
@@ -163,12 +163,6 @@ var _this = this;
 //Ajax call for updading profile
 this.submit = function (e) {
 	console.log('Submit clicked ' + _this.refs.username.value);
-
-	// this.jsonData("Update username", "Update name","Update password","Update email")
-	// this.jsonData("", "Update name","Update password","Update email")
-	// this.jsonData("", "Update name","","Update email")
-	// this.jsonData(null, "Update name","Update password","Update email")
-	// this.jsonData(null, "Update name", null,"Update email")
 
 	var url = '/api/users';
 	var xhr = new XMLHttpRequest();
@@ -254,10 +248,14 @@ this.on('mount', function () {
 });
 });
 
-riot.tag2('signup', '<head> <link href="/static/css/signin.css" rel="stylesheet"> </head> <form class="form-signin"> <h2 class="form-signin-heading">Please sign up</h2> <label for="inputName" class="sr-only">Name</label> <input ref="name" type="text" id="inputName" class="form-control" placeholder="Name" required autofocus> <label for="inputUsername" class="sr-only">Username</label> <input ref="username" type="text" id="inputUsername" class="form-control" placeholder="Username" required> <label for="inputEmail" class="sr-only">Email address</label> <input ref="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus type="email"> <label for="inputPassword" class="sr-only">Password</label> <input ref="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required> <div class="checkbox"> <label> <input type="checkbox" value="remember-me"> Remember me </label> </div> <button class="btn btn-lg btn-primary btn-block" onclick="{submit}" type="submit">Sign up</button> </form>', '', '', function(opts) {
+riot.tag2('signup', '<head> <link href="/static/css/signin.css" rel="stylesheet"> </head> <form class="form-signin"> <h2 class="form-signin-heading">Please sign up</h2> <label for="inputName" class="sr-only">Name</label> <input ref="name" type="text" id="inputName" class="form-control" placeholder="Name" required autofocus> <label for="inputUsername" class="sr-only">Username</label> <input ref="username" type="text" id="inputUsername" class="form-control" placeholder="Username" required> <div class="form-group"> <label for="inputEmail" class="sr-only">Email address</label> <input ref="email" onkeyup="{validateEmail}" id="inputEmail" class="form-control" placeholder="Email address" required autofocus type="email"> <div> <label for="inputPassword" class="sr-only">Password</label> <input ref="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required> <label for="inputPassword" class="sr-only">Password</label> <input ref="password2" type="password" id="inputPassword2" class="form-control" placeholder="Confirm password" required> <div class="checkbox"> <label> <input type="checkbox" value="remember-me"> Remember me </label> </div> <button class="btn btn-lg btn-primary btn-block" onclick="{submit}" type="submit">Sign up</button> </form>', '', '', function(opts) {
 'use strict';
 
 var _this = this;
+
+this.validateEmail = function (e) {
+	console.log('Key up ' + validator.isEmail(_this.refs.email.value));
+};
 
 this.submit = function (e) {
 	console.log('Submit clicked ' + _this.refs.username.value);

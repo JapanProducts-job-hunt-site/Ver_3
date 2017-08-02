@@ -4,6 +4,9 @@
   <p>{ username }</p>
   <p>{ password }</p>
   <p>{ email }</p>
+
+
+<script type='es6'>
 	this.on('mount', () => {
 			console.log('Dashboard mounted')
 
@@ -41,4 +44,5 @@
 			}
 			xhr.send();
 	})
+</script>
 </profile>

@@ -9,6 +9,7 @@
 	<!-- /.container -->
 
 <script type='es6'>
+
 	this.is_authenticated = () => {
 		return localStorage.getItem('token') !== null;
 	}

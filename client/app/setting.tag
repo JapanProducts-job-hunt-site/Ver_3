@@ -21,7 +21,7 @@
 
 			<h1 class="page-header">Setting</h1>
 
-			<form class="form-signin">
+			<form role="form" data-toggle="validator" class="form-signin">
 				<h2 class="form-signin-heading">Public profile</h2>
 
 				<label for="inputName">Name</label>
@@ -36,7 +36,10 @@
 				<label for="inputPassword">Password</label>
 				<input ref="password" type="password" id="inputPassword" class="form-control">
 
-				<button class="btn btn-lg btn-primary btn-block" onclick={ submit } type="submit">Update Changes</button>
+				<label for="inputPassword">Confirm Password</label>
+				<input ref="password2" type="password" id="inputPassword2" class="form-control">
+
+				<button class="btn btn-lg btn-primary" onclick={ submit } type="submit">Update Changes</button>
 			</form>
 
 		</div> <!-- col-sm-9 -->
@@ -45,16 +48,9 @@
 
 
 <script type='es6'>
-
   //Ajax call for updading profile
 	this.submit = (e) => {
 		console.log('Submit clicked ' + this.refs.username.value)
-
-  // this.jsonData("Update username", "Update name","Update password","Update email")
-  // this.jsonData("", "Update name","Update password","Update email")
-  // this.jsonData("", "Update name","","Update email")
-  // this.jsonData(null, "Update name","Update password","Update email")
-  // this.jsonData(null, "Update name", null,"Update email")
 
 		const url = '/api/users';
 		const xhr = new XMLHttpRequest();
