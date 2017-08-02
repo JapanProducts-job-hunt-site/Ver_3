@@ -36,15 +36,11 @@ describe('User', () => {
 	//                  GET /                //
 	///////////////////////////////////////////
 	describe('GET /', () => {
-		it('it should say Hello', (done) => {
+		it('it should return 200', (done) => {
 			chai.request('http://localhost:' + port)
 				.get('/')    
 				.end((err, res) => {
 					res.should.have.status(200);
-					res.body.should.be.a('object');
-					res.should.have.property('text');
-					res.text.should.be.a('string');
-					res.text.should.include('Hello!');
 					done();
 				});
 		});
@@ -291,7 +287,7 @@ describe('User', () => {
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
-					res.should.have.status(200);
+					res.should.have.status(403);
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.false;
 					res.body.message.should.contain('Username not found');
@@ -308,7 +304,7 @@ describe('User', () => {
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
-					res.should.have.status(200);
+					res.should.have.status(403);
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.false;
 					res.body.message.should.contain('Wrong password');
@@ -325,7 +321,7 @@ describe('User', () => {
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
-					res.should.have.status(200);
+					res.should.have.status(403);
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.false;
 					res.body.message.should.contain('Enter username');
@@ -342,7 +338,7 @@ describe('User', () => {
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
-					res.should.have.status(200);
+					res.should.have.status(403);
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.false;
 					res.body.message.should.contain('Enter password');

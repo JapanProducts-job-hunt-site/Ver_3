@@ -5,19 +5,26 @@
 	"main": "config.js",
 	"dependencies": {
 		"body-parser": "^1.17.2",
+		"bootstrap": "^3.3.7",
 		"dotenv": "^4.0.0",
 		"express": "^4.15.3",
+		"jquery": "^3.2.1",
 		"jsonwebtoken": "^7.4.1",
 		"mongoose": "^4.11.2",
 		"morgan": "^1.8.2",
 		"react": "^15.6.1",
-		"react-dom": "^15.6.1"
+		"react-dom": "^15.6.1",
+		"riot": "^3.6.1",
+		"riot-route": "^3.1.2"
 	},
 	"devDependencies": {
 		"babel-core": "^6.25.0",
 		"babel-loader": "^7.1.1",
+		"babel-plugin-external-helpers": "^6.22.0",
 		"babel-preset-es2015": "^6.24.1",
+		"babel-preset-es2015-riot": "^1.1.0",
 		"babel-preset-react": "^6.24.1",
+		"browser-sync": "^2.18.13",
 		"chai": "^4.1.0",
 		"chai-http": "^3.0.0",
 		"eslint": "^3.19.0",
@@ -27,11 +34,17 @@
 		"eslint-plugin-react": "^7.1.0",
 		"mocha": "^3.4.2",
 		"nodemon": "^1.11.0",
+		"parallelshell": "^3.0.1",
 		"webpack": "^3.2.0"
 	},
 	"scripts": {
 		"test": "./node_modules/.bin/mocha --timeout 1000000",
 		"start": "./node_modules/.bin/nodemon server.js",
-		"bundle": "webpack"
+		"bundle": "webpack",
+		"compile": "riot --type es6 client/app client/dist",
+		"watch": "riot -w --type es6 client/app client/dist",
+		"browsersync": "browser-sync start --server --files 'client/dist/*.js, client/app/*.html' --startPath app",
+		"serve": "parallelshell 'npm run watch' 'npm run browsersync'",
+		"riot": "riot -w --type es6 ./client/app ./client/dist/bundle.js"
 	}
 }
