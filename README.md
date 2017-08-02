@@ -12,8 +12,15 @@ npm install
 npm start
 ```
 
-
 # API List
+
+```
+POST /api/register
+POST /api/authenticate
+PUT  /api/users
+GET  /api/users
+GET  /api/user
+```
 
 ## To create user (Sign up)
 
