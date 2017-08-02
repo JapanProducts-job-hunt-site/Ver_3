@@ -24,8 +24,10 @@
 			riot.mount('#content-tag', 'landing')
 		} else if (path === "companies"){
 			riot.mount('#content-tag', 'companies')
-		} else if (path === "dashboard"){
-			riot.mount('#content-tag', 'dashboard')
+		} else if (path === "profile"){
+			riot.mount('#content-tag', 'profile')
+		} else if (path === "setting"){
+			riot.mount('#content-tag', 'setting')
 		} else if (path === "logout"){
 			riot.mount('#content-tag', 'logout')
 		} else if (path === "signup"){

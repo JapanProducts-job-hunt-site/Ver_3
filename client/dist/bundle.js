@@ -18,8 +18,10 @@ route(function (path) {
 		riot.mount('#content-tag', 'landing');
 	} else if (path === "companies") {
 		riot.mount('#content-tag', 'companies');
-	} else if (path === "dashboard") {
-		riot.mount('#content-tag', 'dashboard');
+	} else if (path === "profile") {
+		riot.mount('#content-tag', 'profile');
+	} else if (path === "setting") {
+		riot.mount('#content-tag', 'setting');
 	} else if (path === "logout") {
 		riot.mount('#content-tag', 'logout');
 	} else if (path === "signup") {
@@ -38,80 +40,6 @@ riot.tag2('companies', '<h1>Companies</h1>', '', '', function(opts) {
 });
 
 riot.tag2('company', '<h1>Company</h1>', '', '', function(opts) {
-});
-
-riot.tag2('dashboard', '<head> <link href="/static/css/dashboard.css" rel="stylesheet"> </head> <div class="container-fluid"> <div class="row"> <div class="col-sm-3 col-md-2 sidebar"> <ul class="nav nav-sidebar"> <li class="active"><a href="#">Profile<span class="sr-only">(current)</span></a></li> <li><a href="#">Reports</a></li> <li><a href="#">Analytics</a></li> </ul> <ul class="nav nav-sidebar"> <li><a href="">Nav item</a></li> <li><a href="">Another nav item</a></li> </ul> </div> <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"> <h1 class="page-header">Dashboard</h1> <form class="form-signin"> <h2 class="form-signin-heading">Public profile</h2> <label for="inputName">Name</label> <input ref="name" type="text" id="inputName" class="form-control" placeholder="{name}"> <label for="inputUsername">Username</label> <input ref="username" type="text" id="inputUsername" class="form-control" placeholder="{username}"> <label for="inputEmail">Email address</label> <input ref="email" id="inputEmail" class="form-control" placeholder="{email}" type="email"> <label for="inputPassword">Password</label> <input ref="password" type="password" id="inputPassword" class="form-control"> <button class="btn btn-lg btn-primary btn-block" onclick="{submit}" type="submit">Update Changes</button> </form> </div> </div> </div>', '', '', function(opts) {
-'use strict';
-
-var _this = this;
-
-//Ajax call for updading profile
-this.submit = function (e) {
-	console.log('Submit clicked ' + _this.refs.username.value);
-
-	var url = '/api/update';
-	var xhr = new XMLHttpRequest();
-
-	xhr.open('PUT', url, true);
-
-	// //Send the proper header information along with the request
-	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-	// //Call a function when the state changes.
-	xhr.onreadystatechange = function () {
-		if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
-			// Request finished. Do processing here.
-			console.log('Response ' + xhr.responseText);
-			route('login');
-		} else if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 403) {
-			console.log('Response ' + xhr.responseText);
-		}
-	};
-	xhr.send(_this.queryStringify(_this.refs.username.value, _this.refs.name.value, _this.refs.password.value, _this.refs.email.value));
-};
-
-this.queryStringify = function (username, name, password, email) {
-	return 'username=' + username + '&name=' + name + '&email=' + email + '&password=' + password;
-};
-
-// Right after the tag is mounted
-this.on('mount', function () {
-	console.log('Dashboard mounted');
-
-	// Check if token exist
-	// if not exist
-	if (localStorage.getItem('token') === null) {
-		route('login');
-	}
-
-	var url = '/api/user';
-	var xhr = new XMLHttpRequest();
-
-	xhr.open('GET', url, true);
-	// //Send the proper header information along with the request
-	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhr.setRequestHeader("x-access-token", localStorage.getItem('token'));
-
-	// //Call a function when the state changes.
-	xhr.onreadystatechange = function () {
-		if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
-			// Request finished. Do processing here.
-			var responseObject = JSON.parse(xhr.response);
-
-			_this.name = responseObject.name;
-			_this.username = responseObject.username;
-			_this.password = responseObject.password;
-			_this.email = responseObject.email;
-
-			console.log('JSON' + responseObject.name);
-			_this.update();
-		} else if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 403) {
-			console.log('Response ' + xhr.responseText);
-			route('login');
-		}
-	};
-	xhr.send();
-});
 });
 
 riot.tag2('footer-tag', '<footer class="footer"> <div class="container"> <p class="text-muted">Place sticky footer content here.</p> </div> </footer>', '', '', function(opts) {
@@ -175,7 +103,7 @@ this.submit = function () {
 };
 });
 
-riot.tag2('navi', '<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"> <div class="container"> <div class="navbar-header"> <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> <a class="navbar-brand" href="#">Job Hunt Japan</a> </div> <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1"> <ul if="{opts.is_authenticated()}" class="nav navbar-nav"> <li> <a href="#companies">Companies</a> </li> <li> <a href="#dashboard">Dashboard</a> </li> <li> <a href="#logout">Log Out</a> </li> </ul> <ul if="{opts.is_authenticated() === false}" class="nav navbar-nav"> <li> <a href="#landing">Landing</a> </li> <li> <a href="#signup">Sign Up</a> </li> <li> <a href="#login">Log In</a> </li> <li> <a href="#company">Hiring?</a> </li> </ul> </div> </div> </nav>', '', '', function(opts) {
+riot.tag2('navi', '<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"> <div class="container"> <div class="navbar-header"> <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> <a class="navbar-brand" href="#">Job Hunt Japan</a> </div> <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1"> <ul if="{opts.is_authenticated()}" class="nav navbar-nav"> <li> <a href="#companies">Companies</a> </li> <li> <a href="#profile">Profile</a> </li> <li> <a href="#setting">Setting</a> </li> <li> <a href="#logout">Log Out</a> </li> </ul> <ul if="{opts.is_authenticated() === false}" class="nav navbar-nav"> <li> <a href="#landing">Landing</a> </li> <li> <a href="#signup">Sign Up</a> </li> <li> <a href="#login">Log In</a> </li> <li> <a href="#company">Hiring?</a> </li> </ul> </div> </div> </nav>', '', '', function(opts) {
 'use strict';
 
 this.on('mount', function () {
@@ -183,7 +111,127 @@ this.on('mount', function () {
 });
 });
 
-riot.tag2('profile', '<h1>Profile</h1>', '', '', function(opts) {
+riot.tag2('profile', '<h1>Profile</h1> <p>{name}</p> <p>{username}</p> <p>{password}</p> <p>{email}</p>', '', '', function(opts) {
+'use strict';
+
+var _this = this;
+
+this.on('mount', function () {
+	console.log('Dashboard mounted');
+
+	// Check if token exist
+	// if not exist
+	if (localStorage.getItem('token') === null) {
+		route('landing');
+	}
+
+	var url = '/api/user';
+	var xhr = new XMLHttpRequest();
+
+	xhr.open('GET', url, true);
+	// //Send the proper header information along with the request
+	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhr.setRequestHeader("x-access-token", localStorage.getItem('token'));
+
+	// //Call a function when the state changes.
+	xhr.onreadystatechange = function () {
+		if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+			// Request finished. Do processing here.
+			var responseObject = JSON.parse(xhr.response);
+
+			_this.name = responseObject.name;
+			_this.username = responseObject.username;
+			_this.password = responseObject.password;
+			_this.email = responseObject.email;
+
+			console.log('JSON' + responseObject.name);
+			_this.update();
+		} else if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 403) {
+			console.log('Response ' + xhr.responseText);
+			route('login');
+		}
+	};
+	xhr.send();
+});
+});
+
+riot.tag2('setting', '<head> <link href="/static/css/dashboard.css" rel="stylesheet"> </head> <div class="container-fluid"> <div class="row"> <div class="col-sm-3 col-md-2 sidebar"> <ul class="nav nav-sidebar"> <li class="active"><a href="#">Profile<span class="sr-only">(current)</span></a></li> <li><a href="#">Password</a></li> <li><a href="#">Another setting</a></li> </ul> <ul class="nav nav-sidebar"> <li><a href="">Nav item</a></li> <li><a href="">Another nav item</a></li> </ul> </div> <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"> <h1 class="page-header">Setting</h1> <form class="form-signin"> <h2 class="form-signin-heading">Public profile</h2> <label for="inputName">Name</label> <input ref="name" type="text" id="inputName" class="form-control" placeholder="{name}"> <label for="inputUsername">Username</label> <input ref="username" type="text" id="inputUsername" class="form-control" placeholder="{username}"> <label for="inputEmail">Email address</label> <input ref="email" id="inputEmail" class="form-control" placeholder="{email}" type="email"> <label for="inputPassword">Password</label> <input ref="password" type="password" id="inputPassword" class="form-control"> <button class="btn btn-lg btn-primary btn-block" onclick="{submit}" type="submit">Update Changes</button> </form> </div> </div> </div>', '', '', function(opts) {
+'use strict';
+
+var _this = this;
+
+//Ajax call for updading profile
+this.submit = function (e) {
+	console.log('Submit clicked ' + _this.refs.username.value);
+
+	var url = '/api/users';
+	var xhr = new XMLHttpRequest();
+
+	xhr.open('PUT', url, true);
+
+	// //Send the proper header information along with the request
+	xhr.setRequestHeader("Content-type", "application/json");
+
+	// //Call a function when the state changes.
+	xhr.onreadystatechange = function () {
+		if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+			// Request finished. Do processing here.
+			console.log('Response ' + xhr.responseText);
+		} else if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 403) {
+			console.log('Response ' + xhr.responseText);
+		}
+	};
+	xhr.send(_this.queryStringify(_this.refs.username.value, _this.refs.name.value, _this.refs.password.value, _this.refs.email.value));
+};
+
+this.queryStringify = function (username, name, password, email) {
+	var updateJson = '{ "user": {';
+	if (username) {
+		updateJson += '"username": ' + username + ' ';
+	}
+
+	updateJson += '} }';
+	return 'username=' + username + '&name=' + name + '&email=' + email + '&password=' + password;
+};
+
+// Right after the tag is mounted
+this.on('mount', function () {
+	console.log('Dashboard mounted');
+
+	// Check if token exist
+	// if not exist
+	if (localStorage.getItem('token') === null) {
+		route('landing');
+	}
+
+	var url = '/api/user';
+	var xhr = new XMLHttpRequest();
+
+	xhr.open('GET', url, true);
+	// //Send the proper header information along with the request
+	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhr.setRequestHeader("x-access-token", localStorage.getItem('token'));
+
+	// //Call a function when the state changes.
+	xhr.onreadystatechange = function () {
+		if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+			// Request finished. Do processing here.
+			var responseObject = JSON.parse(xhr.response);
+
+			_this.name = responseObject.name;
+			_this.username = responseObject.username;
+			_this.password = responseObject.password;
+			_this.email = responseObject.email;
+
+			console.log('JSON' + responseObject.name);
+			_this.update();
+		} else if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 403) {
+			console.log('Response ' + xhr.responseText);
+			route('login');
+		}
+	};
+	xhr.send();
+});
 });
 
 riot.tag2('signup', '<head> <link href="/static/css/signin.css" rel="stylesheet"> </head> <form class="form-signin"> <h2 class="form-signin-heading">Please sign up</h2> <label for="inputName" class="sr-only">Name</label> <input ref="name" type="text" id="inputName" class="form-control" placeholder="Name" required autofocus> <label for="inputUsername" class="sr-only">Username</label> <input ref="username" type="text" id="inputUsername" class="form-control" placeholder="Username" required> <label for="inputEmail" class="sr-only">Email address</label> <input ref="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus type="email"> <label for="inputPassword" class="sr-only">Password</label> <input ref="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required> <div class="checkbox"> <label> <input type="checkbox" value="remember-me"> Remember me </label> </div> <button class="btn btn-lg btn-primary btn-block" onclick="{submit}" type="submit">Sign up</button> </form>', '', '', function(opts) {

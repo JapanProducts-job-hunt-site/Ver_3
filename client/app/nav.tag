@@ -19,7 +19,10 @@
 						<a href="#companies">Companies</a>
 					</li>
 					<li>
-						<a href="#dashboard">Dashboard</a>
+						<a href="#profile">Profile</a>
+					</li>
+					<li>
+						<a href="#setting">Setting</a>
 					</li>
 					<li>
 						<a href="#logout">Log Out</a>
