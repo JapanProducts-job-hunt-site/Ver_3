@@ -50,20 +50,19 @@
 	this.submit = (e) => {
 		console.log('Submit clicked ' + this.refs.username.value)
 
-		const url = '/api/update';
+		const url = '/api/users';
 		const xhr = new XMLHttpRequest();
 
 		xhr.open('PUT', url, true);
 
 		// //Send the proper header information along with the request
-		xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhr.setRequestHeader("Content-type", "application/json");
 
 		// //Call a function when the state changes.
 		xhr.onreadystatechange = () => {
 			if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
 				// Request finished. Do processing here.
 				console.log('Response ' + xhr.responseText)
-										route('login')
 			} else if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 403) {
 				console.log('Response ' + xhr.responseText)
 			}
@@ -72,6 +71,12 @@
 	}
 
 	this.queryStringify = (username, name, password, email) => {
+    let updateJson = '{ "user": {'
+    if (username) {
+      updateJson+= `"username": ${username} `
+    }
+
+    updateJson+='} }'
 		return `username=${username}&name=${name}&email=${email}&password=${password}`
 	}
 
@@ -82,7 +87,7 @@
 			// Check if token exist
 			// if not exist
 			if(localStorage.getItem('token') === null) {
-				route('login')
+				route('landing')
 			}
 
 			const url = '/api/user';
