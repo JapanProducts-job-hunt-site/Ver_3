@@ -64,8 +64,10 @@ var apiRoutes = express.Router();
 
 apiRoutes.post('/register', function(req, res) {
 
-	if(!req.body.name){
-		return res.status(401).json({ success: false, message: 'Registration failed. Enter name.' });
+	if(!req.body.firstName){
+		return res.status(401).json({ success: false, message: 'Registration failed. Enter first name.' });
+	} else if(!req.body.lastName){
+		return res.status(401).json({ success: false, message: 'Registration failed. Enter last name.' });
 	} else if(!req.body.password){
 		return res.status(401).json({ success: false, message: 'Registration failed. Enter password.' });
 	} else if(!req.body.email){
@@ -73,8 +75,9 @@ apiRoutes.post('/register', function(req, res) {
 	}
 	// create a sample user
 	var newUser = new User({ 
+		firstName: req.body.firstName,
+		lastName: req.body.lastName,
 		password: req.body.password,
-		name: req.body.name,
 		email: req.body.email,
 		admin: false 
 	});

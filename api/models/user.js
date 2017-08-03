@@ -3,12 +3,17 @@ var Schema = mongoose.Schema;
 
 // set up a mongoose model
 module.exports = mongoose.model('User', new Schema({ 
-	password: {
+	firstName: {
 		type: String,
 		minlength: 1,
 		required: true
 	},
-	name: {
+	lastName: {
+		type: String,
+		minlength: 1,
+		required: true
+	},
+	password: {
 		type: String,
 		minlength: 1,
 		required: true
