@@ -1,35 +1,57 @@
 <signup>
 
-	<head>
-		<!-- Custom styles for this template -->
-		<link href="/static/css/signin.css" rel="stylesheet">
-	</head>
+<link href="/static/css/signup.css" rel="stylesheet">
 
-	<form class="form-signin">
-		<h2 class="form-signin-heading">Please sign up</h2>
-		<label for="inputName" class="sr-only">Name</label>
-		<input ref="name" type="text" id="inputName" class="form-control" placeholder="Name" required autofocus>
+<div class="container">
+	<div class="row centered-form">
+		<div class="col-xs-12 col-sm-8 col-md-4 col-sm-offset-2 col-md-offset-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Please sign up for Job Hunt <small>It's free!</small></h3>
+				</div>
+				<div class="panel-body">
+					<form role="form" method="post">
+						<div class="row">
+							<div class="col-xs-6 col-sm-6 col-md-6">
+								<div class="form-group">
+									<input ref="firstName" type="text" name="firstName" id="first_name" class="form-control input-sm" placeholder="First Name">
+								</div>
+							</div>
+							<div class="col-xs-6 col-sm-6 col-md-6">
+								<div class="form-group">
+									<input ref="lastName" type="text" name="lastName" id="last_name" class="form-control input-sm" placeholder="Last Name">
+								</div>
+							</div>
+						</div>
 
-		<label for="inputUsername" class="sr-only">Username</label>
-		<input ref="username" type="text" id="inputUsername" class="form-control" placeholder="Username" required>
+						<div class="form-group">
+							<input ref="email" type="email" name="email" id="email" class="form-control input-sm" placeholder="Email Address">
+						</div>
 
-		<label for="inputEmail" class="sr-only">Email address</label>
-		<input ref="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-
-		<label for="inputPassword" class="sr-only">Password</label>
-		<input ref="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-
-		<div class="checkbox">
-			<label>
-				<input type="checkbox" value="remember-me"> Remember me
-			</label>
+						<div class="row">
+							<div class="col-xs-6 col-sm-6 col-md-6">
+								<div class="form-group">
+									<input ref="password" type="password"  name="password" id="password" class="form-control input-sm" placeholder="Password">
+								</div>
+							</div>
+							<div class="col-xs-6 col-sm-6 col-md-6">
+								<div class="form-group">
+									<input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-sm" placeholder="Confirm Password">
+								</div>
+							</div>
+						</div>
+						<button type="submit" value="Register" class="btn btn-info btn-block" onclick={ submit } type="submit">Register</button>
+					</form>
+				</div>
+			</div>
 		</div>
-		<button class="btn btn-lg btn-primary btn-block" onclick={ submit } type="submit">Sign up</button>
-	</form>
+	</div>
+</div>
 
-	<script type='es6'>
-	this.submit = (e) => {
-		  console.log('Submit clicked ' + this.refs.username.value)
+
+<script type='es6'>
+this.submit = (e) => {
+		  console.log('Submit clicked ' + this.refs.firstName.value)
 
 				const url = '/api/register';
 				const xhr = new XMLHttpRequest();
@@ -44,17 +66,16 @@
 					if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
 						// Request finished. Do processing here.
 						console.log('Response ' + xhr.responseText)
-                        route('login')
 					} else if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 403) {
 						console.log('Response ' + xhr.responseText)
 					}
 				}
-				xhr.send(this.queryStringify(this.refs.username.value, this.refs.name.value, this.refs.password.value, this.refs.email.value));
+				xhr.send(this.queryStringify(this.refs.firstName.value, this.refs.password.value, this.refs.email.value));
 			}
 
-		this.queryStringify = (username, name, password, email) => {
-		  return `username=${username}&name=${name}&email=${email}&password=${password}`
+		this.queryStringify = (firstName, password, email) => {
+		  return `name=${firstName}&email=${email}&password=${password}`
 		}
-	</script>
+</script>
 
 </signup>

@@ -15,12 +15,62 @@ npm start
 # API List
 
 ```
-POST /api/register
-POST /api/authenticate
-PUT  /api/users
-GET  /api/users
-GET  /api/user
+POST /api/register	/Student registration
+POST /api/authenticate	/Student authentication
+PUT  /api/users		/Student update
+GET  /api/users		/Get all students
+GET  /api/user		/Get one student by JWT
 ```
+
+**Registration**
+----
+  Post email and password and return success message 
+
+* **URL**
+
+  /api/register
+
+* **Method:**
+
+  `POST`
+  
+*  **URL Params**
+
+ 
+     None
+
+* **Data Params**
+
+   **Required:**
+    `name=${name}&email=${email}&password=${password}`
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** `{ success : ture }`
+ 
+* **Error Response:**
+
+  * **Code:** 400 BAD REQUEST <br />
+    **Content:** `{ success : false,  error : "User doesn't exist" }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+  ``javascript
+    $.ajax({
+      url: "/users/1",
+      dataType: "json",
+      type : "GET",
+      success : function(r) {
+        console.log(r);
+      }
+    });
+  ```
 
 ## To create user (Sign up)
 
