@@ -11,26 +11,32 @@
 			<a class="navbar-brand" href="#">Brand</a>
 		</div>
 
-		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" data-ng-controller='loginCtrl'>
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav">
-				<li class="active"><a href="#">Home <span class="sr-only">(current)</span></a></li>
+				<li class="active"><a href="#">Home<span class="sr-only">(current)</span></a></li>
 				<li><a href="#landing">About Us</a></li>
 				<li><a href="#">FAQ</a></li>
+
+				<li><a href="#profile">Profile</a></li>
+				<li><a href="#setting">setting</a></li>
+				<li><a href="#logout">Sign out</a></li>
+
 				<li><a href="#signup">Registration</a></li>
+
+				<div if= { opts.is_authenticated() === false }>
+					<form id="signin" class="navbar-form navbar-right" role="form" method="get">
+						<div class="input-group">
+							<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+							<input ref="email" id="email" type="email" class="form-control" name="email" value="" placeholder="Email Address">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+							<input ref="password" id="password" type="password" class="form-control" name="password" value="" placeholder="Password">
+						</div>
+						<button type="submit" class="btn btn-primary" onclick={ submit } type="submit">Login</button>
+					</form>
+				</div>
 			</ul>
-			<form id="signin" class="navbar-form navbar-right" role="form" method="get">
-				<div class="input-group">
-					<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-					<input ref="email" id="email" type="email" class="form-control" name="email" value="" placeholder="Email Address">
-				</div>
-
-				<div class="input-group">
-					<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-					<input ref="password" id="password" type="password" class="form-control" name="password" value="" placeholder="Password">
-				</div>
-
-				<button type="submit" class="btn btn-primary" onclick={ submit } type="submit">Login</button>
-			</form>
 		</div>
 	</div>
 </nav>
