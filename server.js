@@ -90,8 +90,6 @@ var apiRoutes = express.Router();
 
 apiRoutes.post('/register', function(req, res) {
 
-	console.log('Register' + req.body.name)
-
 	if(!req.body.name){
 		return res.status(401).json({ success: false, message: 'Registration failed. Enter name.' });
 	} else if(!req.body.password){
@@ -99,7 +97,6 @@ apiRoutes.post('/register', function(req, res) {
 	} else if(!req.body.email){
 		return res.status(401).json({ success: false, message: 'Registration failed. Enter email.' });
 	}
-	console.log('In register ' + req.body.name)
 	// create a sample user
 	var newUser = new User({ 
 		password: req.body.password,
@@ -216,14 +213,14 @@ apiRoutes.post('/company/register', function(req, res) {
 apiRoutes.post('/company/authenticate', function(req, res) {
 
 	if(!req.body.email){
-		return res.json({ success: false, message: 'Authentication failed. Enter email.' });
+		return res.status(401).json({ success: false, message: 'Authentication failed. Enter email.' });
 	} else if(!req.body.password){
-		return res.json({ success: false, message: 'Authentication failed. Enter password.' });
+		return res.status(401).json({ success: false, message: 'Authentication failed. Enter password.' });
 	}
 
 	// find the user
 	Company.findOne({
-		username: req.body.email
+		email: req.body.email
 	}, function(err, company) {
 
 		if (err) {
@@ -234,12 +231,12 @@ apiRoutes.post('/company/authenticate', function(req, res) {
 		};
 
 		if (!company) {
-			res.json({ success: false, message: 'Authentication failed. Email not found.' });
+			res.status(401).json({ success: false, message: 'Authentication failed. Email not found.' });
 		} else if (company) {
 
 			// check if password matches
 			if (company.password != req.body.password) {
-				res.json({ success: false, message: 'Authentication failed. Wrong password.' });
+				res.status(401).json({ success: false, message: 'Authentication failed. Wrong password.' });
 			} else {
 
 				// if user is found and password is right
@@ -250,7 +247,7 @@ apiRoutes.post('/company/authenticate', function(req, res) {
 					expiresIn: 86400 // expires in 24 hours
 				});
 
-				res.json({
+				res.status(200).json({
 					success: true,
 					message: 'Enjoy your token for your company!',
 					token: token
@@ -303,7 +300,7 @@ apiRoutes.get('/', function(req, res) {
 // ---------------------------------------------------------
 apiRoutes.put('/users', function(req, res) {
 	if(!req.body.user) {
-		return res.json({
+		return res.status(409).json({
 			success: false,
 			message: "No data to update"
 		})
@@ -323,15 +320,16 @@ apiRoutes.put('/users', function(req, res) {
 		},
 		(err, updated) => {
 			if(err) {
-				res.json(err);
+				res.status(409).json(err);
 			} else if (!updated){
-				res.json(
+				res.status(400).json(
 					{ 
 						success: false, 
 						message: "Could not find user information"
 					}
 				);
 			} else {
+				// success
 				res.json(updated);
 			}
 		}
@@ -344,7 +342,7 @@ apiRoutes.put('/users', function(req, res) {
 apiRoutes.get('/user', function(req, res) {
 	// find the user by username from JWT payload
 	User.findOne({
-		username: req.decoded.user.username
+		email: req.decoded.user.email
 	}, function(err, user) {
 
 		if (err) {
@@ -355,11 +353,11 @@ apiRoutes.get('/user', function(req, res) {
 		}
 		// User not found
 		else if (!user) {
-			return res.json({ success: false, message: 'Username not found.' });
+			return res.status(401).json({ success: false, message: 'email not found.' });
 		} 
 		// User found
 		else if (user) {
-			res.json(user);
+			res.status(200).json(user);
 		}
 	});
 });
@@ -398,7 +396,7 @@ apiRoutes.get('/check', function(req, res) {
 apiRoutes.get('/search', function(req, res) {
 	User.find(req.query, function(err, users) {
 		if (err) {
-			res.status(403).send({
+			res.status(401).send({
 				success: false,
 				message: err 
 			});
