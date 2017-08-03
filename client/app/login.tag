@@ -1,10 +1,5 @@
 <LogIn>
 
-<head>
-	<!-- Custom styles for this template -->
-	<link href="/static/css/signin.css" rel="stylesheet">
-</head>
-
 <form class="form-signin">
 	<h2 class="form-signin-heading">Please sign in</h2>
 	<label for="inputUsername" class="sr-only">Username</label>
