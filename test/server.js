@@ -50,161 +50,17 @@ describe('User', () => {
 	///////////////////////////////////////////
 	//          POST /api/register            //
 	///////////////////////////////////////////
+	const URI = '/api/register'
 
-	describe('POST /api/register', () => {
-		it('it should not POST without username', (done) => {
+	describe('POST ' + URI, () => {
+		it('it should POST', (done) => {
 			let user = {
 				password: 'password',
 				name: 'Yuuki',
-				email: 'yuuki@yuuki.com'
+				email: '1yuuki@yuuki.com'
 			}
 			chai.request('http://localhost:' + port)
-				.post('/api/register')
-				.set('content-type', 'application/x-www-form-urlencoded')
-				.send(user)
-				.end((err, res) => {
-					res.should.have.status(403);
-					res.body.should.be.a('object');
-					res.body.should.have.property('success').that.to.be.false;
-					res.body.should.have.property('message');
-					res.body.message.should.have.property('errors');
-					res.body.message.errors.should.have.property('username');
-					done();
-				});
-		});
-		it('it should not POST with an empty username', (done) => {
-			let user = {
-				username: '',
-				password: 'password',
-				name: 'Yuuki',
-				email: 'yuuki@yuuki.com'
-			}
-			chai.request('http://localhost:' + port)
-				.post('/api/register')
-				.set('content-type', 'application/x-www-form-urlencoded')
-				.send(user)
-				.end((err, res) => {
-					res.should.have.status(403);
-					res.body.should.be.a('object');
-					res.body.should.have.property('success').that.to.be.false;
-					res.body.should.have.property('message');
-					res.body.message.should.have.property('errors');
-					res.body.message.errors.should.have.property('username');
-					done();
-				});
-		});
-		it('it should not POST with an empty name', (done) => {
-			let user = {
-				username: 'yuuki',
-				password: '',
-				name: '',
-				email: 'yuuki@yuuki.com'
-			}
-			chai.request('http://localhost:' + port)
-				.post('/api/register')
-				.set('content-type', 'application/x-www-form-urlencoded')
-				.send(user)
-				.end((err, res) => {
-					res.should.have.status(403);
-					res.body.should.be.a('object');
-					res.body.should.have.property('success').that.to.be.false;
-					res.body.should.have.property('message');
-					res.body.message.should.have.property('errors');
-					res.body.message.errors.should.have.property('name');
-					done();
-				});
-		});
-		it('it should not POST with an empty password', (done) => {
-			let user = {
-				username: 'yuuki',
-				password: '',
-				name: 'Yuuki',
-				email: 'yuuki@yuuki.com'
-			}
-			chai.request('http://localhost:' + port)
-				.post('/api/register')
-				.set('content-type', 'application/x-www-form-urlencoded')
-				.send(user)
-				.end((err, res) => {
-					res.should.have.status(403);
-					res.body.should.be.a('object');
-					res.body.should.have.property('success').that.to.be.false;
-					res.body.should.have.property('message');
-					res.body.message.should.have.property('errors');
-					res.body.message.errors.should.have.property('password');
-					done();
-				});
-		});
-		it('it should not POST with an empty email', (done) => {
-			let user = {
-				username: 'yuuki',
-				password: 'yuuukii',
-				name: 'Yuuki',
-				email: ''
-			}
-			chai.request('http://localhost:' + port)
-				.post('/api/register')
-				.set('content-type', 'application/x-www-form-urlencoded')
-				.send(user)
-				.end((err, res) => {
-					res.should.have.status(403);
-					res.body.should.be.a('object');
-					res.body.should.have.property('success').that.to.be.false;
-					res.body.should.have.property('message');
-					res.body.message.should.have.property('errors');
-					res.body.message.errors.should.have.property('email');
-					done();
-				});
-		});
-		it('it should not POST without name', (done) => {
-			let user = {
-				username: 'yuuking',
-				password: 'password',
-				email: 'yuuki@yuuki.com'
-			}
-			chai.request('http://localhost:' + port)
-				.post('/api/register')
-				.set('content-type', 'application/x-www-form-urlencoded')
-				.send(user)
-				.end((err, res) => {
-					res.should.have.status(403);
-					res.body.should.be.a('object');
-					res.body.should.have.property('success').that.to.be.false;
-					res.body.should.have.property('message');
-					res.body.message.should.have.property('errors');
-					res.body.message.errors.should.have.property('name');
-					done();
-				});
-		});
-		it('it should not POST without email', (done) => {
-			let user = {
-				username: 'yuuking',
-				password: 'password',
-				name: 'Yuuki'
-			}
-			chai.request('http://localhost:' + port)
-				.post('/api/register')
-				.set('content-type', 'application/x-www-form-urlencoded')
-				.send(user)
-				.end((err, res) => {
-					res.should.have.status(403);
-					res.body.should.be.a('object');
-					res.body.should.have.property('success').that.to.be.false;
-					res.body.should.have.property('message');
-					res.body.message.should.have.property('errors');
-					res.body.message.errors.should.have.property('email');
-					done();
-				});
-		});
-		it('it should POST with all properties', (done) => {
-			let user = {
-				username: 'yuuking',
-				password: 'password',
-				name: 'Yuuki',
-				email: 'yuuki@yuuki.com'
-			}
-			chai.request('http://localhost:' + port)
-				.post('/api/register')
+				.post(URI)
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
@@ -214,41 +70,145 @@ describe('User', () => {
 					done();
 				});
 		});
-		it('it should not POST with a duplicate username', (done) => {
+		it('it should POST with an empty username', (done) => {
 			let user = {
-				username: 'yuuking',
+				password: 'password',
+				name: 'Yuuki',
+				email: '2yuuki@yuuki.com'
+			}
+			chai.request('http://localhost:' + port)
+				.post(URI)
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.true;
+					done();
+				});
+		});
+		it('it should not POST with an empty name and password', (done) => {
+			let user = {
+				password: '',
+				name: '',
+				email: 'yuuki@yuuki.com'
+			}
+			chai.request('http://localhost:' + port)
+				.post(URI)
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
+				.end((err, res) => {
+					res.should.have.status(401);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.contain('name');
+					done();
+				});
+		});
+		it('it should not POST with an empty password', (done) => {
+			let user = {
+				password: '',
+				name: 'Yuuki',
+				email: 'yuuki@yuuki.com'
+			}
+			chai.request('http://localhost:' + port)
+				.post(URI)
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
+				.end((err, res) => {
+					res.should.have.status(401);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.contain('password');
+					done();
+				});
+		});
+		it('it should not POST with an empty email', (done) => {
+			let user = {
+				password: 'yuuukii',
+				name: 'Yuuki',
+				email: ''
+			}
+			chai.request('http://localhost:' + port)
+				.post(URI)
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
+				.end((err, res) => {
+					res.should.have.status(401);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.contain('email');
+					done();
+				});
+		});
+		it('it should not POST without name', (done) => {
+			let user = {
+				password: 'password',
+				email: 'yuuki@yuuki.com'
+			}
+			chai.request('http://localhost:' + port)
+				.post(URI)
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
+				.end((err, res) => {
+					res.should.have.status(401);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.contain('name');
+					done();
+				});
+		});
+		it('it should not POST without email', (done) => {
+			let user = {
+				password: 'password',
+				name: 'Yuuki'
+			}
+			chai.request('http://localhost:' + port)
+				.post(URI)
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send(user)
+				.end((err, res) => {
+					res.should.have.status(401);
+					res.body.should.be.a('object');
+					res.body.should.have.property('success').that.to.be.false;
+					res.body.should.have.property('message');
+					res.body.message.should.contain('email');
+					done();
+				});
+		});
+		it('it should POST with all properties', (done) => {
+			let user = {
 				password: 'password',
 				name: 'Yuuki',
 				email: 'yuuki@yuuki.com'
 			}
 			chai.request('http://localhost:' + port)
-				.post('/api/register')
+				.post(URI)
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
-					res.should.have.status(403);
+					res.should.have.status(200);
 					res.body.should.be.a('object');
-					res.body.should.have.property('success').that.to.be.false;
-					res.body.should.have.property('message');
-					res.body.message.should.have.property('errmsg');
-					res.body.message.errmsg.should.contain('duplicate key');
-					res.body.message.errmsg.should.contain('username');
+					res.body.should.have.property('success').that.to.be.true;
 					done();
 				});
 		});
 		it('it should not POST with a duplicate email', (done) => {
 			let user = {
-				username: 'yuuking2',
 				password: 'password',
 				name: 'Yuuki',
 				email: 'yuuki@yuuki.com'
 			}
 			chai.request('http://localhost:' + port)
-				.post('/api/register')
+				.post(URI)
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
-					res.should.have.status(403);
+					res.should.have.status(401);
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.false;
 					res.body.should.have.property('message');
@@ -259,13 +219,12 @@ describe('User', () => {
 		});
 		it('it should POST with a different username and email', (done) => {
 			let user = {
-				username: 'yuuking2',
 				password: 'password',
-				name: 'Yuuki',
+				name: 'yuuking',
 				email: 'yuuki2@yuuki.com'
 			}
 			chai.request('http://localhost:' + port)
-				.post('/api/register')
+				.post(URI)
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
@@ -276,35 +235,37 @@ describe('User', () => {
 				});
 		});
 	});
-	describe('POST /api/authenticate', () => {
-		it('it should not POST with a unregistered username', (done) => {
+
+	const URI_auth = '/api/authenticate'
+	describe('POST ' + URI_auth, () => {
+		it('it should not POST with a unregistered email', (done) => {
 			let user = {
-				username: 'yuukin',
+				email: 'yuuki@yuuki.com3',
 				password: 'password',
 			}
 			chai.request('http://localhost:' + port)
-				.post('/api/authenticate')
+				.post(URI_auth)
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
-					res.should.have.status(403);
+					res.should.have.status(401);
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.false;
-					res.body.message.should.contain('Username not found');
+					res.body.message.should.contain('Email not found');
 					done();
 				});
 		});
 		it('it should not POST with a wrong password', (done) => {
 			let user = {
-				username: 'yuuking',
+				email: 'yuuki2@yuuki.com',
 				password: 'passworda',
 			}
 			chai.request('http://localhost:' + port)
-				.post('/api/authenticate')
+				.post(URI_auth)
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
-					res.should.have.status(403);
+					res.should.have.status(401);
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.false;
 					res.body.message.should.contain('Wrong password');
@@ -313,32 +274,32 @@ describe('User', () => {
 		});
 		it('it should not POST without username', (done) => {
 			let user = {
-				username: '',
+				email: '',
 				password: 'passworda',
 			}
 			chai.request('http://localhost:' + port)
-				.post('/api/authenticate')
+				.post(URI_auth)
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
-					res.should.have.status(403);
+					res.should.have.status(401);
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.false;
-					res.body.message.should.contain('Enter username');
+					res.body.message.should.contain('Enter email');
 					done();
 				});
 		});
 		it('it should not POST without password', (done) => {
 			let user = {
-				username: 'aaaa',
+				email: 'aaaa',
 				password: '',
 			}
 			chai.request('http://localhost:' + port)
-				.post('/api/authenticate')
+				.post(URI_auth)
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
-					res.should.have.status(403);
+					res.should.have.status(401);
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.false;
 					res.body.message.should.contain('Enter password');
@@ -347,11 +308,11 @@ describe('User', () => {
 		});
 		it('it should POST with the correct username and password', (done) => {
 			let user = {
-				username: 'yuuking',
+				email: 'yuuki@yuuki.com',
 				password: 'password',
 			}
 			chai.request('http://localhost:' + port)
-				.post('/api/authenticate')
+				.post(URI_auth)
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
@@ -374,14 +335,12 @@ describe('JSON Web Token', () => {
 		});
 		// register users
 		var newuser1 = new User({ 
-			username: "user1", 
 			password: "11111",
 			name: "User 1",
 			email: "user1@yuuki.com",
 			admin: false 
 		});
 		var newuser2 = new User({ 
-			username: "user2", 
 			password: "11111",
 			name: "User 2",
 			email: "user2@yuuki.com",
@@ -420,7 +379,7 @@ describe('JSON Web Token', () => {
 			chai.request('http://localhost:' + port)
 				.get('/api')
 				.end((err, res) => {
-					res.should.have.status(403);
+					res.should.have.status(401);
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.false;
 					res.body.should.have.property('message');
@@ -451,7 +410,7 @@ describe('JSON Web Token', () => {
 				.get('/api/user')
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.end((err, res) => {
-					res.should.have.status(403);
+					res.should.have.status(401);
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.false;
 					res.body.should.have.property('message');
@@ -479,10 +438,8 @@ describe('JSON Web Token', () => {
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.be.a('object');
-					res.body.should.have.property('username');
 					res.body.should.have.property('name');
 					res.body.should.have.property('email');
-					res.body.username.should.be.eql('user1');
 					res.body.name.should.be.eql('User 1');
 					res.body.email.should.be.eql('user1@yuuki.com');
 					done();
@@ -495,10 +452,8 @@ describe('JSON Web Token', () => {
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.be.a('object');
-					res.body.should.have.property('username');
 					res.body.should.have.property('name');
 					res.body.should.have.property('email');
-					res.body.username.should.be.eql('user2');
 					res.body.name.should.be.eql('User 2');
 					res.body.email.should.be.eql('user2@yuuki.com');
 					done();
@@ -523,7 +478,6 @@ describe('JSON Web Token', () => {
 		});
 	});
 });
-
 
 
 describe('Company', () => {
@@ -565,17 +519,16 @@ describe('Company', () => {
 	///////////////////////////////////////////
 
 	describe('POST /api/company/register', () => {
-		it('it should return 403 without form data', (done) => {
+		it('it should return 401 without form data', (done) => {
 			chai.request('http://localhost:' + port)
 				.post('/api/company/register')
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.end((err, res) => {
-					res.should.have.status(403);
+					res.should.have.status(401);
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.false;
 					res.body.should.have.property('message');
 					res.body.message.should.have.property('errors');
-					res.body.message.errors.should.have.property('username');
 					res.body.message.errors.should.have.property('name');
 					res.body.message.errors.should.have.property('password');
 					res.body.message.errors.should.have.property('email');
@@ -587,44 +540,21 @@ describe('Company', () => {
 				.post('/api/company/register')
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.end((err, res) => {
-					res.should.have.status(403);
+					res.should.have.status(401);
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.false;
 					res.body.should.have.property('message');
 					res.body.message.should.have.property('errors');
-					res.body.message.errors.should.have.property('username');
 					res.body.message.errors.should.have.property('name');
 					res.body.message.errors.should.have.property('password');
 					res.body.message.errors.should.have.property('email');
 					Company.count({}, (err, c)=> {
 						c.should.eql(0);
 					});
-					done();
-				});
-		});
-		it('it should not POST without username', (done) => {
-			let user = {
-				password: 'password',
-				name: 'Yuuki',
-				email: 'yuuki@yuuki.com'
-			}
-			chai.request('http://localhost:' + port)
-				.post('/api/company/register')
-				.set('content-type', 'application/x-www-form-urlencoded')
-				.send(user)
-				.end((err, res) => {
-					res.should.have.status(403);
-					res.body.should.be.a('object');
-					res.body.should.have.property('success').that.to.be.false;
-					res.body.should.have.property('message');
-					res.body.message.should.have.property('errors');
-					res.body.message.errors.should.have.property('username');
-					done();
-				});
+					done(); });
 		});
 		it('it should not POST without password', (done) => {
 			let user = {
-				username: 'Company 1',
 				name: 'Yuuki',
 				email: 'yuuki@yuuki.com'
 			}
@@ -633,7 +563,7 @@ describe('Company', () => {
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
-					res.should.have.status(403);
+					res.should.have.status(401);
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.false;
 					res.body.should.have.property('message');
@@ -644,7 +574,6 @@ describe('Company', () => {
 		});
 		it('it should not POST without name', (done) => {
 			let user = {
-				username: 'Company 1',
 				password: 'password',
 				email: 'yuuki@yuuki.com'
 			}
@@ -653,7 +582,7 @@ describe('Company', () => {
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
-					res.should.have.status(403);
+					res.should.have.status(401);
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.false;
 					res.body.should.have.property('message');
@@ -664,7 +593,6 @@ describe('Company', () => {
 		});
 		it('it should not POST without email', (done) => {
 			let user = {
-				username: 'Company 1',
 				password: 'password',
 				name: 'Yuuki'
 			}
@@ -673,7 +601,7 @@ describe('Company', () => {
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
-					res.should.have.status(403);
+					res.should.have.status(401);
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.false;
 					res.body.should.have.property('message');
@@ -684,7 +612,6 @@ describe('Company', () => {
 		});
 		it('it should POST with all properties', (done) => {
 			let user = {
-				username: 'Company 1',
 				password: 'password',
 				name: 'Yuuki',
 				email: 'yuuki@yuuki.com'
@@ -709,22 +636,22 @@ describe('Company', () => {
 	describe('POST /api/company/authenticate', () => {
 		it('it should not POST with a wrong password', (done) => {
 			let company = {
-				username: 'Company 1',
-				password: 'passworda',
+				email: 'yuuki@yuuki.com',
+				password: 'passworda'
 			}
 			chai.request('http://localhost:' + port)
 				.post('/api/company/authenticate')
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(company)
 				.end((err, res) => {
-					res.should.have.status(200);
+					res.should.have.status(401);
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.false;
 					res.body.message.should.contain('Wrong password');
 					done();
 				});
 		});
-		it('it should not POST without username', (done) => {
+		it('it should not POST without email', (done) => {
 			let company = {
 				password: 'password'
 			}
@@ -733,16 +660,16 @@ describe('Company', () => {
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(company)
 				.end((err, res) => {
-					res.should.have.status(200);
+					res.should.have.status(401);
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.false;
-					res.body.message.should.contain('Enter username');
+					res.body.message.should.contain('Enter email');
 					done();
 				});
 		});
-		it('it should not POST with a wrong username', (done) => {
+		it('it should not POST with a wrong email', (done) => {
 			let company = {
-				username: 'Company 1 ',
+				email: 'Company 1 ',
 				password: 'password'
 			}
 			chai.request('http://localhost:' + port)
@@ -750,23 +677,23 @@ describe('Company', () => {
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(company)
 				.end((err, res) => {
-					res.should.have.status(200);
+					res.should.have.status(401);
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.false;
-					res.body.message.should.contain('Username not found');
+					res.body.message.should.contain('Email not found');
 					done();
 				});
 		});
 		it('it should not POST without password', (done) => {
 			let company = {
-				username: 'aaaa'
+				email: 'aaaa'
 			}
 			chai.request('http://localhost:' + port)
 				.post('/api/company/authenticate')
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(company)
 				.end((err, res) => {
-					res.should.have.status(200);
+					res.should.have.status(401);
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.false;
 					res.body.message.should.contain('Enter password');
@@ -775,7 +702,7 @@ describe('Company', () => {
 		});
 		it('it should POST with the correct username and password', (done) => {
 			let company = {
-				username: 'Company 1',
+				email: 'yuuki@yuuki.com',
 				password: 'password',
 			}
 			chai.request('http://localhost:' + port)
@@ -793,7 +720,6 @@ describe('Company', () => {
 		});
 		it('it should POST with all properties', (done) => {
 			let company = {
-				username: 'Company 1',
 				password: 'password',
 				name: 'Yuuki',
 				email: 'yuuki@yuuki.com'
@@ -830,7 +756,6 @@ describe('Update student information', () => {
 		for(let i = 0; i < SIZE; i++){
 			users.push(
 				new User({ 
-					username: "user" + i, 
 					password: i,
 					name: "User " + i,
 					email: "user" + i + "@yuuki.com",
@@ -867,36 +792,11 @@ describe('Update student information', () => {
 
 	const URI = "/api/users" 
 	describe('GET ' + URI, () => {
-		it('Update username "user0" to "Updated"', (done) => {
-			const USER_INDEX = 0;
-			const DATA = {
-				"user": {
-					"username": "Updated"
-				}
-			}
-			chai.request('http://localhost:' + port)
-				.put(URI)
-				.set('Content-Type', 'application/json')
-			 	.set('x-access-token', userJWTs[USER_INDEX])
-			  .send(DATA)
-				.end((err, res) => {
-					res.should.have.status(200);
-					res.body.should.have.property('username');
-					res.body.should.have.property('name');
-					res.body.should.have.property('email');
-					res.body.should.have.property('password');
-					res.body.username.should.be.eql('Updated');
-					res.body.name.should.be.eql(users[USER_INDEX].name);
-					res.body.email.should.be.eql(users[USER_INDEX].email);
-					res.body.password.should.be.eql(users[USER_INDEX].password);
-					done();
-				});
-		});
-		it('Update username "user1" to "Updated 1" and email "updated1@yuuki.com"', (done) => {
+		it('name to "Updated 1" and email "updated1@yuuki.com"', (done) => {
 			const USER_INDEX = 1;
 			const DATA = {
 				"user": {
-					"username": "Updated 1",
+					"name": "Updated 1",
 					"email": "updated1@yuuki.com"
 				}
 			}
@@ -907,12 +807,10 @@ describe('Update student information', () => {
 			  .send(DATA)
 				.end((err, res) => {
 					res.should.have.status(200);
-					res.body.should.have.property('username');
 					res.body.should.have.property('name');
 					res.body.should.have.property('email');
 					res.body.should.have.property('password');
-					res.body.username.should.be.eql('Updated 1');
-					res.body.name.should.be.eql(users[USER_INDEX].name);
+					res.body.name.should.be.eql("Updated 1");
 					res.body.email.should.be.eql('updated1@yuuki.com');
 					res.body.password.should.be.eql(users[USER_INDEX].password);
 					done();
@@ -922,7 +820,6 @@ describe('Update student information', () => {
 			const USER_INDEX = 2;
 			const DATA = {
 				"user": {
-					"username": "Updated 2",
 					"name": "Updated 2",
 					"email": "Updated 2",
 					"password": "Updated 2"
@@ -935,11 +832,9 @@ describe('Update student information', () => {
 			  .send(DATA)
 				.end((err, res) => {
 					res.should.have.status(200);
-					res.body.should.have.property('username');
 					res.body.should.have.property('name');
 					res.body.should.have.property('email');
 					res.body.should.have.property('password');
-					res.body.username.should.be.eql('Updated 2');
 					res.body.name.should.be.eql('Updated 2');
 					res.body.email.should.be.eql('Updated 2');
 					res.body.password.should.be.eql('Updated 2');
@@ -950,8 +845,6 @@ describe('Update student information', () => {
 			const USER_INDEX = 3;
 			const DATA = {
 				"user": {
-					"username": "Updated 2",
-					"name": "Updated 2",
 					"email": "Updated 2",
 					"password": "Updated 2"
 				}
@@ -962,10 +855,10 @@ describe('Update student information', () => {
 			 	.set('x-access-token', userJWTs[USER_INDEX])
 			  .send(DATA)
 				.end((err, res) => {
-					res.should.have.status(200);
+					res.should.have.status(409);
 					res.body.should.have.property('message');
 					res.body.message.should.contain('duplicate key error');
-					res.body.message.should.contain('username');
+					res.body.message.should.contain('email');
 					done();
 				});
 		});
@@ -982,50 +875,10 @@ describe('Update student information', () => {
 			 	.set('x-access-token', userJWTs[USER_INDEX])
 			  .send(DATA)
 				.end((err, res) => {
-					res.should.have.status(200);
+					res.should.have.status(409);
 					res.body.should.have.property('message');
 					res.body.message.should.contain('duplicate key error');
 					res.body.message.should.contain('email');
-					done();
-				});
-		});
-		it('Should return duplicate username error if trying to set duplicate value', (done) => {
-			const USER_INDEX = 3;
-			const DATA = {
-				"user": {
-					"username": "user9",
-				}
-			}
-			chai.request('http://localhost:' + port)
-				.put(URI)
-				.set('Content-Type', 'application/json')
-			 	.set('x-access-token', userJWTs[USER_INDEX])
-			  .send(DATA)
-				.end((err, res) => {
-					res.should.have.status(200);
-					res.body.should.have.property('message');
-					res.body.message.should.contain('duplicate key error');
-					res.body.message.should.contain('username');
-					done();
-				});
-		});
-		it('Should return if username is empty', (done) => {
-			const USER_INDEX = 3;
-			const DATA = {
-				"user": {
-					"username": "",
-				}
-			}
-			chai.request('http://localhost:' + port)
-				.put(URI)
-				.set('Content-Type', 'application/json')
-			 	.set('x-access-token', userJWTs[USER_INDEX])
-			  .send(DATA)
-				.end((err, res) => {
-					res.should.have.status(200);
-					res.body.should.have.property('message');
-					res.body.message.should.contain('required');
-					res.body.message.should.contain('username');
 					done();
 				});
 		});
@@ -1042,7 +895,7 @@ describe('Update student information', () => {
 			 	.set('x-access-token', userJWTs[USER_INDEX])
 			  .send(DATA)
 				.end((err, res) => {
-					res.should.have.status(200);
+					res.should.have.status(409);
 					res.body.should.have.property('message');
 					res.body.message.should.contain('required');
 					res.body.message.should.contain('name');
@@ -1062,7 +915,7 @@ describe('Update student information', () => {
 			 	.set('x-access-token', userJWTs[USER_INDEX])
 			  .send(DATA)
 				.end((err, res) => {
-					res.should.have.status(200);
+					res.should.have.status(409);
 					res.body.should.have.property('message');
 					res.body.message.should.contain('required');
 					res.body.message.should.contain('email');
@@ -1082,7 +935,7 @@ describe('Update student information', () => {
 			 	.set('x-access-token', userJWTs[USER_INDEX])
 			  .send(DATA)
 				.end((err, res) => {
-					res.should.have.status(200);
+					res.should.have.status(409);
 					res.body.should.have.property('message');
 					res.body.message.should.contain('required');
 					res.body.message.should.contain('password');
@@ -1097,7 +950,7 @@ describe('Update student information', () => {
 				.set('x-access-token', userJWTs[0])
 			  .send(DATA)
 				.end((err, res) => {
-					res.should.have.status(200);
+					res.should.have.status(409);
 					res.body.should.have.property('success').that.to.be.false;
 					res.body.should.have.property('message')
 					res.body.message.should.contain("No data to update");
@@ -1110,7 +963,7 @@ describe('Update student information', () => {
 				.set('Content-Type', 'application/json')
 				.set('x-access-token', userJWTs[0])
 				.end((err, res) => {
-					res.should.have.status(200);
+					res.should.have.status(409);
 					res.body.should.have.property('success').that.to.be.false;
 					res.body.should.have.property('message')
 					res.body.message.should.contain("No data to update");
@@ -1139,7 +992,6 @@ describe('Search studetns', () => {
 		for(let i = 0; i < SIZE; i++){
 			users.push(
 				new User({ 
-					username: "user" + i, 
 					password: i,
 					name: "User " + i,
 					email: "user" + i + "@yuuki.com",
@@ -1184,22 +1036,19 @@ describe('Search studetns', () => {
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.have.lengthOf(SIZE);
-					res.body[0].should.have.property('username');
 					res.body[0].should.have.property('name');
 					res.body[0].should.have.property('email');
 					done();
 				});
 		});
-		it('{ username:"user9" } should GET only user9', (done) => {
+		it('{ email:"user9@yuuki.com" } should GET only User 9', (done) => {
 			chai.request('http://localhost:' + port)
 				.get('/api/search')
 				.set('x-access-token', user0jwt)
-				.query({ username: "user9" })
+				.query({ email: "user9@yuuki.com" })
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.have.lengthOf(1);
-					res.body[0].should.have.property('username');
-					res.body[0].username.should.be.eql('user9');
 					res.body[0].should.have.property('name');
 					res.body[0].name.should.be.eql('User 9');
 					res.body[0].should.have.property('email');
@@ -1211,28 +1060,10 @@ describe('Search studetns', () => {
 			chai.request('http://localhost:' + port)
 				.get('/api/search')
 				.set('x-access-token', user0jwt)
-				.query({ username: "user9" })
+				.query({ name: "User 9" })
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.have.lengthOf(1);
-					res.body[0].should.have.property('username');
-					res.body[0].username.should.be.eql('user9');
-					res.body[0].should.have.property('name');
-					res.body[0].name.should.be.eql('User 9');
-					res.body[0].should.have.property('email');
-					done();
-				});
-		});
-		it('{ username:"user9" } should GET only user9', (done) => {
-			chai.request('http://localhost:' + port)
-				.get('/api/search')
-				.set('x-access-token', user0jwt)
-				.query({ username: "user9" })
-				.end((err, res) => {
-					res.should.have.status(200);
-					res.body.should.have.lengthOf(1);
-					res.body[0].should.have.property('username');
-					res.body[0].username.should.be.eql('user9');
 					res.body[0].should.have.property('name');
 					res.body[0].name.should.be.eql('User 9');
 					res.body[0].should.have.property('email');
