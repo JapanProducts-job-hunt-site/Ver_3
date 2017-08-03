@@ -30,8 +30,6 @@
 			riot.mount('#content-tag', 'logout')
 		} else if (path === "signup"){
 			riot.mount('#content-tag', 'signup')
-		} else if (path === "login"){
-			riot.mount('#content-tag', 'login')
 		} else if (path === "company"){
 			riot.mount('#content-tag', 'company')
 		} else {

@@ -24,8 +24,6 @@ route(function (path) {
 		riot.mount('#content-tag', 'logout');
 	} else if (path === "signup") {
 		riot.mount('#content-tag', 'signup');
-	} else if (path === "login") {
-		riot.mount('#content-tag', 'login');
 	} else if (path === "company") {
 		riot.mount('#content-tag', 'company');
 	} else {
@@ -123,48 +121,6 @@ riot.tag2('footer-tag', '<footer class="footer"> <div class="container"> <p clas
 });
 
 riot.tag2('landing', '', '', '', function(opts) {
-});
-
-riot.tag2('login', '<form class="form-signin"> <h2 class="form-signin-heading">Please sign in</h2> <label for="inputUsername" class="sr-only">Username</label> <input ref="username" type="text" id="inputUsername" class="form-control" placeholder="Username" required autofocus> <label for="inputPassword" class="sr-only">Password</label> <input ref="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required> <div class="checkbox"> <label> <input type="checkbox" value="remember-me"> Remember me </label> </div> <button class="btn btn-lg btn-primary btn-block" onclick="{submit}" type="submit">Sign in</button> </form>', '', '', function(opts) {
-'use strict';
-
-var _this = this;
-
-this.submit = function (e) {
-	console.log('Log In clicked');
-
-	var url = '/api/authenticate';
-	var xhr = new XMLHttpRequest();
-	// const data = FormData(formData);
-
-	xhr.open('POST', url, true);
-	console.log(_this.queryStringify(_this.refs.username.value, _this.refs.password.value));
-
-	// //Send the proper header information along with the request
-	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-	// //Call a function when the state changes.
-	xhr.onreadystatechange = function () {
-		if (xhr.readyState == XMLHttpRequest.DONE && xhr.status === 200) {
-			// Request finished. Do processing here.
-			var responseObject = JSON.parse(xhr.response);
-			var JWT = responseObject.token;
-			localStorage.setItem('token', JWT);
-			riot.update();
-			console.log('JWT ' + JWT);
-
-			// go to dashboard page after logging in
-			route('dashboard');
-		} else if (xhr.readyState == XMLHttpRequest.DONE && xhr.status === 403) {
-			console.log('Response ' + xhr.responseText);
-		}
-	};
-	xhr.send(_this.queryStringify(_this.refs.username.value, _this.refs.password.value));
-};
-
-this.queryStringify = function (username, password) {
-	return 'username=' + username + '&password=' + password;
-};
 });
 
 riot.tag2('logout', '<h1>Log Out</h1> <input onclick="{submit}" type="submit" value="Log Out">', '', '', function(opts) {
