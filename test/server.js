@@ -50,29 +50,27 @@ describe('User', () => {
 	///////////////////////////////////////////
 	//          POST /api/register            //
 	///////////////////////////////////////////
+	const URI = '/api/register'
 
-	describe('POST /api/register', () => {
-		it('it should not POST without username', (done) => {
+	describe('POST ' + URI, () => {
+		it('it should POST without username', (done) => {
 			let user = {
 				password: 'password',
 				name: 'Yuuki',
 				email: 'yuuki@yuuki.com'
 			}
 			chai.request('http://localhost:' + port)
-				.post('/api/register')
+				.post(URI)
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
-					res.should.have.status(403);
+					res.should.have.status(200);
 					res.body.should.be.a('object');
-					res.body.should.have.property('success').that.to.be.false;
-					res.body.should.have.property('message');
-					res.body.message.should.have.property('errors');
-					res.body.message.errors.should.have.property('username');
+					res.body.should.have.property('success').that.to.be.true;
 					done();
 				});
 		});
-		it('it should not POST with an empty username', (done) => {
+		it('it should POST with an empty username', (done) => {
 			let user = {
 				username: '',
 				password: 'password',
@@ -80,11 +78,11 @@ describe('User', () => {
 				email: 'yuuki@yuuki.com'
 			}
 			chai.request('http://localhost:' + port)
-				.post('/api/register')
+				.post(URI)
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
-					res.should.have.status(403);
+					res.should.have.status(200);
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.false;
 					res.body.should.have.property('message');
@@ -101,7 +99,7 @@ describe('User', () => {
 				email: 'yuuki@yuuki.com'
 			}
 			chai.request('http://localhost:' + port)
-				.post('/api/register')
+				.post(URI)
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
@@ -122,7 +120,7 @@ describe('User', () => {
 				email: 'yuuki@yuuki.com'
 			}
 			chai.request('http://localhost:' + port)
-				.post('/api/register')
+				.post(URI)
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
@@ -143,7 +141,7 @@ describe('User', () => {
 				email: ''
 			}
 			chai.request('http://localhost:' + port)
-				.post('/api/register')
+				.post(URI)
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
@@ -163,7 +161,7 @@ describe('User', () => {
 				email: 'yuuki@yuuki.com'
 			}
 			chai.request('http://localhost:' + port)
-				.post('/api/register')
+				.post(URI)
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
@@ -183,7 +181,7 @@ describe('User', () => {
 				name: 'Yuuki'
 			}
 			chai.request('http://localhost:' + port)
-				.post('/api/register')
+				.post(URI)
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
@@ -204,7 +202,7 @@ describe('User', () => {
 				email: 'yuuki@yuuki.com'
 			}
 			chai.request('http://localhost:' + port)
-				.post('/api/register')
+				.post(URI)
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
@@ -222,7 +220,7 @@ describe('User', () => {
 				email: 'yuuki@yuuki.com'
 			}
 			chai.request('http://localhost:' + port)
-				.post('/api/register')
+				.post(URI)
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
@@ -244,7 +242,7 @@ describe('User', () => {
 				email: 'yuuki@yuuki.com'
 			}
 			chai.request('http://localhost:' + port)
-				.post('/api/register')
+				.post(URI)
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
@@ -265,7 +263,7 @@ describe('User', () => {
 				email: 'yuuki2@yuuki.com'
 			}
 			chai.request('http://localhost:' + port)
-				.post('/api/register')
+				.post(URI)
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {

@@ -90,10 +90,16 @@ var apiRoutes = express.Router();
 
 apiRoutes.post('/register', function(req, res) {
 
-	console.log('In register ' + req.body.username)
+	if(!req.body.name){
+		return res.status(401).json({ success: false, message: 'Registration failed. Enter username.' });
+	} else if(!req.body.password){
+		return res.status(401).json({ success: false, message: 'Registration failed. Enter password.' });
+	} else if(!req.body.email){
+		return res.status(401).json({ success: false, message: 'Registration failed. Enter email.' });
+	}
+	console.log('In register ' + req.body.name)
 	// create a sample user
 	var newUser = new User({ 
-		username: req.body.username, 
 		password: req.body.password,
 		name: req.body.name,
 		email: req.body.email,
@@ -101,7 +107,7 @@ apiRoutes.post('/register', function(req, res) {
 	});
 	newUser.save(function(err) {
 		if (err) {
-			res.status(403).send({
+			res.status(401).send({
 				success: false,
 				message: err 
 			});
