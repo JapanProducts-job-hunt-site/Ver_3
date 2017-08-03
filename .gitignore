@@ -1,5 +1,9 @@
+# idea
+.idea
+
 # SSH
 *.pem
+
 # Logs
 logs
 *.log
