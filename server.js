@@ -48,35 +48,9 @@ app.use('/scripts', express.static(__dirname + '/node_modules/'));
 app.use('/static', express.static(__dirname + '/client/static/'));
 
 
-app.get('/test', (req, res) => {
-  console.log('Testing from /test')
-  res.send('Testing from /test')
-})
 // =================================================================
 // routes ==========================================================
 // =================================================================
-app.get('/setup', function(req, res) {
-
-	// create a sample user
-	console.log('Setpu')
-	var nick = new User({ 
-		name: 'Nick Cerminara', 
-		password: 'password',
-		admin: true 
-	});
-	nick.save(function(err) {
-
-		if (err) {
-			res.status(403).send({
-				success: false,
-				message: err 
-			});
-		};
-
-		console.log('User saved successfully');
-		res.json({ success: true });
-	});
-});
 
 // basic route (http://localhost:8080)
 app.get('/', function(req, res) {
@@ -396,14 +370,14 @@ apiRoutes.get('/check', function(req, res) {
 apiRoutes.get('/search', function(req, res) {
 	User.find(req.query, function(err, users) {
 		if (err) {
-			res.status(401).send({
+			res.status(400).send({
 				success: false,
 				message: err 
 			});
 		}
 		// No match found
 		else if(!users || users.length == 0){
-			res.json({
+			res.status(400).json({
 				message:"No match found"
 			});
 		}

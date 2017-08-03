@@ -81,7 +81,6 @@ describe('User', () => {
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
-					console.log(res.body)
 					res.should.have.status(200);
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.true;
@@ -118,7 +117,6 @@ describe('User', () => {
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send(user)
 				.end((err, res) => {
-					console.log(res.body)
 					res.should.have.status(401);
 					res.body.should.be.a('object');
 					res.body.should.have.property('success').that.to.be.false;
@@ -438,7 +436,7 @@ describe('JSON Web Token', () => {
 				.get('/api/user')
 				.set('x-access-token', user1jwt)
 				.end((err, res) => {
-					res.should.have.status(409);
+					res.should.have.status(200);
 					res.body.should.be.a('object');
 					res.body.should.have.property('name');
 					res.body.should.have.property('email');
@@ -1038,22 +1036,19 @@ describe('Search studetns', () => {
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.have.lengthOf(SIZE);
-					res.body[0].should.have.property('username');
 					res.body[0].should.have.property('name');
 					res.body[0].should.have.property('email');
 					done();
 				});
 		});
-		it('{ username:"user9" } should GET only user9', (done) => {
+		it('{ email:"user9@yuuki.com" } should GET only User 9', (done) => {
 			chai.request('http://localhost:' + port)
 				.get('/api/search')
 				.set('x-access-token', user0jwt)
-				.query({ username: "user9" })
+				.query({ email: "user9@yuuki.com" })
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.have.lengthOf(1);
-					res.body[0].should.have.property('username');
-					res.body[0].username.should.be.eql('user9');
 					res.body[0].should.have.property('name');
 					res.body[0].name.should.be.eql('User 9');
 					res.body[0].should.have.property('email');
@@ -1065,12 +1060,10 @@ describe('Search studetns', () => {
 			chai.request('http://localhost:' + port)
 				.get('/api/search')
 				.set('x-access-token', user0jwt)
-				.query({ username: "user9" })
+				.query({ name: "User 9" })
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.have.lengthOf(1);
-					res.body[0].should.have.property('username');
-					res.body[0].username.should.be.eql('user9');
 					res.body[0].should.have.property('name');
 					res.body[0].name.should.be.eql('User 9');
 					res.body[0].should.have.property('email');
