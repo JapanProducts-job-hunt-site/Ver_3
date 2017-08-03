@@ -50,7 +50,7 @@
 
 
 <script type='es6'>
-this.submit = (e) => {
+		this.submit = (e) => {
 		  console.log('Submit clicked ' + this.refs.firstName.value)
 
 				const url = '/api/register';
@@ -70,12 +70,14 @@ this.submit = (e) => {
 						console.log('Response ' + xhr.responseText)
 					}
 				}
-				xhr.send(this.queryStringify(this.refs.firstName.value, this.refs.password.value, this.refs.email.value));
+				xhr.send(this.queryStringify(this.refs.firstName.value, 
+																		 this.refs.lastName.value,
+																		 this.refs.password.value, 
+																		 this.refs.email.value));
 			}
 
-		this.queryStringify = (firstName, password, email) => {
-		  return `name=${firstName}&email=${email}&password=${password}`
+		this.queryStringify = (firstName, lastName, password, email) => {
+		  return `firstName=${firstName}&lastName=${lastName}&email=${email}&password=${password}`
 		}
 </script>
-
 </signup>

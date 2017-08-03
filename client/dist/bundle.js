@@ -205,10 +205,10 @@ this.submit = function (e) {
 			console.log('Response ' + xhr.responseText);
 		}
 	};
-	xhr.send(_this.queryStringify(_this.refs.firstName.value, _this.refs.password.value, _this.refs.email.value));
+	xhr.send(_this.queryStringify(_this.refs.firstName.value, _this.refs.lastName.value, _this.refs.password.value, _this.refs.email.value));
 };
 
-this.queryStringify = function (firstName, password, email) {
-	return 'name=' + firstName + '&email=' + email + '&password=' + password;
+this.queryStringify = function (firstName, lastName, password, email) {
+	return 'firstName=' + firstName + '&lastName=' + lastName + '&email=' + email + '&password=' + password;
 };
 });
