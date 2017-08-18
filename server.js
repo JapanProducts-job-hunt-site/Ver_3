@@ -355,15 +355,13 @@ apiRoutes.get('/search', (req, res) => {
         success: false,
         message: err,
       });
-    }
+    } else if (!users || users.length === 0) {
     // No match found
-    else if (!users || users.length === 0) {
       res.status(400).json({
         message: 'No match found',
       });
-    }
+    } else {
     // Found one or more users
-    else {
       res.json(users);
     }
   });
