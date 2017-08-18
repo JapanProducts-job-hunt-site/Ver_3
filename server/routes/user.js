@@ -105,12 +105,10 @@ exports.update = (req, res) => {
       if (err) {
         res.status(409).json(err);
       } else if (!updated) {
-        res.status(400).json(
-          {
-            success: false,
-            message: 'Could not find user information',
-          },
-        );
+        res.status(400).json({
+          success: false,
+          message: 'Could not find user information',
+        });
       } else {
         // success
         res.json(updated);
