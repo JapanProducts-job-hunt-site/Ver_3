@@ -14,7 +14,7 @@ exports.register = (req, res) => {
   } else if (!req.body.email) {
     return res.status(401).json({ success: false, message: 'Registration failed. Enter email.' });
   }
-  // create a sample user
+  // create a new user
   const newUser = new User({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
