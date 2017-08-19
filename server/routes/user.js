@@ -2,12 +2,20 @@
  * This file contains the main part of manipulating the HTTP requests
  */
 const jwt = require('jsonwebtoken');
-const User = require('../models/user'); // get our mongoose model
+const User = require('../models/user').Model;
+const tempUser = require('../models/user');
+
 
 /*
  * Route for registration
  */
 exports.register = (req, res) => {
+  // Checking if all properties to create new user
+  // * firstName
+  // * lastName
+  // * password
+  // * email
+  // are sent in body
   if (!req.body.firstName) {
     return res.status(401).json({ success: false, message: 'Registration failed. Enter first name.' });
   } else if (!req.body.lastName) {
@@ -18,22 +26,39 @@ exports.register = (req, res) => {
     return res.status(401).json({ success: false, message: 'Registration failed. Enter email.' });
   }
   // create a new user
-  const newUser = new User({
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    password: req.body.password,
-    email: req.body.email,
-    admin: false,
-  });
-  newUser.save((err) => {
-    if (err) {
-      return res.status(401).send({
-        success: false,
-        message: err,
-      });
-    }
-    return res.json({ success: true });
-  });
+  // const newUser = new User({
+  //   firstName: req.body.firstName,
+  //   lastName: req.body.lastName,
+  //   password: req.body.password,
+  //   email: req.body.email,
+  //   admin: false,
+  // });
+  // newUser.save((err) => {
+  //   if (err) {
+  //     return res.status(401).send({
+  //       success: false,
+  //       message: err,
+  //     });
+  //   }
+  //   return res.json({ success: true });
+  // });
+  console.log('before promise')
+  tempUser.create(
+    req.body.firstName,
+    req.body.lastName,
+    req.body.password,
+    req.body.email,
+  )
+    .then(fulfilled => res.status(200).json(fulfilled))
+  // .then(fulfilled => {
+  //   console.log('Fulfilled')
+  //   res.status(200).json(fulfilled)
+  // })
+    .catch(err => res.status(401).send(err));
+  // .catch(err => {
+  //   console.log('error')
+  //   res.status(401).send(err)
+  // })
 };
 
 /*
