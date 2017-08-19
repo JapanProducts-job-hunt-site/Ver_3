@@ -8,7 +8,7 @@ const user = require('./user');
 const company = require('./company');
 const validateJWT = require('./jwt').validateJWT;
 
-const User = require('../../api/models/user.js'); // get our mongoose model
+const User = require('../models/user'); // get our mongoose model
 
 const router = express.Router();
 

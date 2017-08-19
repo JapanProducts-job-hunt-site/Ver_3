@@ -3,7 +3,7 @@ process.env.NODE_ENV = 'test';
 
 require('dotenv').config();
 
-const Company = require('../api/models/company');
+const Company = require('../server/models/company');
 
 // Require the dev-dependencies
 const chai = require('chai');

@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const Company = require('../../api/models/company'); // get our mongoose model
+const Company = require('../models/company'); // get our mongoose model
 
 exports.root = (req, res) => {
   res.send(`Hello! This is API for company http://localhost:${process.env.PORT}/api/company/register to create your company account`);

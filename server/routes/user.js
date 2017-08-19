@@ -2,7 +2,7 @@
  * This file contains the main part of manipulating the HTTP requests
  */
 const jwt = require('jsonwebtoken');
-const User = require('../../api/models/user.js'); // get our mongoose model
+const User = require('../models/user'); // get our mongoose model
 
 /*
  * Route for registration
