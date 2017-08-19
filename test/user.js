@@ -3,15 +3,12 @@ process.env.NODE_ENV = 'test';
 
 require('dotenv').config();
 
-// const mongoose = require('mongoose');
 const User = require('../api/models/user');
 const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
 // Require the dev-dependencies
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-// const server = require('../server');
-
 
 const port = process.env.PORT || 8080; // used to create, sign, and verify tokens
 
@@ -263,15 +260,15 @@ describe('User', () => {
     });
   });
 
-  const URI_auth = '/api/authenticate';
-  describe(`POST ${URI_auth}`, () => {
+  const URI_Auth = '/api/authenticate';
+  describe(`POST ${URI_Auth}`, () => {
     it('it should not POST with a unregistered email', (done) => {
       const user = {
         email: 'yuuki@yuuki.com3',
         password: 'password',
       };
       chai.request(`http://localhost:${port}`)
-        .post(URI_auth)
+        .post(URI_Auth)
         .set('content-type', 'application/x-www-form-urlencoded')
         .send(user)
         .end((err, res) => {
@@ -288,7 +285,7 @@ describe('User', () => {
         password: 'passworda',
       };
       chai.request(`http://localhost:${port}`)
-        .post(URI_auth)
+        .post(URI_Auth)
         .set('content-type', 'application/x-www-form-urlencoded')
         .send(user)
         .end((err, res) => {
@@ -305,7 +302,7 @@ describe('User', () => {
         password: 'passworda',
       };
       chai.request(`http://localhost:${port}`)
-        .post(URI_auth)
+        .post(URI_Auth)
         .set('content-type', 'application/x-www-form-urlencoded')
         .send(user)
         .end((err, res) => {
@@ -322,7 +319,7 @@ describe('User', () => {
         password: '',
       };
       chai.request(`http://localhost:${port}`)
-        .post(URI_auth)
+        .post(URI_Auth)
         .set('content-type', 'application/x-www-form-urlencoded')
         .send(user)
         .end((err, res) => {
@@ -339,7 +336,7 @@ describe('User', () => {
         password: 'password',
       };
       chai.request(`http://localhost:${port}`)
-        .post(URI_auth)
+        .post(URI_Auth)
         .set('content-type', 'application/x-www-form-urlencoded')
         .send(user)
         .end((err, res) => {
@@ -396,6 +393,9 @@ describe('JSON Web Token', () => {
   // Remove all the data from test db
   after((done) => {
     User.remove({}, (err) => {
+      if (err) {
+        console.log('[error] cound not save an user on db');
+      }
       done();
     });
   });
@@ -520,7 +520,7 @@ describe('Update student information', () => {
   const users = [];
   const userJWTs = [];
   const SIZE = 10;
-  let save_count = 0;
+  let saveCount = 0;
 
   before((done) => {
     User.remove({}, (err) => {
@@ -542,9 +542,9 @@ describe('Update student information', () => {
           console.log(`[error] cound not save an user on db\n${err}`);
         }
 
-        save_count++;
+        saveCount++;
         // Wait all saving is done
-        if (save_count == SIZE) {
+        if (saveCount === SIZE) {
           done();
         }
       });
@@ -808,7 +808,7 @@ describe('Update student information', () => {
 describe('Search studetns', () => {
   const users = [];
   const SIZE = 10;
-  let save_count = 0;
+  let saveCount = 0;
 
   let user0jwt;
   before((done) => {
@@ -831,9 +831,9 @@ describe('Search studetns', () => {
           console.log(`[error] cound not save an user on db\n${err}`);
         }
 
-        save_count++;
+        saveCount++;
         // Wait all saving is done
-        if (save_count == SIZE) {
+        if (saveCount == SIZE) {
           done();
         }
       });
