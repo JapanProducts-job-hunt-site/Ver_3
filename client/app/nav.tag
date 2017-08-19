@@ -23,7 +23,7 @@
 
 				<li><a href="#signup">Registration</a></li>
 
-				<div if= { opts.is_authenticated() === false }>
+				<span if= { opts.is_authenticated() === false }>
 					<form id="signin" class="navbar-form navbar-right" role="form" method="get">
 						<div class="input-group">
 							<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
@@ -35,7 +35,7 @@
 						</div>
 						<button type="submit" class="btn btn-primary" onclick={ submit } type="submit">Login</button>
 					</form>
-				</div>
+				</span>
 			</ul>
 		</div>
 	</div>
