@@ -12,7 +12,6 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 // const server = require('../server');
 
-// const should = chai.should();
 
 const port = process.env.PORT || 8080; // used to create, sign, and verify tokens
 
