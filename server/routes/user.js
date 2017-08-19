@@ -2,6 +2,7 @@
  * This file contains the main part of manipulating the HTTP requests
  */
 const jwt = require('jsonwebtoken');
+const HTTPStatus = require('http-status');
 const User = require('../models/user').Model;
 const tempUser = require('../models/user');
 
@@ -17,13 +18,13 @@ exports.register = (req, res) => {
   // * email
   // are sent in body
   if (!req.body.firstName) {
-    return res.status(401).json({ success: false, message: 'Registration failed. Enter first name.' });
+    return res.status(HTTPStatus.UNAUTHORIZED).json({ success: false, message: 'Registration failed. Enter first name.' });
   } else if (!req.body.lastName) {
-    return res.status(401).json({ success: false, message: 'Registration failed. Enter last name.' });
+    return res.status(HTTPStatus.UNAUTHORIZED).json({ success: false, message: 'Registration failed. Enter last name.' });
   } else if (!req.body.password) {
-    return res.status(401).json({ success: false, message: 'Registration failed. Enter password.' });
+    return res.status(HTTPStatus.UNAUTHORIZED).json({ success: false, message: 'Registration failed. Enter password.' });
   } else if (!req.body.email) {
-    return res.status(401).json({ success: false, message: 'Registration failed. Enter email.' });
+    return res.status(HTTPStatus.UNAUTHORIZED).json({ success: false, message: 'Registration failed. Enter email.' });
   }
 
   /**
@@ -38,7 +39,7 @@ exports.register = (req, res) => {
   // Success
     .then(fulfilled => res.status(200).json(fulfilled))
   // Error
-    .catch(err => res.status(401).send(err));
+    .catch(err => res.status(HTTPStatus.UNAUTHORIZED).send(err));
 };
 
 /*
@@ -46,44 +47,35 @@ exports.register = (req, res) => {
  */
 exports.authenticate = (req, res) => {
   if (!req.body.email) {
-    return res.status(401).json({ success: false, message: 'Authentication failed. Enter email.' });
+    return res.status(HTTPStatus.UNAUTHORIZED).json({ success: false, message: 'Authentication failed. Enter email.' });
   } else if (!req.body.password) {
-    return res.status(401).json({ success: false, message: 'Authentication failed. Enter password.' });
+    return res.status(HTTPStatus.UNAUTHORIZED).json({ success: false, message: 'Authentication failed. Enter password.' });
   }
 
-  // find the user
-  User.findOne({
-    email: req.body.email,
-  }, (err, user) => {
-    if (err) {
-      res.status(401).send({
-        success: false,
-        message: err,
+  /**
+   * Authenticate user
+   * provide JWT when authenticated
+   */
+  tempUser.authenticate(
+    req.body.password,
+    req.body.email,
+  )
+  // Success
+    .then((user) => {
+      // create a token
+      // In the JWT's payload(where all the data stored) send user object
+      // when jwt.verify is called we can obtain user data by decoded.user
+      const token = jwt.sign({ user }, process.env.secret, {
+        expiresIn: 86400, // expires in 24 hours
       });
-    }
-
-    if (!user) {
-      res.status(401).send({ success: false, message: 'Authentication failed. Email not found.' });
-    } else if (user) {
-      // check if password matches
-      if (user.password !== req.body.password) {
-        res.status(401).json({ success: false, message: 'Authentication failed. Wrong password.' });
-      } else {
-        // if user is found and password is right
-        // create a toke
-        // In the JWT's payload(where all the data stored) send user object
-        // when jwt.verify is called we can obtain user data by decoded.user
-        const token = jwt.sign({ user }, process.env.secret, {
-          expiresIn: 86400, // expires in 24 hours
-        });
-        res.json({
-          success: true,
-          message: 'Enjoy your token!',
-          token,
-        });
-      }
-    }
-  });
+      res.status(HTTPStatus.OK).json({
+        success: true,
+        message: 'Enjoy your token!',
+        token,
+      });
+    })
+  // Error
+    .catch(err => res.status(HTTPStatus.UNAUTHORIZED).send(err));
 };
 
 /*
@@ -98,7 +90,8 @@ exports.update = (req, res) => {
   }
   User.findOneAndUpdate(
     // Query
-    { _id: req.decoded.user._id },
+    // { _id: req.decoded.user._id },
+    { email: req.decoded.user.email },
     // Update
     {
       $set: req.body.user,
@@ -119,7 +112,17 @@ exports.update = (req, res) => {
         });
       } else {
         // success
-        res.json(updated);
+        // Update JWT
+        const token = jwt.sign({ user: updated }, process.env.secret, {
+          expiresIn: 86400, // expires in 24 hours
+        });
+        res.json({
+          firstName: updated.firstName,
+          lastName: updated.lastName,
+          password: updated.password,
+          email: updated.email,
+          token,
+        });
       }
     },
   );
@@ -134,13 +137,13 @@ exports.getAccountInfo = (req, res) => {
     email: req.decoded.user.email,
   }, (err, user) => {
     if (err) {
-      res.status(401).send({
+      res.status(HTTPStatus.UNAUTHORIZED).send({
         success: false,
         message: err,
       });
     } else if (!user) {
       // User not found
-      return res.status(401).json({ success: false, message: 'email not found.' });
+      return res.status(HTTPStatus.UNAUTHORIZED).json({ success: false, message: 'email not found.' });
     } else if (user) {
       // User found
       res.status(200).json(user);

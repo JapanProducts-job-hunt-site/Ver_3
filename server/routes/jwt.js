@@ -8,16 +8,20 @@ exports.validateJWT = (req, res, next) => {
   // check header or url parameters or post parameters for token
   const token = req.body.token || req.params.token || req.headers['x-access-token'];
 
+
+  // console.log('Token in middle\n' + token)
   // decode token
   if (token) {
     // verifies secret and checks exp
     jwt.verify(token, process.env.secret, (err, decoded) => {
       if (err) {
         return res.json({ success: false, message: 'Failed to authenticate token.' });
+      } else if (decoded) {
+        // if everything is good, save to request for use in other routes
+        req.decoded = decoded;
+        // console.log('decoded ' + req.decoded.user.email);
+        next();
       }
-      // if everything is good, save to request for use in other routes
-      req.decoded = decoded;
-      next();
     });
   } else {
     // if there is no token

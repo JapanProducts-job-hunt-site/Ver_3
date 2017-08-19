@@ -3,36 +3,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 // set up a mongoose model
-// module.exports = mongoose.model('User', new Schema({
-// 	firstName: {
-// 		type: String,
-// 		minlength: 1,
-// 		required: true
-// 	},
-// 	lastName: {
-// 		type: String,
-// 		minlength: 1,
-// 		required: true
-// 	},
-// 	password: {
-// 		type: String,
-// 		minlength: 1,
-// 		required: true
-// 	},
-// 	email: {
-// 		type: String,
-// 		minlength: 1,
-// 		unique: true,
-// 		required: true
-// 	},
-// 	schoolName: {
-// 		type: String,
-// 	},
-// 	major: {
-// 		type: String,
-// 	},
-// 	admin: Boolean
-// }));
 // const Model = mongoose.model('User', new Schema({
 const Model = mongoose.model('User', new Schema({
   firstName: {
@@ -95,7 +65,76 @@ const create = (firstName, lastName, password, email) =>
     });
   });
 
+/**
+ * To authenticate user
+ * All parameters have to be valid
+ */
+const authenticate = (password, email) =>
+  new Promise((resolve, reject) => {
+    // find the user
+    Model.findOne({
+      email,
+    }, (err, user) => {
+      if (err) {
+        // Database error
+        reject({
+          success: false,
+          message: err,
+        });
+      } else if (!user) {
+        // No user found by the email
+        reject({
+          success: false,
+          message: 'Authentication failed. Email not found.',
+        });
+      } else if (user) {
+        // check if password matches
+        if (user.password !== password) {
+          // Wrong password
+          reject({
+            success: false,
+            message: 'Authentication failed. Wrong password.',
+          });
+        } else {
+          // if user is found and password is right
+          resolve({
+            user,
+          });
+        }
+      }
+    });
+  });
+
+// const update = (jkk)
+//   User.findOneAndUpdate(
+//     // Query
+//     { _id: req.decoded.user._id },
+//     // Update
+//     {
+//       $set: req.body.user,
+//     },
+//     // When true the return is updated data
+//     // Run validators when updating
+//     {
+//       new: true,
+//       runValidators: true,
+//     },
+//     (err, updated) => {
+//       if (err) {
+//         res.status(409).json(err);
+//       } else if (!updated) {
+//         res.status(400).json({
+//           success: false,
+//           message: 'Could not find user information',
+//         });
+//       } else {
+//         // success
+//         res.json(updated);
+//       }
+//     },
+//   );
 module.exports = {
   Model,
   create,
+  authenticate,
 };

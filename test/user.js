@@ -524,6 +524,7 @@ describe('Update student information', () => {
 
   before((done) => {
     User.remove({}, (err) => {
+      if (err) console.log(err);
     });
 
     for (let i = 0; i < SIZE; i++) {
@@ -536,30 +537,28 @@ describe('Update student information', () => {
           admin: false,
         }),
       );
+      userJWTs.push(
+        jwt.sign({ user: users[i] }, process.env.secret, {
+          expiresIn: 86400, // expires in 24 hours
+        }),
+      );
       // register users
       users[i].save((err) => {
         if (err) {
-          console.log(`[error] cound not save an user on db\n${err}`);
         }
-
         saveCount++;
         // Wait all saving is done
         if (saveCount === SIZE) {
           done();
         }
       });
-      userJWTs.push(
-        jwt.sign({ user: users[i] }, process.env.secret, {
-          expiresIn: 86400, // expires in 24 hours
-        }),
-      );
     }
   });
 
   // Remove all the data from test db
   after((done) => {
     User.remove({}, (err) => {
-      console.log(err);
+      if (err) console.log(err);
       done();
     });
   });
@@ -585,10 +584,12 @@ describe('Update student information', () => {
           res.body.should.have.property('lastName');
           res.body.should.have.property('email');
           res.body.should.have.property('password');
+          res.body.should.have.property('token');
           res.body.firstName.should.be.eql('Updated first 1');
           res.body.lastName.should.be.eql('Last 1');
           res.body.email.should.be.eql('updated1@yuuki.com');
           res.body.password.should.be.eql(users[USER_INDEX].password);
+          userJWTs[USER_INDEX] = res.body.token;
           done();
         });
     });
@@ -614,6 +615,37 @@ describe('Update student information', () => {
           res.body.lastName.should.be.eql('Updated last 1');
           res.body.email.should.be.eql('updated1@yuuki.com');
           res.body.password.should.be.eql(users[USER_INDEX].password);
+          done();
+        });
+    });
+    it('Update all properties to "Updated 2"', (done) => {
+      const USER_INDEX = 2;
+      const DATA = {
+        user: {
+          firstName: 'Updated 2',
+          lastName: 'Updated 2',
+          name: 'Updated 2',
+          email: 'Updated 2',
+          password: 'Updated 2',
+        },
+      };
+      chai.request(`http://localhost:${port}`)
+        .put(URI)
+        .set('Content-Type', 'application/json')
+        .set('x-access-token', userJWTs[USER_INDEX])
+        .send(DATA)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.have.property('firstName');
+          res.body.should.have.property('lastName');
+          res.body.should.have.property('email');
+          res.body.should.have.property('password');
+          res.body.should.have.property('token');
+          res.body.firstName.should.be.eql('Updated 2');
+          res.body.lastName.should.be.eql('Updated 2');
+          res.body.email.should.be.eql('Updated 2');
+          res.body.password.should.be.eql('Updated 2');
+          userJWTs[USER_INDEX] = res.body.token;
           done();
         });
     });
