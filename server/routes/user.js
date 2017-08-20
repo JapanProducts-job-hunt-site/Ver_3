@@ -88,44 +88,6 @@ exports.update = (req, res) => {
       message: 'No data to update',
     });
   }
-  // User.findOneAndUpdate(
-  //   // Query
-  //   // { _id: req.decoded.user._id },
-  //   { email: req.decoded.user.email },
-  //   // Update
-  //   {
-  //     $set: req.body.user,
-  //   },
-  //   // When true the return is updated data
-  //   // Run validators when updating
-  //   {
-  //     new: true,
-  //     runValidators: true,
-  //   },
-  //   (err, updated) => {
-  //     if (err) {
-  //       res.status(409).json(err);
-  //     } else if (!updated) {
-  //       res.status(400).json({
-  //         success: false,
-  //         message: 'Could not find user information',
-  //       });
-  //     } else {
-  //       // success
-  //       // Update JWT
-  //       const token = jwt.sign({ user: updated }, process.env.secret, {
-  //         expiresIn: 86400, // expires in 24 hours
-  //       });
-  //       res.json({
-  //         firstName: updated.firstName,
-  //         lastName: updated.lastName,
-  //         password: updated.password,
-  //         email: updated.email,
-  //         token,
-  //       });
-  //     }
-  //   },
-  // );
   /*
    * Updated user
    */
@@ -161,23 +123,9 @@ exports.update = (req, res) => {
  * To get user account information
  */
 exports.getAccountInfo = (req, res) => {
-  // find the user by username from JWT payload
-  User.findOne({
-    email: req.decoded.user.email,
-  }, (err, user) => {
-    if (err) {
-      res.status(HTTPStatus.UNAUTHORIZED).send({
-        success: false,
-        message: err,
-      });
-    } else if (!user) {
-      // User not found
-      return res.status(HTTPStatus.UNAUTHORIZED).json({ success: false, message: 'email not found.' });
-    } else if (user) {
-      // User found
-      res.status(200).json(user);
-    }
-  });
+  tempUser.findUserByEmail(req.decoded.user.email)
+  .then(user => res.status(HTTPStatus.OK).json(user))
+  .catch(err => res.status(HTTPStatus.UNAUTHORIZED).json(err));
 };
 
 /*

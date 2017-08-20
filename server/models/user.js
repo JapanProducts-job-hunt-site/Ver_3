@@ -105,6 +105,9 @@ const authenticate = (password, email) =>
     });
   });
 
+/*
+ * Update user information
+ */
 const update = (email, newUser) =>
   new Promise((resolve, reject) => {
     Model.findOneAndUpdate(
@@ -142,9 +145,37 @@ const update = (email, newUser) =>
     );
   });
 
+/*
+ * To find user by email
+ * return User object
+ */
+const findUserByEmail = email =>
+  new Promise((resolve, reject) => {
+    // find the user by username from JWT payload
+    Model.findOne({
+      email,
+    }, (err, user) => {
+      if (err) {
+        reject({
+          success: false,
+          message: err,
+        });
+      } else if (!user) {
+        // User not found
+        reject({
+          success: false,
+          message: 'email not found.',
+        });
+      } else if (user) {
+        // User found
+        resolve(user);
+      }
+    });
+  });
 module.exports = {
   Model,
   create,
   authenticate,
   update,
+  findUserByEmail,
 };
