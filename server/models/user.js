@@ -172,10 +172,31 @@ const findUserByEmail = email =>
       }
     });
   });
+const search = query =>
+  new Promise((resolve, reject) => {
+    Model.find(query, (err, users) => {
+      if (err) {
+        reject({
+          success: false,
+          message: err,
+        });
+      } else if (!users || users.length === 0) {
+        // No match found
+        reject({
+          message: 'No match found',
+        });
+      } else {
+        // Found one or more users
+        resolve(users);
+      }
+    });
+  });
+
 module.exports = {
   Model,
   create,
   authenticate,
   update,
   findUserByEmail,
+  search,
 };

@@ -132,20 +132,23 @@ exports.getAccountInfo = (req, res) => {
  * To search user (student)
  */
 exports.search = (req, res) => {
-  User.find(req.query, (err, users) => {
-    if (err) {
-      res.status(400).send({
-        success: false,
-        message: err,
-      });
-    } else if (!users || users.length === 0) {
-    // No match found
-      res.status(400).json({
-        message: 'No match found',
-      });
-    } else {
-    // Found one or more users
-      res.json(users);
-    }
-  });
+  // User.find(req.query, (err, users) => {
+  //   if (err) {
+  //     res.status(400).send({
+  //       success: false,
+  //       message: err,
+  //     });
+  //   } else if (!users || users.length === 0) {
+  //   // No match found
+  //     res.status(400).json({
+  //       message: 'No match found',
+  //     });
+  //   } else {
+  //   // Found one or more users
+  //     res.json(users);
+  //   }
+  // });
+  tempUser.search(req.query)
+    .then(users => res.status(HTTPStatus.OK).json(users))
+    .catch(err => res.status(400).json(err));
 };
