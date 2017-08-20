@@ -88,44 +88,73 @@ exports.update = (req, res) => {
       message: 'No data to update',
     });
   }
-  User.findOneAndUpdate(
-    // Query
-    // { _id: req.decoded.user._id },
-    { email: req.decoded.user.email },
-    // Update
-    {
-      $set: req.body.user,
-    },
-    // When true the return is updated data
-    // Run validators when updating
-    {
-      new: true,
-      runValidators: true,
-    },
-    (err, updated) => {
-      if (err) {
-        res.status(409).json(err);
-      } else if (!updated) {
-        res.status(400).json({
-          success: false,
-          message: 'Could not find user information',
-        });
-      } else {
-        // success
-        // Update JWT
-        const token = jwt.sign({ user: updated }, process.env.secret, {
-          expiresIn: 86400, // expires in 24 hours
-        });
-        res.json({
-          firstName: updated.firstName,
-          lastName: updated.lastName,
-          password: updated.password,
-          email: updated.email,
-          token,
-        });
-      }
-    },
-  );
+  // User.findOneAndUpdate(
+  //   // Query
+  //   // { _id: req.decoded.user._id },
+  //   { email: req.decoded.user.email },
+  //   // Update
+  //   {
+  //     $set: req.body.user,
+  //   },
+  //   // When true the return is updated data
+  //   // Run validators when updating
+  //   {
+  //     new: true,
+  //     runValidators: true,
+  //   },
+  //   (err, updated) => {
+  //     if (err) {
+  //       res.status(409).json(err);
+  //     } else if (!updated) {
+  //       res.status(400).json({
+  //         success: false,
+  //         message: 'Could not find user information',
+  //       });
+  //     } else {
+  //       // success
+  //       // Update JWT
+  //       const token = jwt.sign({ user: updated }, process.env.secret, {
+  //         expiresIn: 86400, // expires in 24 hours
+  //       });
+  //       res.json({
+  //         firstName: updated.firstName,
+  //         lastName: updated.lastName,
+  //         password: updated.password,
+  //         email: updated.email,
+  //         token,
+  //       });
+  //     }
+  //   },
+  // );
+  /*
+   * Updated user
+   */
+  tempUser.update(
+    req.decoded.user.email,
+    req.body.user,
+  )
+  // Success
+    .then((user) => {
+      // create a token
+      // In the JWT's payload(where all the data stored) send user object
+      // when jwt.verify is called we can obtain user data by decoded.user
+      const token = jwt.sign({ user }, process.env.secret, {
+        expiresIn: 86400, // expires in 24 hours
+      });
+      res.status(HTTPStatus.OK).json({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        password: user.password,
+        email: user.email,
+        token,
+      });
+    })
+  // Error
+    .catch(err =>
+      res.status(err.statusCode).json({
+        message: err.message,
+      }),
+    );
 };
 
 /*

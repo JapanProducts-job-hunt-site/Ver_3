@@ -694,6 +694,7 @@ describe('Update student information', () => {
         .set('x-access-token', userJWTs[USER_INDEX])
         .send(DATA)
         .end((err, res) => {
+          console.log(res.body)
           res.should.have.status(409);
           res.body.should.have.property('message');
           res.body.message.should.contain('duplicate key error');

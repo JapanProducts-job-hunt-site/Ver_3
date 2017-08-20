@@ -105,36 +105,46 @@ const authenticate = (password, email) =>
     });
   });
 
-// const update = (jkk)
-//   User.findOneAndUpdate(
-//     // Query
-//     { _id: req.decoded.user._id },
-//     // Update
-//     {
-//       $set: req.body.user,
-//     },
-//     // When true the return is updated data
-//     // Run validators when updating
-//     {
-//       new: true,
-//       runValidators: true,
-//     },
-//     (err, updated) => {
-//       if (err) {
-//         res.status(409).json(err);
-//       } else if (!updated) {
-//         res.status(400).json({
-//           success: false,
-//           message: 'Could not find user information',
-//         });
-//       } else {
-//         // success
-//         res.json(updated);
-//       }
-//     },
-//   );
+const update = (email, newUser) =>
+  new Promise((resolve, reject) => {
+    Model.findOneAndUpdate(
+      // Query
+      { email },
+      // Update
+      {
+        $set: newUser,
+      },
+      // When true the return is updated data
+      // Run validators when updating
+      {
+        new: true,
+        runValidators: true,
+      },
+      (err, updated) => {
+        if (err) {
+          // error
+          reject({
+            message: err.message,
+            statusCode: 409,
+          });
+        } else if (!updated) {
+          // Updated not defined
+          reject({
+            success: false,
+            statusCode: 400,
+            message: 'Could not find user information',
+          });
+        } else {
+          // success
+          resolve(updated);
+        }
+      },
+    );
+  });
+
 module.exports = {
   Model,
   create,
   authenticate,
+  update,
 };
