@@ -26,6 +26,7 @@ exports.register = (req, res) => {
   } else if (!req.body.email) {
     return res.status(HTTPStatus.UNAUTHORIZED).json({ success: false, message: 'Registration failed. Enter email.' });
   }
+  console.log('Register')
 
   /**
    * Create new user (student)
@@ -82,6 +83,8 @@ exports.authenticate = (req, res) => {
  * Route for updading user (student information)
  */
 exports.update = (req, res) => {
+  // console.log('Route' + req.body.user)
+  console.log('Route update')
   if (!req.body.user) {
     return res.status(409).json({
       success: false,

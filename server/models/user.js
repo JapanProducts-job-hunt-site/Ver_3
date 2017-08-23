@@ -1,10 +1,12 @@
+const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
+const SaltRoud = 10;
 
 // set up a mongoose model
 // const Model = mongoose.model('User', new Schema({
-const Model = mongoose.model('User', new Schema({
+const UserSchema = new Schema({
   firstName: {
     type: String,
     minlength: 1,
@@ -33,7 +35,55 @@ const Model = mongoose.model('User', new Schema({
     type: String,
   },
   admin: Boolean,
-}));
+});
+
+/**
+ * Mongoose middleware to crypt password
+ * before it is saved on database
+ * NOTE cannot user arrow function
+ * because it cannot access *this*
+ */
+
+const cryptPassword = function (next) {
+  // only hash the password if it has been modified (or is new)
+  if (!this.isModified('password')) return next();
+
+  // generate a salt
+  bcrypt.genSalt(SaltRoud, (errSalt, salt) => {
+    if (errSalt) return next(errSalt);
+
+    // hash the password along with our new salt
+    bcrypt.hash(this.password, salt, (errHash, hash) => {
+      if (errHash) return next(errHash);
+      // override the cleartext password with the hashed one
+      this.password = hash;
+      next();
+    });
+  });
+};
+
+/**
+ * Set middleware for pre save
+ */
+UserSchema.pre('save', cryptPassword);
+
+/**
+ * Set middleware for pre findOneAndUpdate
+ */
+// UserSchema.pre('findOneAndUpdate', cryptPassword);
+
+/**
+ * Method to compare hashed password
+ */
+// UserSchema.methods.validatePassword = (candidatePassword, cb) => {
+const validatePassword = (candidatePassword, hashedPassword, cb) => {
+  bcrypt.compare(candidatePassword, hashedPassword, (err, isMatch) => {
+    console.log(this)
+    if (err) return cb(err);
+    cb(null, isMatch);
+  });
+};
+
 
 /**
  * To create new user
@@ -89,18 +139,24 @@ const authenticate = (password, email) =>
         });
       } else if (user) {
         // check if password matches
-        if (user.password !== password) {
-          // Wrong password
-          reject({
-            success: false,
-            message: 'Authentication failed. Wrong password.',
-          });
-        } else {
-          // if user is found and password is right
-          resolve({
-            user,
-          });
-        }
+        validatePassword(password, user.password, (errValidate, isMatch) => {
+          if (errValidate) {
+            reject({
+              success: false,
+              message: 'Authentication failed. Wrong password.',
+            });
+          } else if (!isMatch) {
+            reject({
+              success: false,
+              message: 'Authentication failed. Wrong password.',
+            });
+          } else {
+            // if user is found and password is right
+            resolve({
+              user,
+            });
+          }
+        });
       }
     });
   });
@@ -191,6 +247,8 @@ const search = query =>
       }
     });
   });
+
+const Model = mongoose.model('User', UserSchema);
 
 module.exports = {
   Model,
