@@ -45,9 +45,12 @@ const UserSchema = new Schema({
  */
 
 const cryptPassword = function (next) {
+  console.log('In crypting')
+  console.log(this)
   // only hash the password if it has been modified (or is new)
   if (!this.isModified('password')) return next();
 
+  console.log('PW is isModified')
   // generate a salt
   bcrypt.genSalt(SaltRoud, (errSalt, salt) => {
     if (errSalt) return next(errSalt);
@@ -70,7 +73,7 @@ UserSchema.pre('save', cryptPassword);
 /**
  * Set middleware for pre findOneAndUpdate
  */
-// UserSchema.pre('findOneAndUpdate', cryptPassword);
+UserSchema.pre('findOneAndUpdate', cryptPassword);
 
 /**
  * Method to compare hashed password
@@ -169,6 +172,7 @@ const update = (email, newUser) =>
     Model.findOneAndUpdate(
       // Query
       { email },
+      // { email: '1yuuki@yuuki.com' },
       // Update
       {
         $set: newUser,
@@ -187,6 +191,8 @@ const update = (email, newUser) =>
             statusCode: 409,
           });
         } else if (!updated) {
+          console.log('updated user ' + updated)
+          console.log('err ' + err)
           // Updated not defined
           reject({
             success: false,
@@ -194,6 +200,7 @@ const update = (email, newUser) =>
             message: 'Could not find user information',
           });
         } else {
+          console.log('Email: ' + email)
           // success
           resolve(updated);
         }

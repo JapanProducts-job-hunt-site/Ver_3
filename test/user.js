@@ -1,4 +1,4 @@
-// Set the enviroment variable to test
+ // Set the enviroment variable to test
 process.env.NODE_ENV = 'test';
 
 require('dotenv').config();
@@ -345,6 +345,7 @@ describe('User', () => {
           res.body.should.have.property('success').that.to.be.true;
           res.body.message.should.contain('Enjoy your token!');
           res.body.should.have.property('token');
+          console.log('token ' + res.body.token);
           done();
         });
     });

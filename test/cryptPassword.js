@@ -12,7 +12,6 @@ require('dotenv').config();
 // Set the enviroment variable to test
 process.env.NODE_ENV = 'test';
 
-
 const User = require('../server/models/user');
 const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
@@ -83,6 +82,7 @@ describe('Crypt password', () => {
           res.body.should.be.a('object');
           res.body.should.have.property('success').that.to.be.true;
           res.body.should.have.property('token');
+          // console.log('token ' + res.body.token)
           JWT = res.body.token;
           done();
         });
@@ -122,8 +122,8 @@ describe('Crypt password', () => {
     it('should update and password should be crypted', (done) => {
       const DATA = {
         user: {
-          firstName: 'Updated first 1',
-          email: 'updated1@yuuki.com',
+          firstName: 'Updated',
+          password: 'updatedpassword',
         },
       };
       chai.request(`http://localhost:${port}`)
@@ -133,13 +133,13 @@ describe('Crypt password', () => {
         .send(DATA)
         .end((err, res) => {
           console.log(res.body)
+          // console.log('JWT' + JWT)
           res.should.have.status(200);
           res.body.should.be.a('object');
-          res.body.should.have.property('success').that.to.be.true;
-          User.Model.findOne({ email: user.email }, (errDb, foundUser) => {
+          User.Model.findOne({ email: '1yuuki@yuuki.com' }, (errDb, foundUser) => {
             if (errDb) throw errDb;
             console.log(foundUser.password)
-            foundUser.password.should.not.eql(user.password);
+            foundUser.password.should.not.eql(DATA.user.password);
             done();
           });
         });
