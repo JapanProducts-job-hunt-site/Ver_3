@@ -46,7 +46,6 @@ const UserSchema = new Schema({
 
 const cryptPassword = function (next) {
   console.log('In crypting')
-  console.log(this)
   // only hash the password if it has been modified (or is new)
   if (!this.isModified('password')) return next();
 
