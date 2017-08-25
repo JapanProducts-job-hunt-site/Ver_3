@@ -214,3 +214,50 @@ Send this in *Header*
 x-access-token:JSON web token
 
 
+# Pages to make 
+
+## Landing page for student
+
+* Sign up
+* Sign in
+* Explanation about the web site for students 
+(Example: Show the list of companies registered)
+
+## Landing page for company
+
+* Sign up
+* Sign in
+* Explanation about the web site for companies
+(Example: Show the price comparing to going to Boston career forum)
+
+## Profile page for student
+
+* User can see their profile
+* User can edit their profile
+
+## Profile page for company
+
+* User can see their profile
+* User can edit their profile
+
+## Dashboard page for students
+
+* User can see the notification of offer from companies
+
+## Dashboard page for company
+
+* List of job information user made
+ ***More detail required***
+
+## Search page for students to search companies
+
+* Student can search companies and their job postings
+* Student can click on each job post and see more details
+
+## Search page for company to search students
+
+* Companies can search students 
+* Companies can click on each student and go to their profile page
+* Companies can click the button to notify students that they are interested
+
+# Database schema
