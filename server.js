@@ -41,9 +41,9 @@ app.use(bodyParser.json());
  * index.html looks for these files
  */
 app.use(express.static(`${__dirname}/client/app`));
-app.use('/dist', express.static(`${__dirname}/client/dist`));
-app.use('/scripts', express.static(`${__dirname}/node_modules/`));
+app.use('/modules', express.static(`${__dirname}/node_modules/`));
 app.use('/static', express.static(`${__dirname}/client/static/`));
+
 
 /*
  * All routing happens in server/routes
