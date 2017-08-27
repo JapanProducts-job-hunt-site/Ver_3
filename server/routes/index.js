@@ -4,6 +4,7 @@
  */
 
 const express = require('express');
+const path = require('path');
 const user = require('./user');
 const company = require('./company');
 const validateJWT = require('./jwt').validateJWT;
@@ -12,13 +13,20 @@ const User = require('../models/user'); // get our mongoose model
 
 const router = express.Router();
 
-// basic route (http://localhost:8080)
 /*
  * GET /
- * Root route
+ * Send html for landing page
  */
 router.get('/', (req, res) => {
-  res.send(`Hello! The API is at http://localhost:${process.env.PORT}/api`);
+  const options = {
+    root: `${__dirname}/../../`,
+    headers: {
+      'x-timestamp': Date.now(),
+      'x-sent': true,
+    },
+  };
+  const fileName = '/client/static/html/index.html';
+  res.sendFile(fileName, options);
 });
 
 /*
