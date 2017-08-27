@@ -45,11 +45,11 @@ const UserSchema = new Schema({
  */
 
 const cryptPassword = function (next) {
-  console.log('In crypting')
+  // console.log('In crypting')
   // only hash the password if it has been modified (or is new)
   if (!this.isModified('password')) return next();
 
-  console.log('PW is isModified')
+  // console.log('PW is isModified')
   // generate a salt
   bcrypt.genSalt(SaltRoud, (errSalt, salt) => {
     if (errSalt) return next(errSalt);
@@ -72,7 +72,7 @@ UserSchema.pre('save', cryptPassword);
 /**
  * Set middleware for pre findOneAndUpdate
  */
-UserSchema.pre('findOneAndUpdate', cryptPassword);
+// UserSchema.pre('findOneAndUpdate', cryptPassword);
 
 /**
  * Method to compare hashed password
@@ -80,7 +80,7 @@ UserSchema.pre('findOneAndUpdate', cryptPassword);
 // UserSchema.methods.validatePassword = (candidatePassword, cb) => {
 const validatePassword = (candidatePassword, hashedPassword, cb) => {
   bcrypt.compare(candidatePassword, hashedPassword, (err, isMatch) => {
-    console.log(this)
+    // console.log(this)
     if (err) return cb(err);
     cb(null, isMatch);
   });
@@ -234,6 +234,79 @@ const findUserByEmail = email =>
       }
     });
   });
+
+/**
+ * Method to update password
+ * Precondition: all params have to exist
+ * user object has to contain
+ * email
+ * oldPassword
+ * newPassowrd
+ */
+UserSchema.statics.updatePassword =
+  function updatePassword(user, cb) {
+    // if (!user) {
+    //   // user is undefined
+    //   cb('User is undefined');
+    // } else if (!user.email) {
+    //   // email is undefined
+    //   cb('email is undefined');
+    // } else if (!user.oldPassword) {
+    //   // oldPassword is undefined
+    //   cb('oldPassword is undefined');
+    // } else if (!user.newPassword) {
+    //   // newPassword is undefined
+    //   cb('newPassword is undefined');
+    // }
+    // Validate input with email and oldPassword
+    console.log('in the methods')
+    this.findOne({ email: user.email }, (err, foundUser) => {
+      if (err) {
+        // Error while searching
+        cb('Error occured while finding user')
+      } else if (!foundUser) {
+        // No user found with email from JWT
+        cb('No user found')
+      } else {
+        // Found user
+        console.log('Found user')
+        // Check if the old password is valid
+        validatePassword(user.oldPassword, foundUser.password, (err, isMatch) => {
+          if (err) {
+            console.log(err)
+          } else if (!isMatch) {
+            console.log('Password is wrong')
+          } else {
+            // If valid
+            // hash the password
+            bcrypt.genSalt(SaltRoud, (errSalt, salt) => {
+              if (errSalt) cb(errSalt);
+              // hash the password along with our new salt
+              bcrypt.hash(user.newPassword, salt, (errHash, hash) => {
+                if (errHash) cb(errHash);
+                // update password with hashed password
+                foundUser.password = hash;
+                foundUser.save((updateErr, updatedUser) => {
+                  if (updateErr) {
+                    console.log('Update err')
+                  } else if (!updatedUser) {
+                    console.log('Update user undefined')
+                  } else {
+                    // Success
+                    cb(null, updatedUser);
+                  }
+                });
+              });
+            });
+          }
+        });
+      }
+    });
+  };
+
+/**
+ * Method to search student
+ */
 const search = query =>
   new Promise((resolve, reject) => {
     Model.find(query, (err, users) => {

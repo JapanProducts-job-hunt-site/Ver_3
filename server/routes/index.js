@@ -81,6 +81,12 @@ apiRoutes.get('/', (req, res) => {
 apiRoutes.put('/users', user.update);
 
 /*
+ * PUT /api/updatepassword
+ * To update only password
+ */
+apiRoutes.put('/updatepassword', user.updatePassword);
+
+/*
  * GET /api/user
  * To get user (student) account information
  */
