@@ -2,8 +2,40 @@
  * This js file is for sign up function
  */
 
-console.log('Test')
 $( "form#signup" ).submit(function( event ) {
   event.preventDefault();
-  console.log($("form#signup input.firstname").val())
+
+  var firstName = $("form#signup input.firstname").val();
+  var lastName = $("form#signup input.lastname").val();
+  var email = $("form#signup input.email").val();
+  var password = $("form#signup input.password").val();
+
+  var method = "POST";
+  var url = "api/register";
+  var contentType = "application/x-www-form-urlencoded";
+  // To enable object formatter for query string
+  var processData = true;
+  // This will be transformed into query string
+  var data = {
+    firstName: firstName,
+    lastName: lastName,
+    email: email,
+    password: password,
+  };
+  var dataType = "json";
+
+  // Only for testing
+  console.log("First name: " + firstName);
+  console.log("Last name: " + lastName);
+  console.log("Email: " + email);
+  console.log("Password: " + password);
+
+  $.ajax({
+    method: method,
+    url: url,
+    contentType: contentType,
+    processData: processData,
+    data: data,
+    dataType: dataType,
+  });
 });
