@@ -37,5 +37,11 @@ $( "form#signup" ).submit(function( event ) {
     processData: processData,
     data: data,
     dataType: dataType,
-  });
+  })
+  .done(function (data) {
+    console.log(data);
+  })
+  .fail(function (jqXHR) {
+    console.log(jqXHR.responseJSON);
+  })
 });
