@@ -39,10 +39,25 @@
             <input type="submit" value="Submit"><br>
         </form>
 
+        <h2>Sign in</h2>
+
+        <!-- Do NOT delete id or signup.js will not work-->
+        <form id="signin" action="">
+            email:<br>
+            <!-- Do NOT delete class or signup.js will not work-->
+            <input class="email" type="text" name="email"><br>
+            Password:<br>
+            <!-- Do NOT delete class or signup.js will not work-->
+            <input class="password" type="text" name="password"><br>
+            <input type="submit" value="Submit"><br>
+        </form>
 
         <!-- Load jQuery -->
-        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script src="modules/jquery/dist/jquery.min.js"></script>
+
         <!-- Load js file for sign up-->
         <script src="/static/js/signup.js"></script>
+        <!-- Load js file for sign in-->
+        <script src="/static/js/signin.js"></script>
     </body>
 </html>
