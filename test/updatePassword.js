@@ -14,7 +14,6 @@ const should = chai.should();
 
 chai.use(chaiHttp);
 
-
 // Set the enviroment variable to test
 process.env.NODE_ENV = 'test';
 
@@ -232,7 +231,7 @@ describe('Update student information', () => {
     it('should return 409 if the old password is wrong', (done) => {
       done();
     });
-    it('should return return 200 and PW is hashed', (done) => {
+    it('should return 200 and PW is hashed', (done) => {
       const USER_INDEX = 1;
       const DATA = {
         user: {
@@ -284,6 +283,7 @@ describe('Update student information', () => {
       const user = {
         email: users[USER_INDEX].email,
         password: 'a',
+        // password: USER_INDEX,
       };
       chai.request(`http://localhost:${port}`)
         .post(authURI)

@@ -80,7 +80,8 @@ UserSchema.pre('save', cryptPassword);
 // UserSchema.methods.validatePassword = (candidatePassword, cb) => {
 const validatePassword = (candidatePassword, hashedPassword, cb) => {
   bcrypt.compare(candidatePassword, hashedPassword, (err, isMatch) => {
-    // console.log(this)
+    console.log('candidate PW')
+    console.log('is Match ' + isMatch)
     if (err) return cb(err);
     cb(null, isMatch);
   });
@@ -143,11 +144,13 @@ const authenticate = (password, email) =>
         // check if password matches
         validatePassword(password, user.password, (errValidate, isMatch) => {
           if (errValidate) {
+            console.log('Err validate');
             reject({
               success: false,
               message: 'Authentication failed. Wrong password.',
             });
           } else if (!isMatch) {
+            console.log('Wrong password in route');
             reject({
               success: false,
               message: 'Authentication failed. Wrong password.',
