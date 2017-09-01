@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
-const SaltRoud = 10;
+const SaltRound = 10;
 
 // set up a mongoose model
 // const Model = mongoose.model('User', new Schema({
@@ -19,7 +19,6 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
-    minlength: 1,
     required: true,
   },
   email: {
@@ -51,12 +50,14 @@ const cryptPassword = function (next) {
 
   // console.log('PW is isModified')
   // generate a salt
-  bcrypt.genSalt(SaltRoud, (errSalt, salt) => {
+  bcrypt.genSalt(SaltRound, (errSalt, salt) => {
     if (errSalt) return next(errSalt);
 
     // hash the password along with our new salt
     bcrypt.hash(this.password, salt, (errHash, hash) => {
       if (errHash) return next(errHash);
+      console.log('BEFORE hash: ' + this.password);
+      console.log('AFTER  hash: ' + hash);
       // override the cleartext password with the hashed one
       this.password = hash;
       next();
@@ -79,8 +80,9 @@ UserSchema.pre('save', cryptPassword);
  */
 // UserSchema.methods.validatePassword = (candidatePassword, cb) => {
 const validatePassword = (candidatePassword, hashedPassword, cb) => {
+  console.log('candidate PW ' + candidatePassword);
+  console.log('hashed PW ' + hashedPassword);
   bcrypt.compare(candidatePassword, hashedPassword, (err, isMatch) => {
-    console.log('candidate PW')
     console.log('is Match ' + isMatch)
     if (err) return cb(err);
     cb(null, isMatch);
@@ -281,26 +283,40 @@ UserSchema.statics.updatePassword =
             console.log('Password is wrong')
           } else {
             // If valid
-            // hash the password
-            bcrypt.genSalt(SaltRoud, (errSalt, salt) => {
-              if (errSalt) cb(errSalt);
-              // hash the password along with our new salt
-              bcrypt.hash(user.newPassword, salt, (errHash, hash) => {
-                if (errHash) cb(errHash);
-                // update password with hashed password
-                foundUser.password = hash;
-                foundUser.save((updateErr, updatedUser) => {
-                  if (updateErr) {
-                    console.log('Update err')
-                  } else if (!updatedUser) {
-                    console.log('Update user undefined')
-                  } else {
-                    // Success
-                    cb(null, updatedUser);
-                  }
-                });
-              });
+           
+            console.log('user.newPassword ' + user.newPassword);
+            foundUser.password = user.newPassword;
+            
+            foundUser.save((updateErr, updatedUser) => {
+              if (updateErr) {
+                console.log('Update err' + updateErr)
+              } else if (!updatedUser) {
+                console.log('Update user undefined')
+              } else {
+                // Success
+                cb(null, updatedUser);
+              }
             });
+
+            // bcrypt.genSalt(SaltRound, (errSalt, salt) => {
+            //   if (errSalt) cb(errSalt);
+            //   // hash the password along with our new salt
+            //   bcrypt.hash(user.newPassword, salt, (errHash, hash) => {
+            //     if (errHash) cb(errHash);
+            //     // update password with hashed password
+            //     foundUser.password = hash;
+            //     foundUser.save((updateErr, updatedUser) => {
+            //       if (updateErr) {
+            //         console.log('Update err')
+            //       } else if (!updatedUser) {
+            //         console.log('Update user undefined')
+            //       } else {
+            //         // Success
+            //         cb(null, updatedUser);
+            //       }
+            //     });
+            //   });
+            // });
           }
         });
       }
