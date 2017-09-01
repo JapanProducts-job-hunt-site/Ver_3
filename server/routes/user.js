@@ -26,7 +26,6 @@ exports.register = (req, res) => {
   } else if (!req.body.email) {
     return res.status(HTTPStatus.UNAUTHORIZED).json({ success: false, message: 'Registration failed. Enter email.' });
   }
-  // console.log('Register')
 
   /**
    * Create new user (student)
@@ -66,7 +65,6 @@ exports.authenticate = (req, res) => {
       // create a token
       // In the JWT's payload(where all the data stored) send user object
       // when jwt.verify is called we can obtain user data by decoded.user
-      // console.log('JWT.sign ' + JSON.stringify(user))
       // const token = jwt.sign({ user }, process.env.secret, {
       const token = jwt.sign(user, process.env.secret, {
         expiresIn: 86400, // expires in 24 hours
@@ -85,8 +83,6 @@ exports.authenticate = (req, res) => {
  * Route for updading user (student information)
  */
 exports.update = (req, res) => {
-  // console.log('Route' + req.body.user)
-  // console.log('Route update')
   /*
    * Validate param
    * If not data found, return 409
@@ -110,7 +106,6 @@ exports.update = (req, res) => {
   /*
    * Updated user
    */
-  // console.log('Route req.decode ' + req.decoded)
   tempUser.update(
     req.decoded.user.email,
     req.body.user,
@@ -144,31 +139,33 @@ exports.update = (req, res) => {
  */
 exports.updatePassword = (req, res) => {
   if (!req.body.user.oldPassword) {
-    return res.status(409).json({
+    return res.status(HTTPStatus.CONFLICT).json({
       success: false,
       message: 'No old password found',
     });
   } else if (!req.body.user.newPassword) {
-    return res.status(409).json({
+    return res.status(HTTPStatus.CONFLICT).json({
       success: false,
       message: 'No new password found',
     });
   }
-  console.log('Before calling methods')
-  
   User.updatePassword({
     email: req.decoded.user.email,
     oldPassword: req.body.user.oldPassword,
     newPassword: req.body.user.newPassword,
   }, (err, newUser) => {
     if (err) {
-      console.log(err)
+      return res.status(HTTPStatus.UNAUTHORIZED).json({
+        success: false,
+        message: err,
+      });
     } else if (!newUser) {
-      console.log('No updated user')
+      return res.status(HTTPStatus.CONFLICT).json({
+        success: false,
+        message: 'User not found',
+      });
     } else {
       // Success
-      console.log('Success')
-      console.log(newUser)
       return res.status(HTTPStatus.OK).json({
         message: 'Password updated',
       })

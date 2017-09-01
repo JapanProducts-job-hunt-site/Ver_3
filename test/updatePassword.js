@@ -64,7 +64,6 @@ describe('Update student information', () => {
       users[i].save((err, saved) => {
         if (err) {
         }
-        console.log(i + ', ' + saved.password)
         saveCount++;
         // Wait all saving is done
         if (saveCount === SIZE) {
@@ -221,23 +220,18 @@ describe('Update student information', () => {
         .set('x-access-token', 'Wrong JWT')
         .send(DATA)
         .end((err, res) => {
-          console.log(res.body)
           res.should.have.status(200);
           res.body.success.should.be.false;
           res.body.message.should.contain('Failed ');
           done();
         });
     });
-    it('should return 409 if the old password is wrong', (done) => {
-      done();
-    });
     it('should return 200 and PW is hashed', (done) => {
       const USER_INDEX = 1;
       const DATA = {
         user: {
           oldPassword: '1',
-          // newPassword: 'new password',
-          newPassword: 'a',
+          newPassword: 'new password',
         },
       };
       chai.request(`http://localhost:${port}`)
@@ -250,10 +244,28 @@ describe('Update student information', () => {
           res.body.message.should.be.eql('Password updated');
           User.findOne({ email: users[USER_INDEX].email }, (errDb, foundUser) => {
             if (errDb) throw errDb;
-            console.log(foundUser.password)
-            // foundUser.password.should.not.eql(users[USER_INDEX].password);
-          done();
+            foundUser.password.should.not.eql(users[USER_INDEX].password);
+            done();
           });
+        });
+    });
+    it('should return 409 if the old password is wrong', (done) => {
+      const USER_INDEX = 1;
+      const DATA = {
+        user: {
+          oldPassword: '1',
+          newPassword: 'new password',
+        },
+      };
+      chai.request(`http://localhost:${port}`)
+        .put(updatePassordURI)
+        .set('Content-Type', 'application/json')
+        .set('x-access-token', userJWTs[USER_INDEX])
+        .send(DATA)
+        .end((err, res) => {
+          res.should.have.status(401);
+          res.body.message.should.be.eql('Password is wrong');
+          done();
         });
     });
   });
@@ -278,23 +290,53 @@ describe('Update student information', () => {
           done();
         });
     });
-    it('should be able to log in with updated password', (done) => {
+    it('should NOT be able to log in with old password', (done) => {
       const USER_INDEX = 1;
       const user = {
         email: users[USER_INDEX].email,
-        password: 'a',
-        // password: USER_INDEX,
+        password: '1',
       };
       chai.request(`http://localhost:${port}`)
         .post(authURI)
         .set('content-type', 'application/x-www-form-urlencoded')
         .send(user)
         .end((err, res) => {
-          User.findOne({ email: users[USER_INDEX].email }, (errDb, foundUser) => {
-            if (errDb) throw errDb;
-           //  console.log('Pre test' +  foundUser.password)
-          });
-          console.log(res.body)
+          res.should.have.status(401);
+          res.body.should.be.a('object');
+          res.body.should.have.property('success').that.to.be.false;
+          res.body.message.should.contain('Wrong password');
+          done();
+        });
+    });
+    it('should NOT be able to log in with wrong password', (done) => {
+      const USER_INDEX = 1;
+      const user = {
+        email: users[USER_INDEX].email,
+        password: 'wrong new password',
+      };
+      chai.request(`http://localhost:${port}`)
+        .post(authURI)
+        .set('content-type', 'application/x-www-form-urlencoded')
+        .send(user)
+        .end((err, res) => {
+          res.should.have.status(401);
+          res.body.should.be.a('object');
+          res.body.should.have.property('success').that.to.be.false;
+          res.body.message.should.contain('Wrong password');
+          done();
+        });
+    });
+    it('should be able to log in with updated password', (done) => {
+      const USER_INDEX = 1;
+      const user = {
+        email: users[USER_INDEX].email,
+        password: 'new password',
+      };
+      chai.request(`http://localhost:${port}`)
+        .post(authURI)
+        .set('content-type', 'application/x-www-form-urlencoded')
+        .send(user)
+        .end((err, res) => {
           res.should.have.status(200);
           res.body.should.be.a('object');
           res.body.should.have.property('success').that.to.be.true;

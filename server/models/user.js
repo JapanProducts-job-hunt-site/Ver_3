@@ -19,6 +19,7 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
+    minlength: 1,
     required: true,
   },
   email: {
@@ -44,11 +45,9 @@ const UserSchema = new Schema({
  */
 
 const cryptPassword = function (next) {
-  // console.log('In crypting')
   // only hash the password if it has been modified (or is new)
   if (!this.isModified('password')) return next();
 
-  // console.log('PW is isModified')
   // generate a salt
   bcrypt.genSalt(SaltRound, (errSalt, salt) => {
     if (errSalt) return next(errSalt);
@@ -56,8 +55,6 @@ const cryptPassword = function (next) {
     // hash the password along with our new salt
     bcrypt.hash(this.password, salt, (errHash, hash) => {
       if (errHash) return next(errHash);
-      console.log('BEFORE hash: ' + this.password);
-      console.log('AFTER  hash: ' + hash);
       // override the cleartext password with the hashed one
       this.password = hash;
       next();
@@ -80,10 +77,7 @@ UserSchema.pre('save', cryptPassword);
  */
 // UserSchema.methods.validatePassword = (candidatePassword, cb) => {
 const validatePassword = (candidatePassword, hashedPassword, cb) => {
-  console.log('candidate PW ' + candidatePassword);
-  console.log('hashed PW ' + hashedPassword);
   bcrypt.compare(candidatePassword, hashedPassword, (err, isMatch) => {
-    console.log('is Match ' + isMatch)
     if (err) return cb(err);
     cb(null, isMatch);
   });
@@ -146,13 +140,11 @@ const authenticate = (password, email) =>
         // check if password matches
         validatePassword(password, user.password, (errValidate, isMatch) => {
           if (errValidate) {
-            console.log('Err validate');
             reject({
               success: false,
               message: 'Authentication failed. Wrong password.',
             });
           } else if (!isMatch) {
-            console.log('Wrong password in route');
             reject({
               success: false,
               message: 'Authentication failed. Wrong password.',
@@ -195,8 +187,6 @@ const update = (email, newUser) =>
             statusCode: 409,
           });
         } else if (!updated) {
-          console.log('updated user ' + updated)
-          console.log('err ' + err)
           // Updated not defined
           reject({
             success: false,
@@ -204,7 +194,6 @@ const update = (email, newUser) =>
             message: 'Could not find user information',
           });
         } else {
-          console.log('Email: ' + email)
           // success
           resolve(updated);
         }
@@ -250,21 +239,20 @@ const findUserByEmail = email =>
  */
 UserSchema.statics.updatePassword =
   function updatePassword(user, cb) {
-    // if (!user) {
-    //   // user is undefined
-    //   cb('User is undefined');
-    // } else if (!user.email) {
-    //   // email is undefined
-    //   cb('email is undefined');
-    // } else if (!user.oldPassword) {
-    //   // oldPassword is undefined
-    //   cb('oldPassword is undefined');
-    // } else if (!user.newPassword) {
-    //   // newPassword is undefined
-    //   cb('newPassword is undefined');
-    // }
+    if (!user) {
+      // user is undefined
+      cb('User is undefined');
+    } else if (!user.email) {
+      // email is undefined
+      cb('email is undefined');
+    } else if (!user.oldPassword) {
+      // oldPassword is undefined
+      cb('oldPassword is undefined');
+    } else if (!user.newPassword) {
+      // newPassword is undefined
+      cb('newPassword is undefined');
+    }
     // Validate input with email and oldPassword
-    console.log('in the methods')
     this.findOne({ email: user.email }, (err, foundUser) => {
       if (err) {
         // Error while searching
@@ -274,49 +262,26 @@ UserSchema.statics.updatePassword =
         cb('No user found')
       } else {
         // Found user
-        console.log('Found user')
         // Check if the old password is valid
         validatePassword(user.oldPassword, foundUser.password, (err, isMatch) => {
           if (err) {
-            console.log(err)
+            cb(err);
           } else if (!isMatch) {
-            console.log('Password is wrong')
+            cb('Password is wrong');
           } else {
             // If valid
-           
-            console.log('user.newPassword ' + user.newPassword);
+            // Update password with newPassword
             foundUser.password = user.newPassword;
-            
             foundUser.save((updateErr, updatedUser) => {
               if (updateErr) {
-                console.log('Update err' + updateErr)
+                cb(updateErr);
               } else if (!updatedUser) {
-                console.log('Update user undefined')
+                cb('Update user undefined');
               } else {
                 // Success
                 cb(null, updatedUser);
               }
             });
-
-            // bcrypt.genSalt(SaltRound, (errSalt, salt) => {
-            //   if (errSalt) cb(errSalt);
-            //   // hash the password along with our new salt
-            //   bcrypt.hash(user.newPassword, salt, (errHash, hash) => {
-            //     if (errHash) cb(errHash);
-            //     // update password with hashed password
-            //     foundUser.password = hash;
-            //     foundUser.save((updateErr, updatedUser) => {
-            //       if (updateErr) {
-            //         console.log('Update err')
-            //       } else if (!updatedUser) {
-            //         console.log('Update user undefined')
-            //       } else {
-            //         // Success
-            //         cb(null, updatedUser);
-            //       }
-            //     });
-            //   });
-            // });
           }
         });
       }
