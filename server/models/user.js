@@ -1,10 +1,12 @@
+const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
+const SaltRound = 10;
 
 // set up a mongoose model
 // const Model = mongoose.model('User', new Schema({
-const Model = mongoose.model('User', new Schema({
+const UserSchema = new Schema({
   firstName: {
     type: String,
     minlength: 1,
@@ -33,7 +35,54 @@ const Model = mongoose.model('User', new Schema({
     type: String,
   },
   admin: Boolean,
-}));
+});
+
+/**
+ * Mongoose middleware to crypt password
+ * before it is saved on database
+ * NOTE cannot user arrow function
+ * because it cannot access *this*
+ */
+
+const cryptPassword = function (next) {
+  // only hash the password if it has been modified (or is new)
+  if (!this.isModified('password')) return next();
+
+  // generate a salt
+  bcrypt.genSalt(SaltRound, (errSalt, salt) => {
+    if (errSalt) return next(errSalt);
+
+    // hash the password along with our new salt
+    bcrypt.hash(this.password, salt, (errHash, hash) => {
+      if (errHash) return next(errHash);
+      // override the cleartext password with the hashed one
+      this.password = hash;
+      next();
+    });
+  });
+};
+
+/**
+ * Set middleware for pre save
+ */
+UserSchema.pre('save', cryptPassword);
+
+/**
+ * Set middleware for pre findOneAndUpdate
+ */
+// UserSchema.pre('findOneAndUpdate', cryptPassword);
+
+/**
+ * Method to compare hashed password
+ */
+// UserSchema.methods.validatePassword = (candidatePassword, cb) => {
+const validatePassword = (candidatePassword, hashedPassword, cb) => {
+  bcrypt.compare(candidatePassword, hashedPassword, (err, isMatch) => {
+    if (err) return cb(err);
+    cb(null, isMatch);
+  });
+};
+
 
 /**
  * To create new user
@@ -89,18 +138,24 @@ const authenticate = (password, email) =>
         });
       } else if (user) {
         // check if password matches
-        if (user.password !== password) {
-          // Wrong password
-          reject({
-            success: false,
-            message: 'Authentication failed. Wrong password.',
-          });
-        } else {
-          // if user is found and password is right
-          resolve({
-            user,
-          });
-        }
+        validatePassword(password, user.password, (errValidate, isMatch) => {
+          if (errValidate) {
+            reject({
+              success: false,
+              message: 'Authentication failed. Wrong password.',
+            });
+          } else if (!isMatch) {
+            reject({
+              success: false,
+              message: 'Authentication failed. Wrong password.',
+            });
+          } else {
+            // if user is found and password is right
+            resolve({
+              user,
+            });
+          }
+        });
       }
     });
   });
@@ -113,6 +168,7 @@ const update = (email, newUser) =>
     Model.findOneAndUpdate(
       // Query
       { email },
+      // { email: '1yuuki@yuuki.com' },
       // Update
       {
         $set: newUser,
@@ -172,6 +228,69 @@ const findUserByEmail = email =>
       }
     });
   });
+
+/**
+ * Method to update password
+ * Precondition: all params have to exist
+ * user object has to contain
+ * email
+ * oldPassword
+ * newPassowrd
+ */
+UserSchema.statics.updatePassword =
+  function updatePassword(user, cb) {
+    if (!user) {
+      // user is undefined
+      cb('User is undefined');
+    } else if (!user.email) {
+      // email is undefined
+      cb('email is undefined');
+    } else if (!user.oldPassword) {
+      // oldPassword is undefined
+      cb('oldPassword is undefined');
+    } else if (!user.newPassword) {
+      // newPassword is undefined
+      cb('newPassword is undefined');
+    }
+    // Validate input with email and oldPassword
+    this.findOne({ email: user.email }, (err, foundUser) => {
+      if (err) {
+        // Error while searching
+        cb('Error occured while finding user')
+      } else if (!foundUser) {
+        // No user found with email from JWT
+        cb('No user found')
+      } else {
+        // Found user
+        // Check if the old password is valid
+        validatePassword(user.oldPassword, foundUser.password, (err, isMatch) => {
+          if (err) {
+            cb(err);
+          } else if (!isMatch) {
+            cb('Password is wrong');
+          } else {
+            // If valid
+            // Update password with newPassword
+            foundUser.password = user.newPassword;
+            foundUser.save((updateErr, updatedUser) => {
+              if (updateErr) {
+                cb(updateErr);
+              } else if (!updatedUser) {
+                cb('Update user undefined');
+              } else {
+                // Success
+                cb(null, updatedUser);
+              }
+            });
+          }
+        });
+      }
+    });
+  };
+
+/**
+ * Method to search student
+ */
 const search = query =>
   new Promise((resolve, reject) => {
     Model.find(query, (err, users) => {
@@ -191,6 +310,8 @@ const search = query =>
       }
     });
   });
+
+const Model = mongoose.model('User', UserSchema);
 
 module.exports = {
   Model,
