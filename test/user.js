@@ -1,4 +1,4 @@
- // Set the enviroment variable to test
+// Set the enviroment variable to test
 process.env.NODE_ENV = 'test';
 
 require('dotenv').config();
@@ -345,7 +345,6 @@ describe('User', () => {
           res.body.should.have.property('success').that.to.be.true;
           res.body.message.should.contain('Enjoy your token!');
           res.body.should.have.property('token');
-          console.log('token ' + res.body.token);
           done();
         });
     });
@@ -627,7 +626,6 @@ describe('Update student information', () => {
           lastName: 'Updated 2',
           name: 'Updated 2',
           email: 'Updated 2',
-          password: 'Updated 2',
         },
       };
       chai.request(`http://localhost:${port}`)
@@ -645,7 +643,6 @@ describe('Update student information', () => {
           res.body.firstName.should.be.eql('Updated 2');
           res.body.lastName.should.be.eql('Updated 2');
           res.body.email.should.be.eql('Updated 2');
-          res.body.password.should.be.eql('Updated 2');
           userJWTs[USER_INDEX] = res.body.token;
           done();
         });
@@ -658,7 +655,6 @@ describe('Update student information', () => {
           lastName: 'Updated 2',
           name: 'Updated 2',
           email: 'Updated 2',
-          password: 'Updated 2',
         },
       };
       chai.request(`http://localhost:${port}`)
@@ -671,11 +667,9 @@ describe('Update student information', () => {
           res.body.should.have.property('firstName');
           res.body.should.have.property('lastName');
           res.body.should.have.property('email');
-          res.body.should.have.property('password');
           res.body.firstName.should.be.eql('Updated 2');
           res.body.lastName.should.be.eql('Updated 2');
           res.body.email.should.be.eql('Updated 2');
-          res.body.password.should.be.eql('Updated 2');
           done();
         });
     });
@@ -686,7 +680,6 @@ describe('Update student information', () => {
           firstName: 'Updated frist 1',
           lastName: 'Updated last 1',
           email: 'Updated 2',
-          password: 'Updated 2',
         },
       };
       chai.request(`http://localhost:${port}`)
@@ -695,7 +688,6 @@ describe('Update student information', () => {
         .set('x-access-token', userJWTs[USER_INDEX])
         .send(DATA)
         .end((err, res) => {
-          console.log(res.body)
           res.should.have.status(409);
           res.body.should.have.property('message');
           res.body.message.should.contain('duplicate key error');
@@ -798,8 +790,7 @@ describe('Update student information', () => {
         .end((err, res) => {
           res.should.have.status(409);
           res.body.should.have.property('message');
-          res.body.message.should.contain('required');
-          res.body.message.should.contain('password');
+          res.body.message.should.be.eql('Password cannot be updated via this route');
           done();
         });
     });

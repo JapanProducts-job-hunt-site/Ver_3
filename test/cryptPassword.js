@@ -59,7 +59,6 @@ describe('Crypt password', () => {
           res.body.should.have.property('success').that.to.be.true;
           User.Model.findOne({ email: user.email }, (errDb, foundUser) => {
             if (errDb) throw errDb;
-            // console.log(foundUser.password)
             foundUser.password.should.not.eql(user.password);
             done();
           });
@@ -82,7 +81,6 @@ describe('Crypt password', () => {
           res.body.should.be.a('object');
           res.body.should.have.property('success').that.to.be.true;
           res.body.should.have.property('token');
-          // console.log('token ' + res.body.token)
           JWT = res.body.token;
           done();
         });
@@ -132,16 +130,11 @@ describe('Crypt password', () => {
         .set('x-access-token', JWT)
         .send(DATA)
         .end((err, res) => {
-          console.log(res.body)
-          // console.log('JWT' + JWT)
-          res.should.have.status(200);
+          res.should.have.status(409);
           res.body.should.be.a('object');
-          User.Model.findOne({ email: '1yuuki@yuuki.com' }, (errDb, foundUser) => {
-            if (errDb) throw errDb;
-            console.log(foundUser.password)
-            foundUser.password.should.not.eql(DATA.user.password);
-            done();
-          });
+          res.body.should.have.property('success').that.to.be.false;
+          res.body.should.have.property('message').that.contain('Password cannot be updated via this route');
+          done();
         });
     });
   });
