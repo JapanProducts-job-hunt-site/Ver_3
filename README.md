@@ -15,11 +15,12 @@ npm start
 # API List
 
 ```
-POST /api/register	/Student registration
-POST /api/authenticate	/Student authentication
-PUT  /api/users		/Student update
-GET  /api/users		/Get all students
-GET  /api/user		/Get one student by JWT
+POST /api/register      	/Student registration
+POST /api/authenticate  	/Student authentication
+PUT  /api/users	        	/Student update
+PUT  /api/updatepassword	/Student update password
+GET  /api/users	        	/Get all students
+GET  /api/user	        	/Get one student by JWT
 ```
 
 **Registration**
