@@ -29,7 +29,7 @@ router.get('/', (req, res) => {
  * Send html for landing page
  */
 router.get('/company', (req, res) => {
-  const fileName = 'index.html';
+  const fileName = 'company/index.html';
   htmls.sendHtml(req, res, fileName);
 });
 

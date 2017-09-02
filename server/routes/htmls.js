@@ -13,6 +13,5 @@ exports.sendHtml = ((req, res, fileName) => {
       'x-sent': true,
     },
   };
-  // const fileName = '/client/static/html/index.html';
   res.sendFile(`/client/static/html/${fileName}`, options);
 });
