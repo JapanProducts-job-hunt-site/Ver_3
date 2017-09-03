@@ -7,26 +7,30 @@ const express = require('express');
 const path = require('path');
 const user = require('./user');
 const company = require('./company');
+const htmls = require('./htmls');
 const validateJWT = require('./jwt').validateJWT;
 
 const User = require('../models/user'); // get our mongoose model
 
 const router = express.Router();
 
-/*
+/**
  * GET /
  * Send html for landing page
  */
+
 router.get('/', (req, res) => {
-  const options = {
-    root: `${__dirname}/../../`,
-    headers: {
-      'x-timestamp': Date.now(),
-      'x-sent': true,
-    },
-  };
-  const fileName = '/client/static/html/index.html';
-  res.sendFile(fileName, options);
+  const fileName = 'user/index.html';
+  htmls.sendHtml(req, res, fileName);
+});
+
+/**
+ * GET /company/
+ * Send html for landing page
+ */
+router.get('/company', (req, res) => {
+  const fileName = 'company/index.html';
+  htmls.sendHtml(req, res, fileName);
 });
 
 /*
