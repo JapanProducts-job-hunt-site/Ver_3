@@ -6,7 +6,6 @@ const HTTPStatus = require('http-status');
 const User = require('../models/user').Model;
 const tempUser = require('../models/user');
 
-
 /*
  * Route for registration
  */
@@ -30,16 +29,30 @@ exports.register = (req, res) => {
   /**
    * Create new user (student)
    */
-  tempUser.create(
+  User.create(
     req.body.firstName,
     req.body.lastName,
     req.body.password,
     req.body.email,
-  )
-  // Success
-    .then(fulfilled => res.status(200).json(fulfilled))
-  // Error
-    .catch(err => res.status(HTTPStatus.UNAUTHORIZED).send(err));
+    (err, newUser) => {
+      if (err) {
+        res.status(HTTPStatus.UNAUTHORIZED).json({
+          message: err,
+          success: false,
+        });
+      } else if (!newUser) {
+        res.status(HTTPStatus.UNAUTHORIZED).json({
+          message: 'Could not create new user',
+          success: false,
+        });
+      } else {
+        res.status(HTTPStatus.OK).json({
+          newUser,
+          success: true,
+        });
+      }
+    },
+  );
 };
 
 /*
@@ -56,27 +69,36 @@ exports.authenticate = (req, res) => {
    * Authenticate user
    * provide JWT when authenticated
    */
-  tempUser.authenticate(
-    req.body.password,
-    req.body.email,
-  )
-  // Success
-    .then((user) => {
-      // create a token
-      // In the JWT's payload(where all the data stored) send user object
-      // when jwt.verify is called we can obtain user data by decoded.user
-      // const token = jwt.sign({ user }, process.env.secret, {
-      const token = jwt.sign(user, process.env.secret, {
-        expiresIn: 86400, // expires in 24 hours
-      });
-      res.status(HTTPStatus.OK).json({
-        success: true,
-        message: 'Enjoy your token!',
-        token,
-      });
-    })
-  // Error
-    .catch(err => res.status(HTTPStatus.UNAUTHORIZED).send(err));
+  User.authorize(
+     req.body.password,
+     req.body.email,
+    (err, authorizedUser) => {
+      if (err) {
+        res.status(HTTPStatus.UNAUTHORIZED).json({
+          message: err,
+          success: false,
+        });
+      } else if (!authorizedUser) {
+        res.status(HTTPStatus.UNAUTHORIZED).json({
+          message: err,
+          success: false,
+        });
+      } else {
+        // create a token
+        // In the JWT's payload(where all the data stored) send user object
+        // when jwt.verify is called we can obtain user data by decoded.user
+        // const token = jwt.sign({ user }, process.env.secret, {
+        const token = jwt.sign(authorizedUser, process.env.secret, {
+          expiresIn: 86400, // expires in 24 hours
+        });
+        res.status(HTTPStatus.OK).json({
+          success: true,
+          message: 'Enjoy your token!',
+          token,
+        });
+      }
+    },
+  );
 };
 
 /*
@@ -106,32 +128,62 @@ exports.update = (req, res) => {
   /*
    * Updated user
    */
-  tempUser.update(
+  User.updateData(
     req.decoded.user.email,
     req.body.user,
-  )
-  // Success
-    .then((user) => {
-      // create a token
-      // In the JWT's payload(where all the data stored) send user object
-      // when jwt.verify is called we can obtain user data by decoded.user
-      const token = jwt.sign({ user }, process.env.secret, {
-        expiresIn: 86400, // expires in 24 hours
-      });
-      res.status(HTTPStatus.OK).json({
-        firstName: user.firstName,
-        lastName: user.lastName,
-        password: user.password,
-        email: user.email,
-        token,
-      });
-    })
-  // Error
-    .catch(err =>
-      res.status(err.statusCode).json({
-        message: err.message,
-      }),
-    );
+    (err, updated) => {
+      if (err) {
+        res.status(HTTPStatus.UNAUTHORIZED).json({
+          message: err,
+        });
+      } else if (!updated) {
+        res.status(HTTPStatus.UNAUTHORIZED).json({
+          message: 'Err while updating',
+        });
+      } else {
+        // create a token
+        // In the JWT's payload(where all the data stored) send user object
+        // when jwt.verify is called we can obtain user data by decoded.user
+        // ********* DO NOT CHANGE the key user ************
+        // Otherwise, JWT does not work
+        const token = jwt.sign({ user: updated }, process.env.secret, {
+          expiresIn: 86400, // expires in 24 hours
+        });
+        res.status(HTTPStatus.OK).json({
+          firstName: updated.firstName,
+          lastName: updated.lastName,
+          password: updated.password,
+          email: updated.email,
+          token,
+        });
+      }
+    });
+  // tempUser.update(
+  //   req.decoded.user.email,
+  //   req.body.user,
+  // )
+  // // Success
+  //   .then((user) => {
+  //     // create a token
+  //     // In the JWT's payload(where all the data stored) send user object
+  //     // when jwt.verify is called we can obtain user data by decoded.user
+  //     const token = jwt.sign({ user }, process.env.secret, {
+  //       expiresIn: 86400, // expires in 24 hours
+  //     });
+  //     res.status(HTTPStatus.OK).json({
+  //       firstName: user.firstName,
+  //       lastName: user.lastName,
+  //       password: user.password,
+  //       email: user.email,
+  //       token,
+  //     });
+  //   })
+  // // Error
+  //   .catch(err =>
+  //     res.status(err.statusCode).json({
+  //       message: err.message,
+  //     }),
+  //   );
 };
 
 /*
