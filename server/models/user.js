@@ -164,71 +164,27 @@ UserSchema.statics.updateData = (email, newUser, cb) => {
     },
   );
 };
-// const update = (email, newUser) =>
-//   new Promise((resolve, reject) => {
-//     Model.findOneAndUpdate(
-//       // Query
-//       { email },
-//       // { email: '1yuuki@yuuki.com' },
-//       // Update
-//       {
-//         $set: newUser,
-//       },
-//       // When true the return is updated data
-//       // Run validators when updating
-//       {
-//         new: true,
-//         runValidators: true,
-//       },
-//       (err, updated) => {
-//         if (err) {
-//           // error
-//           reject({
-//             message: err.message,
-//             statusCode: 409,
-//           });
-//         } else if (!updated) {
-//           // Updated not defined
-//           reject({
-//             success: false,
-//             statusCode: 400,
-//             message: 'Could not find user information',
-//           });
-//         } else {
-//           // success
-//           resolve(updated);
-//         }
-//       },
-//     );
-//   });
 
 /*
  * To find user by email
  * return User object
  */
-const findUserByEmail = email =>
-  new Promise((resolve, reject) => {
-    // find the user by username from JWT payload
-    Model.findOne({
-      email,
-    }, (err, user) => {
-      if (err) {
-        reject({
-          success: false,
-          message: err,
-        });
-      } else if (!user) {
-        // User not found
-        reject({
-          success: false,
-          message: 'email not found.',
-        });
-      } else if (user) {
-        // User found
-        resolve(user);
-      }
-    });
+UserSchema.statics.getUser = (email, cb) => {
+  Model.findOne({
+    email,
+  }, (err, user) => {
+    if (err) {
+      cb(err.message);
+    } else if (!user) {
+      // User not found
+      cb('email not found.');
+    } else if (user) {
+      // User found
+      cb(null, user);
+    }
   });
+};
+
 
 /**
  * Method to update password
@@ -292,34 +248,28 @@ UserSchema.statics.updatePassword =
 /**
  * Method to search student
  */
-const search = query =>
-  new Promise((resolve, reject) => {
+UserSchema.statics.getUsers = (query, cb) => {
     Model.find(query, (err, users) => {
       if (err) {
-        reject({
-          success: false,
-          message: err,
-        });
+        cb(err.message);
       } else if (!users || users.length === 0) {
         // No match found
-        reject({
-          message: 'No match found',
-        });
+        cb('No match found');
       } else {
         // Found one or more users
-        resolve(users);
+        cb(null, users);
       }
     });
-  });
+};
 
 const Model = mongoose.model('User', UserSchema);
 
 module.exports = {
   Model,
-  UserSchema,
+  // UserSchema,
   // create,
   // authenticate,
   // update,
-  findUserByEmail,
-  search,
+  // findUserByEmail,
+  // search,
 };

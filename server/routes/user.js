@@ -4,7 +4,7 @@
 const jwt = require('jsonwebtoken');
 const HTTPStatus = require('http-status');
 const User = require('../models/user').Model;
-const tempUser = require('../models/user');
+// const tempUser = require('../models/user');
 
 /*
  * Route for registration
@@ -158,32 +158,6 @@ exports.update = (req, res) => {
         });
       }
     });
-  // tempUser.update(
-  //   req.decoded.user.email,
-  //   req.body.user,
-  // )
-  // // Success
-  //   .then((user) => {
-  //     // create a token
-  //     // In the JWT's payload(where all the data stored) send user object
-  //     // when jwt.verify is called we can obtain user data by decoded.user
-  //     const token = jwt.sign({ user }, process.env.secret, {
-  //       expiresIn: 86400, // expires in 24 hours
-  //     });
-  //     res.status(HTTPStatus.OK).json({
-  //       firstName: user.firstName,
-  //       lastName: user.lastName,
-  //       password: user.password,
-  //       email: user.email,
-  //       token,
-  //     });
-  //   })
-  // // Error
-  //   .catch(err =>
-  //     res.status(err.statusCode).json({
-  //       message: err.message,
-  //     }),
-  //   );
 };
 
 /*
@@ -220,7 +194,7 @@ exports.updatePassword = (req, res) => {
       // Success
       return res.status(HTTPStatus.OK).json({
         message: 'Password updated',
-      })
+      });
     }
   });
 };
@@ -229,32 +203,38 @@ exports.updatePassword = (req, res) => {
  * To get user account information
  */
 exports.getAccountInfo = (req, res) => {
-  tempUser.findUserByEmail(req.decoded.user.email)
-  .then(user => res.status(HTTPStatus.OK).json(user))
-  .catch(err => res.status(HTTPStatus.UNAUTHORIZED).json(err));
+  User.getUser(req.decoded.user.email, (err, user) => {
+    if (err) {
+      res.status(HTTPStatus.UNAUTHORIZED).json({
+        messag: err,
+      });
+    } else if (!user) {
+      res.status(HTTPStatus.UNAUTHORIZED).json({
+        messag: 'No user found by the token',
+      });
+    } else {
+      res.status(HTTPStatus.OK).json(user);
+    }
+  });
 };
 
 /*
  * To search user (student)
  */
+
 exports.search = (req, res) => {
-  // User.find(req.query, (err, users) => {
-  //   if (err) {
-  //     res.status(400).send({
-  //       success: false,
-  //       message: err,
-  //     });
-  //   } else if (!users || users.length === 0) {
-  //   // No match found
-  //     res.status(400).json({
-  //       message: 'No match found',
-  //     });
-  //   } else {
-  //   // Found one or more users
-  //     res.json(users);
-  //   }
-  // });
-  tempUser.search(req.query)
-    .then(users => res.status(HTTPStatus.OK).json(users))
-    .catch(err => res.status(400).json(err));
+  if (!req.query) {
+    res.status(400).json({
+      message: 'Query undefined',
+    });
+  }
+  User.getUsers(req.query, (err, users) => {
+    if (err) {
+      res.status(400).json(err);
+    } else if (!users) {
+      res.status(400).json('No user found');
+    } else {
+      res.status(HTTPStatus.OK).json(users);
+    }
+  });
 };
