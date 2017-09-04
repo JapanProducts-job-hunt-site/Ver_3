@@ -190,33 +190,17 @@ UserSchema.statics.updateData = function updateData(email, newUser, cb) {
  * return User object
  */
 UserSchema.statics.getUser = function getUser(email, cb) {
-   this.findOneUserByEmail(email, (err, user) => {
-     if (err) {
-       console.log('err' + err)
-       cb(err);
-     } else if (!user) {
-       // User not found
-       console.log('No user')
-       cb('No user found by email not found.');
-     } else if (user) {
-       console.log('found user')
-       // User found
-       cb(null, user);
-     }
-   });
-  // this.findOne({
-  //   email,
-  // }, (err, user) => {
-  //   if (err) {
-  //     cb(err.message);
-  //   } else if (!user) {
-  //     // User not found
-  //     cb('email not found.');
-  //   } else if (user) {
-  //     // User found
-  //     cb(null, user);
-  //   }
-  // });
+  this.findOneUserByEmail(email, (err, user) => {
+    if (err) {
+      cb(err);
+    } else if (!user) {
+      // User not found
+      cb('No user found by email not found.');
+    } else if (user) {
+      // User found
+      cb(null, user);
+    }
+  });
 };
 
 
@@ -230,27 +214,14 @@ UserSchema.statics.getUser = function getUser(email, cb) {
  */
 UserSchema.statics.updatePassword =
   function updatePassword(user, cb) {
-    if (!user) {
-      // user is undefined
-      cb('User is undefined');
-    } else if (!user.email) {
-      // email is undefined
-      cb('email is undefined');
-    } else if (!user.oldPassword) {
-      // oldPassword is undefined
-      cb('oldPassword is undefined');
-    } else if (!user.newPassword) {
-      // newPassword is undefined
-      cb('newPassword is undefined');
-    }
     // Validate input with email and oldPassword
-    this.findOne({ email: user.email }, (err, foundUser) => {
+    this.findOneUserByEmail(user.email, (err, foundUser) => {
       if (err) {
         // Error while searching
-        cb('Error occured while finding user')
+        cb('Error occured while finding user');
       } else if (!foundUser) {
         // No user found with email from JWT
-        cb('No user found')
+        cb('No user found');
       } else {
         // Found user
         // Check if the old password is valid
@@ -262,7 +233,14 @@ UserSchema.statics.updatePassword =
           } else {
             // If valid
             // Update password with newPassword
+            //
+            // ******* Do not change this *******
+            //
+            // I chose to use assign becuase this way `pre save` hook is evoked
+            // in `pre hook` password crypting function is evoked
+            //
             foundUser.password = user.newPassword;
+
             foundUser.save((updateErr, updatedUser) => {
               if (updateErr) {
                 cb(updateErr);
