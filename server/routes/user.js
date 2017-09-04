@@ -144,8 +144,10 @@ exports.update = (req, res) => {
         // create a token
         // In the JWT's payload(where all the data stored) send user object
         // when jwt.verify is called we can obtain user data by decoded.user
+        //
         // ********* DO NOT CHANGE the key user ************
         // Otherwise, JWT does not work
+        //
         const token = jwt.sign({ user: updated }, process.env.secret, {
           expiresIn: 86400, // expires in 24 hours
         });

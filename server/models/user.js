@@ -78,11 +78,31 @@ const validatePassword = (candidatePassword, hashedPassword, cb) => {
 };
 
 /**
+ * Support function to find one user by email
+ */
+UserSchema.statics.findOneUserByEmail = function findOneUserByEmail(email, cb) {
+  this.findOne({ email }, (err, foundUser) => {
+    if (err) {
+      cb(err.message);
+    } else if (!foundUser) {
+      // cb('No user found by email');
+      cb();
+    } else {
+      cb(null, foundUser);
+    }
+  });
+};
+
+/**
+ * Below is methods used by routes
+ */
+
+/**
  * To create new user
  * all parameters have to be valid ( cannot be null or undefined)
  */
-UserSchema.statics.create = (firstName, lastName, password, email, cb) => {
-  const newUser = new Model({
+UserSchema.statics.create = function create(firstName, lastName, password, email, cb) {
+  const newUser = new this({
     firstName,
     lastName,
     password,
@@ -107,8 +127,8 @@ UserSchema.statics.create = (firstName, lastName, password, email, cb) => {
  * All parameters have to be valid
  */
 
-UserSchema.statics.authorize = (password, email, cb) => {
-  Model.findOne({
+UserSchema.statics.authorize = function authorize(password, email, cb) {
+  this.findOne({
     email,
   }, (err, user) => {
     if (err) {
@@ -136,8 +156,8 @@ UserSchema.statics.authorize = (password, email, cb) => {
 /*
  * Update user information
  */
-UserSchema.statics.updateData = (email, newUser, cb) => {
-  Model.findOneAndUpdate(
+UserSchema.statics.updateData = function updateData(email, newUser, cb) {
+  this.findOneAndUpdate(
     // Query
     { email },
     // Update
@@ -169,20 +189,34 @@ UserSchema.statics.updateData = (email, newUser, cb) => {
  * To find user by email
  * return User object
  */
-UserSchema.statics.getUser = (email, cb) => {
-  Model.findOne({
-    email,
-  }, (err, user) => {
-    if (err) {
-      cb(err.message);
-    } else if (!user) {
-      // User not found
-      cb('email not found.');
-    } else if (user) {
-      // User found
-      cb(null, user);
-    }
-  });
+UserSchema.statics.getUser = function getUser(email, cb) {
+   this.findOneUserByEmail(email, (err, user) => {
+     if (err) {
+       console.log('err' + err)
+       cb(err);
+     } else if (!user) {
+       // User not found
+       console.log('No user')
+       cb('No user found by email not found.');
+     } else if (user) {
+       console.log('found user')
+       // User found
+       cb(null, user);
+     }
+   });
+  // this.findOne({
+  //   email,
+  // }, (err, user) => {
+  //   if (err) {
+  //     cb(err.message);
+  //   } else if (!user) {
+  //     // User not found
+  //     cb('email not found.');
+  //   } else if (user) {
+  //     // User found
+  //     cb(null, user);
+  //   }
+  // });
 };
 
 
@@ -248,28 +282,22 @@ UserSchema.statics.updatePassword =
 /**
  * Method to search student
  */
-UserSchema.statics.getUsers = (query, cb) => {
-    Model.find(query, (err, users) => {
-      if (err) {
-        cb(err.message);
-      } else if (!users || users.length === 0) {
-        // No match found
-        cb('No match found');
-      } else {
-        // Found one or more users
-        cb(null, users);
-      }
-    });
+UserSchema.statics.getUsers = function getUsers(query, cb) {
+  this.find(query, (err, users) => {
+    if (err) {
+      cb(err.message);
+    } else if (!users || users.length === 0) {
+      // No match found
+      cb('No match found');
+    } else {
+      // Found one or more users
+      cb(null, users);
+    }
+  });
 };
 
 const Model = mongoose.model('User', UserSchema);
 
 module.exports = {
   Model,
-  // UserSchema,
-  // create,
-  // authenticate,
-  // update,
-  // findUserByEmail,
-  // search,
 };
