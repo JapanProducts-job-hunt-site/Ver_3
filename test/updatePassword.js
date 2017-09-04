@@ -31,10 +31,10 @@ chai.use(chaiHttp);
 
 
 // /////////////////////////////////////////
-//             GET /api/update           //
+//          PUT /api/updatepassword       //
 // /////////////////////////////////////////
 
-describe('Update student information', () => {
+describe('Update student password', () => {
   const users = [];
   const userJWTs = [];
   const SIZE = 5;

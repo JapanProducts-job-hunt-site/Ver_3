@@ -235,8 +235,7 @@ describe('User', () => {
           res.body.should.be.a('object');
           res.body.should.have.property('success').that.to.be.false;
           res.body.should.have.property('message');
-          res.body.message.should.have.property('errmsg');
-          res.body.message.errmsg.should.contain('email');
+          res.body.message.should.contain('email');
           done();
         });
     });
@@ -688,7 +687,7 @@ describe('Update student information', () => {
         .set('x-access-token', userJWTs[USER_INDEX])
         .send(DATA)
         .end((err, res) => {
-          res.should.have.status(409);
+          res.should.have.status(401);
           res.body.should.have.property('message');
           res.body.message.should.contain('duplicate key error');
           res.body.message.should.contain('email');
@@ -708,7 +707,7 @@ describe('Update student information', () => {
         .set('x-access-token', userJWTs[USER_INDEX])
         .send(DATA)
         .end((err, res) => {
-          res.should.have.status(409);
+          res.should.have.status(401);
           res.body.should.have.property('message');
           res.body.message.should.contain('duplicate key error');
           res.body.message.should.contain('email');
@@ -728,7 +727,7 @@ describe('Update student information', () => {
         .set('x-access-token', userJWTs[USER_INDEX])
         .send(DATA)
         .end((err, res) => {
-          res.should.have.status(409);
+          res.should.have.status(401);
           res.body.should.have.property('message');
           res.body.message.should.contain('required');
           res.body.message.should.contain('firstName');
@@ -748,7 +747,7 @@ describe('Update student information', () => {
         .set('x-access-token', userJWTs[USER_INDEX])
         .send(DATA)
         .end((err, res) => {
-          res.should.have.status(409);
+          res.should.have.status(401);
           res.body.should.have.property('message');
           res.body.message.should.contain('required');
           res.body.message.should.contain('lastName');
@@ -768,7 +767,7 @@ describe('Update student information', () => {
         .set('x-access-token', userJWTs[USER_INDEX])
         .send(DATA)
         .end((err, res) => {
-          res.should.have.status(409);
+          res.should.have.status(401);
           res.body.should.have.property('message');
           res.body.message.should.contain('required');
           res.body.message.should.contain('email');

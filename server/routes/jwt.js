@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-/*
+/**
  * Json web token middle ware
  * Check if JWT is valid
  * if it is invalid return unauthorized
@@ -7,7 +7,6 @@ const jwt = require('jsonwebtoken');
 exports.validateJWT = (req, res, next) => {
   // check header or url parameters or post parameters for token
   const token = req.body.token || req.params.token || req.headers['x-access-token'];
-
 
   // console.log('Token in middle\n' + token)
   // decode token

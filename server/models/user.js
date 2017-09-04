@@ -57,7 +57,7 @@ const cryptPassword = function (next) {
       if (errHash) return next(errHash);
       // override the cleartext password with the hashed one
       this.password = hash;
-      next();
+      return next();
     });
   });
 };
@@ -68,166 +68,141 @@ const cryptPassword = function (next) {
 UserSchema.pre('save', cryptPassword);
 
 /**
- * Set middleware for pre findOneAndUpdate
- */
-// UserSchema.pre('findOneAndUpdate', cryptPassword);
-
-/**
  * Method to compare hashed password
  */
-// UserSchema.methods.validatePassword = (candidatePassword, cb) => {
 const validatePassword = (candidatePassword, hashedPassword, cb) => {
   bcrypt.compare(candidatePassword, hashedPassword, (err, isMatch) => {
     if (err) return cb(err);
-    cb(null, isMatch);
+    return cb(null, isMatch);
   });
 };
 
+/**
+ * Support function to find one user by email
+ */
+UserSchema.statics.findOneUserByEmail = function findOneUserByEmail(email, cb) {
+  this.findOne({ email }, (err, foundUser) => {
+    if (err) {
+      cb(err.message);
+    } else if (!foundUser) {
+      // cb('No user found by email');
+      cb();
+    } else {
+      cb(null, foundUser);
+    }
+  });
+};
+
+/**
+ * Below is methods used by routes
+ */
 
 /**
  * To create new user
  * all parameters have to be valid ( cannot be null or undefined)
  */
-const create = (firstName, lastName, password, email) =>
-  new Promise((resolve, reject) => {
-    const newUser = new Model({
-      firstName,
-      lastName,
-      password,
-      email,
-      admin: false,
-    });
-    newUser.save((err) => {
-      if (err) {
-        // Something went wrong
-        // Return with error message
-        reject({
-          success: false,
-          message: err,
-        });
-      } else {
-        // Success
-        resolve({
-          success: true,
-        });
-      }
-    });
+UserSchema.statics.create = function create(firstName, lastName, password, email, cb) {
+  const newUser = new this({
+    firstName,
+    lastName,
+    password,
+    email,
+    admin: false,
   });
+
+  newUser.save((err) => {
+    if (err) {
+      // Something went wrong
+      // Return with error message
+      cb(err.message);
+    } else {
+      // Success
+      cb(null, newUser);
+    }
+  });
+};
 
 /**
  * To authenticate user
  * All parameters have to be valid
  */
-const authenticate = (password, email) =>
-  new Promise((resolve, reject) => {
-    // find the user
-    Model.findOne({
-      email,
-    }, (err, user) => {
-      if (err) {
-        // Database error
-        reject({
-          success: false,
-          message: err,
-        });
-      } else if (!user) {
-        // No user found by the email
-        reject({
-          success: false,
-          message: 'Authentication failed. Email not found.',
-        });
-      } else if (user) {
-        // check if password matches
-        validatePassword(password, user.password, (errValidate, isMatch) => {
-          if (errValidate) {
-            reject({
-              success: false,
-              message: 'Authentication failed. Wrong password.',
-            });
-          } else if (!isMatch) {
-            reject({
-              success: false,
-              message: 'Authentication failed. Wrong password.',
-            });
-          } else {
-            // if user is found and password is right
-            resolve({
-              user,
-            });
-          }
-        });
-      }
-    });
+
+UserSchema.statics.authorize = function authorize(password, email, cb) {
+  this.findOne({
+    email,
+  }, (err, user) => {
+    if (err) {
+      // Database error
+      cb(err);
+    } else if (!user) {
+      // No user found by the email
+      cb('Authentication failed. Email not found.');
+    } else if (user) {
+      // check if password matches
+      validatePassword(password, user.password, (errValidate, isMatch) => {
+        if (errValidate) {
+          cb('Authentication failed. Wrong password.');
+        } else if (!isMatch) {
+          cb('Authentication failed. Wrong password.');
+        } else {
+          // if user is found and password is right
+          cb(null, user);
+        }
+      });
+    }
   });
+};
 
 /*
  * Update user information
  */
-const update = (email, newUser) =>
-  new Promise((resolve, reject) => {
-    Model.findOneAndUpdate(
-      // Query
-      { email },
-      // { email: '1yuuki@yuuki.com' },
-      // Update
-      {
-        $set: newUser,
-      },
-      // When true the return is updated data
-      // Run validators when updating
-      {
-        new: true,
-        runValidators: true,
-      },
-      (err, updated) => {
-        if (err) {
-          // error
-          reject({
-            message: err.message,
-            statusCode: 409,
-          });
-        } else if (!updated) {
-          // Updated not defined
-          reject({
-            success: false,
-            statusCode: 400,
-            message: 'Could not find user information',
-          });
-        } else {
-          // success
-          resolve(updated);
-        }
-      },
-    );
-  });
+UserSchema.statics.updateData = function updateData(email, newUser, cb) {
+  this.findOneAndUpdate(
+    // Query
+    { email },
+    // Update
+    {
+      $set: newUser,
+    },
+    // When true the return is updated data
+    // Run validators when updating
+    {
+      new: true,
+      runValidators: true,
+    },
+    (err, updated) => {
+      if (err) {
+        // error
+        cb(err.message);
+      } else if (!updated) {
+        // Updated not defined
+        cb('Could not find user information');
+      } else {
+        // success
+        cb(null, updated);
+      }
+    },
+  );
+};
 
 /*
  * To find user by email
  * return User object
  */
-const findUserByEmail = email =>
-  new Promise((resolve, reject) => {
-    // find the user by username from JWT payload
-    Model.findOne({
-      email,
-    }, (err, user) => {
-      if (err) {
-        reject({
-          success: false,
-          message: err,
-        });
-      } else if (!user) {
-        // User not found
-        reject({
-          success: false,
-          message: 'email not found.',
-        });
-      } else if (user) {
-        // User found
-        resolve(user);
-      }
-    });
+UserSchema.statics.getUser = function getUser(email, cb) {
+  this.findOneUserByEmail(email, (err, user) => {
+    if (err) {
+      cb(err);
+    } else if (!user) {
+      // User not found
+      cb('No user found by email not found.');
+    } else if (user) {
+      // User found
+      cb(null, user);
+    }
   });
+};
+
 
 /**
  * Method to update password
@@ -239,27 +214,14 @@ const findUserByEmail = email =>
  */
 UserSchema.statics.updatePassword =
   function updatePassword(user, cb) {
-    if (!user) {
-      // user is undefined
-      cb('User is undefined');
-    } else if (!user.email) {
-      // email is undefined
-      cb('email is undefined');
-    } else if (!user.oldPassword) {
-      // oldPassword is undefined
-      cb('oldPassword is undefined');
-    } else if (!user.newPassword) {
-      // newPassword is undefined
-      cb('newPassword is undefined');
-    }
     // Validate input with email and oldPassword
-    this.findOne({ email: user.email }, (err, foundUser) => {
+    this.findOneUserByEmail(user.email, (err, foundUser) => {
       if (err) {
         // Error while searching
-        cb('Error occured while finding user')
+        cb('Error occured while finding user');
       } else if (!foundUser) {
         // No user found with email from JWT
-        cb('No user found')
+        cb('No user found');
       } else {
         // Found user
         // Check if the old password is valid
@@ -271,7 +233,14 @@ UserSchema.statics.updatePassword =
           } else {
             // If valid
             // Update password with newPassword
+            //
+            // ******* Do not change this *******
+            //
+            // I chose to use assign becuase this way `pre save` hook is evoked
+            // in `pre hook` password crypting function is evoked
+            //
             foundUser.password = user.newPassword;
+
             foundUser.save((updateErr, updatedUser) => {
               if (updateErr) {
                 cb(updateErr);
@@ -291,33 +260,22 @@ UserSchema.statics.updatePassword =
 /**
  * Method to search student
  */
-const search = query =>
-  new Promise((resolve, reject) => {
-    Model.find(query, (err, users) => {
-      if (err) {
-        reject({
-          success: false,
-          message: err,
-        });
-      } else if (!users || users.length === 0) {
-        // No match found
-        reject({
-          message: 'No match found',
-        });
-      } else {
-        // Found one or more users
-        resolve(users);
-      }
-    });
+UserSchema.statics.getUsers = function getUsers(query, cb) {
+  this.find(query, (err, users) => {
+    if (err) {
+      cb(err.message);
+    } else if (!users || users.length === 0) {
+      // No match found
+      cb('No match found');
+    } else {
+      // Found one or more users
+      cb(null, users);
+    }
   });
+};
 
 const Model = mongoose.model('User', UserSchema);
 
 module.exports = {
   Model,
-  create,
-  authenticate,
-  update,
-  findUserByEmail,
-  search,
 };
