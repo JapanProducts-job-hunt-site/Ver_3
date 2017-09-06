@@ -92,13 +92,8 @@ describe('Update student password', () => {
 
   const URI = '/api/uploadimg';
   describe(`PUT ${URI}`, () => {
-    it('should return 401 if no img data', (done) => {
+    it('should return 401 if no img object', (done) => {
       const USER_INDEX = 1;
-      // const DATA = {
-      //   img: {
-      //     password: 'updated1@yuuki.com',
-      //   },
-      // };
       chai.request(`http://localhost:${port}`)
         .put(URI)
         .set('Content-Type', 'application/json')
@@ -106,6 +101,45 @@ describe('Update student password', () => {
         .send()
         .end((err, res) => {
           res.should.have.status(400);
+          res.body.should.have.property('message');
+          res.body.message.should.be.eql('No data');
+          done();
+        });
+    });
+    it('should return 401 if no img data', (done) => {
+      const USER_INDEX = 1;
+      const DATA = {
+        img: {
+        },
+      };
+      chai.request(`http://localhost:${port}`)
+        .put(URI)
+        .set('Content-Type', 'application/json')
+        .set('x-access-token', userJWTs[USER_INDEX])
+        .send(DATA)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.have.property('message');
+          res.body.message.should.be.eql('No image to upload');
+          done();
+        });
+    });
+    it('should return 401 if no delete boolean flag', (done) => {
+      const USER_INDEX = 1;
+      const DATA = {
+        img: {
+          data: 'test',
+        },
+      };
+      chai.request(`http://localhost:${port}`)
+        .put(URI)
+        .set('Content-Type', 'application/json')
+        .set('x-access-token', userJWTs[USER_INDEX])
+        .send(DATA)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.have.property('message');
+          res.body.message.should.be.eql('No delete boolean flag');
           done();
         });
     });

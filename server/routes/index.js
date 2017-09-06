@@ -100,7 +100,7 @@ apiRoutes.put('/updatepassword', user.updatePassword);
 
 /*
  * PUT /api/uploadimg
- * To upload/delete img
+ * To upload/delete image
  */
 apiRoutes.put('/uploadimg', user.uploadImage);
 

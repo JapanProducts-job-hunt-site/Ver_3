@@ -248,13 +248,21 @@ exports.uploadImage = (req, res) => {
   /**
    * Check json has all needed data
    *   * img
-   *   * type
    *   * delete true if deleting
    */
   console.log('In uploadImage')
-  if (!req.img) {
+  console.log(req.body.img)
+  if (!req.body.img) {
     res.status(HTTPStatus.BAD_REQUEST).json({
       message: 'No data',
+    });
+  } else if (!req.body.img.data) {
+    res.status(HTTPStatus.BAD_REQUEST).json({
+      message: 'No image to upload',
+    });
+  } else if (!req.body.img.delete) {
+    res.status(HTTPStatus.BAD_REQUEST).json({
+      message: 'No delete boolean flag',
     });
   }
 
