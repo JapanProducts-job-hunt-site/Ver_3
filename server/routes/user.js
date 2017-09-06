@@ -240,3 +240,36 @@ exports.search = (req, res) => {
     }
   });
 };
+
+/*
+ * To upload/delete/update user profile image
+ */
+exports.uploadImage = (req, res) => {
+  /**
+   * Check json has all needed data
+   *   * img
+   *   * type
+   *   * delete true if deleting
+   */
+  console.log('In uploadImage')
+  if (!req.img) {
+    res.status(HTTPStatus.BAD_REQUEST).json({
+      message: 'No data',
+    });
+  }
+
+  /**
+   * upload image
+   */
+
+  // User.saveImage(email, img object, (err, updatedUser) => {
+  // }
+
+  /**
+   * delete image
+   */
+
+  // User.deleteImage(email, (err, updatedUser) => {
+  // }
+
+};

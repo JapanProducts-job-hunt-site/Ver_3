@@ -99,6 +99,12 @@ apiRoutes.put('/users', user.update);
 apiRoutes.put('/updatepassword', user.updatePassword);
 
 /*
+ * PUT /api/uploadimg
+ * To upload/delete img
+ */
+apiRoutes.put('/uploadimg', user.uploadImage);
+
+/*
  * GET /api/user
  * To get user (student) account information
  */
