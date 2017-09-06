@@ -34,7 +34,10 @@ if (process.env.NODE_ENV !== 'test') {
 
 // use body parser so we can get info from POST and/or URL parameters
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+/**
+ * Limit is set to 50 mega byte for uploading profile image
+ */
+app.use(bodyParser.json({ limit: '50mb' }));
 
 /*
  * Configuration for static files
