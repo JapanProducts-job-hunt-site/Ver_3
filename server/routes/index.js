@@ -25,6 +25,16 @@ router.get('/', (req, res) => {
 });
 
 /**
+ * GET /profile
+ * Send html for student profile page
+ */
+
+router.get('/profile', (req, res) => {
+  const fileName = 'user/profile.html';
+  htmls.sendHtml(req, res, fileName);
+});
+
+/**
  * GET /company/
  * Send html for landing page
  */
