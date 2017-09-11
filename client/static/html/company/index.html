@@ -1,60 +1,127 @@
 <!--
-    This page is a landing page for company
-    Requirement
-    * Explanation of this website for company
+    Landing Page for Companies
+    Requirements:
+    * Explanation of this website (Example: Show the price comparing to going to Boston career forum)
     * Sign In
     * Sign Up
-    * Link to landing page for student
+    * Link to Landing Page for Students
 -->
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <!-- test -->
-        <meta charset="utf-8">
-        <title>Job Hunt Japan</title>
 
-        <!-- Custom CSS -->
-        <link href="/static/css/company/index.css" rel="stylesheet">
-    </head>
-    <body>
-        <h1>Landing page for company</h1>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
 
-        <h2>Sign up</h2>
+    <!-- <link rel="icon" href="img/favicon.png"> -->
+    <title>For Companies | Job Hunt Japan</title>
 
-        <!-- Do NOT delete id or signup.js will not work-->
+    <!-- CSS -->
+        <link rel="stylesheet" type="text/css" href="static/css/styles.css">
+        <link rel="stylesheet" type="text/css" href="static/css/landing.css">
+</head>
+
+<body>
+    <div class="navbar">
+        <a class="logo" href="">
+            <img src="static/img/job-hunt-logo.png" alt="Job Hunt Japan Logo">
+        </a>
+        <p class="links">
+            <a href="">For Students</a>
+            <a href="">For Companies</a>
+        </p>
+    </div>
+    <div class="navbar-break"></div>
+    <div class="bg"></div>
+
+    <div class="signup-container">
         <form id="signup" action="">
-            Name:<br>
-            <!-- Do NOT delete class or signup.js will not work-->
-            <input class="name" type="text" name="name"><br>
-            email:<br>
-            <!-- Do NOT delete class or signup.js will not work-->
-            <input class="email" type="text" name="email"><br>
-            Password:<br>
-            <!-- Do NOT delete class or signup.js will not work-->
-            <input class="password" type="text" name="password"><br>
-            <input type="submit" value="Submit"><br>
-        </form>
+            <!-- Do not delete ids or classnames; signup.js will not work -->
+            <table>
+                <tr>
+                    <td colspan="2">
+                        <h4>New Company?</h4>
+                        <h1>Sign Up</h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <p>Company Name</p>
+                        <input class="companyname" type="text" name="firstname" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <p>Email</p>
+                        <input class="email" type="text" name="email" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <p>Password</p>
+                        <input class="password" type="password" name="password" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center;">
+                        <input type="submit" name="signup" value="Sign Up">
+                    </td>
+                </tr>
+            </table>
+    </div>
 
-        <h2>Sign in</h2>
-
-        <!-- Do NOT delete id or signup.js will not work-->
+    <div class="signin-container">
         <form id="signin" action="">
-            email:<br>
-            <!-- Do NOT delete class or signup.js will not work-->
-            <input class="email" type="text" name="email"><br>
-            Password:<br>
-            <!-- Do NOT delete class or signup.js will not work-->
-            <input class="password" type="text" name="password"><br>
-            <input type="submit" value="Submit"><br>
+            <table>
+                <tr>
+                    <td>
+                        <h4>Already registered?</h4>
+                        <h1>Sign In</h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Email</p>
+                        <input class="email" type="text" name="email">
+                        <a class="forgot" href="">Forgot your email?</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Password</p>
+                        <input class="password" type="password" name="password">
+                        <a class="forgot" href="">Forgot your password?</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">
+                        <input type="submit" name="signin" value="Sign In">
+                    </td>
+                </tr>
+            </table>
         </form>
+    </div>
 
-        <!-- Load jQuery -->
-        <script src="modules/jquery/dist/jquery.min.js"></script>
+    <div class="info">
+        <h1>What is <em>Job Hunt Japan</em> ?</h1>
+        <p class="explanation">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+        <br><br>
+        <h2>Boston Career Forum</h2>
+        <p class="companies">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+    </div>
 
-        <!-- Load js file for sign up-->
-        <script src="/static/js/company/signup.js"></script>
-        <!-- Load js file for sign in-->
-        <script src="/static/js/company/signin.js"></script>
-    </body>
+    <footer>
+        &copy; Job Hunt Japan 2017 &nbsp;|&nbsp; All Rights Reserved.
+    </footer>
+
+    <!-- Load jQuery & .js file -->
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script src="static/js/signup.js"></script>
+</body>
+
 </html>
