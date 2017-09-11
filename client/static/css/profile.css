@@ -1,0 +1,96 @@
+/*
+    Stylesheet for
+    Landing Page for Students & Companies
+*/
+
+/* Navbar */
+    .navbar-break-profile { height: 54px; }
+
+/* Profile */
+    .profile {
+        position: relative;
+        margin: 20px auto;
+        padding: 50px 0;
+        width: 100%;
+        overflow-x: scroll;
+        white-space: nowrap;
+        background: #fff;
+    }
+    .profile > * {
+        display: inline-block;
+        margin: 0 20px;
+        text-align: left;
+        vertical-align: top;
+    }
+    .profile .pic {
+        width: 200px;
+        height: 200px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 1);
+    }
+    .profile-info .name {
+        margin: 0 0 10px -20px;
+        font-size: 24px;
+        font-weight: 500;
+    }
+    .profile-info .title {
+        font-style: italic;
+        opacity: 0.5;
+    }
+    .profile-info .bio {
+        margin: 20px 0 0 0;
+        width: 500px;
+        max-height: 120px;
+        overflow-y: scroll;
+        white-space: normal;
+    }
+    .contact-info > * { margin: 5px 0; }
+    .contact-info :matches(.location, .email, .website)::before {
+        margin: 0 10px 0 0;
+    }
+    .contact-info .location::before { content: '🗺'; }
+    .contact-info .email::before { content: '📧'; }
+    .contact-info .website::before { content: '🌐'; }
+    .follow {
+        position: absolute;
+        bottom: 10px;
+    }
+    hr {
+        width: 90%;
+        margin: 30px auto;
+        border: 0.5px solid rgba(0,0,0, 0.2);
+        border-radius: 2px;
+    }
+
+/* Entities */
+    .entity {
+        display: inline-block;
+        margin: 20px;
+        padding: 10px;
+        max-width: 87.5%;
+        border: 1px solid rgba(0,0,0, 0.2);
+        border-radius: 4px;
+        background: #fff;
+        vertical-align: middle;
+        text-align: left;
+    }
+    .entity.full { width: calc(500px * 2 + 65px); }
+    .entity.half { width: 500px; }
+    .entity .title {
+        margin: 0 0 10px 0;
+        color: var(--blue-light);
+    }
+    .entity p { margin: 10px 0; }
+    .entity .tags {
+        text-align: right;
+    }
+    .tags span::before { content: '#'; }
+    .tags span {
+        margin: 2px;
+        padding: 2px 4px;
+        border-radius: 2px;
+        background: rgba(0,0,0, 0.1);
+        color: rgba(0,0,0, 0.5);
+        font-size: 14px;
+        font-style: italic;
+    }
