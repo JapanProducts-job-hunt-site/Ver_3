@@ -34,6 +34,10 @@ const UserSchema = new Schema({
   major: {
     type: String,
   },
+  img: {
+    data: Buffer,
+    contentType: String,
+  },
   admin: Boolean,
 });
 
@@ -256,6 +260,47 @@ UserSchema.statics.updatePassword =
       }
     });
   };
+
+/**
+ * Method to upload profile image
+ *
+ * @params
+ * email: String
+ *
+ * img: {
+ *   data: Base64,
+ *   type: String,
+ *   delete: boolean
+ * }
+ */
+UserSchema.statics.saveImage = function saveImage(email, img, cb) {
+  // Only testing
+  //
+  const decodedImage = new Buffer(img.data, 'base64');
+  require('fs').writeFile(`${__dirname}/MongooseDecoded.jpg`, decodedImage, (err) => {
+    if (err) throw err;
+  });
+  this.findOneUserByEmail(email, (err, foundUser) => {
+    if (err) {
+      cb(err.message);
+    } else if (!foundUser) {
+      cb('No user found');
+    } else {
+      // save image data and type
+      // console.log(img);
+      foundUser.set({ img });
+      foundUser.save((saveErr, updatedUser) => {
+        if (saveErr) {
+          cb(err.message);
+        } else if (!updatedUser) {
+          cb('No updated user');
+        } else {
+          cb(null, { message: 'Image saved' });
+        }
+      });
+    }
+  });
+};
 
 /**
  * Method to search student

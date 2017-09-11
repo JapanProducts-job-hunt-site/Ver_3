@@ -251,33 +251,63 @@ exports.uploadImage = (req, res) => {
    *   * delete true if deleting
    */
   console.log('In uploadImage')
-  console.log(req.body.img)
+  // console.log(req.body.img)
   if (!req.body.img) {
-    res.status(HTTPStatus.BAD_REQUEST).json({
+    return res.status(HTTPStatus.BAD_REQUEST).json({
       message: 'No data',
     });
   } else if (!req.body.img.data) {
-    res.status(HTTPStatus.BAD_REQUEST).json({
+    return res.status(HTTPStatus.BAD_REQUEST).json({
       message: 'No image to upload',
     });
-  } else if (!req.body.img.delete) {
-    res.status(HTTPStatus.BAD_REQUEST).json({
+  } else if (req.body.img.delete == null) {
+    return res.status(HTTPStatus.BAD_REQUEST).json({
       message: 'No delete boolean flag',
+    });
+  } else if (!req.body.img.type) {
+    return res.status(HTTPStatus.BAD_REQUEST).json({
+      message: 'No type',
     });
   }
 
   /**
    * upload image
    */
+  if (!req.body.delete) {
+    // Only testing
+    //
+    const decodedImage = new Buffer(req.body.img.data, 'base64');
+    require('fs').writeFile(`${__dirname}/Routedecoded.jpg`, decodedImage, (err) => {
+      if (err) throw err;
+    });
 
-  // User.saveImage(email, img object, (err, updatedUser) => {
-  // }
-
+    // console.log('No delete');
+    const imgObject = {
+      data: req.body.img.data,
+      contentType: req.body.img.type,
+    };
+    // console.log(imgObject);
+    console.log(req.decoded.user.email);
+    User.saveImage(req.decoded.user.email, imgObject, (err, message) => {
+      if (err) {
+        return res.status(HTTPStatus.BAD_REQUEST).json({
+          message: err,
+        });
+      } else if (!message) {
+        return res.status(HTTPStatus.BAD_REQUEST).json({
+          message: 'No user updated',
+        });
+      } else {
+        return res.status(HTTPStatus.CREATED).json(
+          message,
+        );
+      }
+    });
+  }
   /**
    * delete image
    */
 
   // User.deleteImage(email, (err, updatedUser) => {
   // }
-
 };

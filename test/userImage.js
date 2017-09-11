@@ -56,7 +56,14 @@ describe('Update student password', () => {
     //   fs.writeFile('image_orig.jpg', original_data, function(err) {});
     //   var base64Image = original_data.toString('base64');
     //   var decodedImage = new Buffer(base64Image, 'base64');
-    //   fs.writeFile('image_decoded.jpg', decodedImage, function(err) {});
+    //   fs.writeFile(`${__dirname}/img/image_decoded1.jpg`, decodedImage, function(err) {});
+    // });
+
+    // fs.readFile(`${__dirname}/img/profile2.png`, function(err, original_data){
+    //   fs.writeFile('image_orig.jpg', original_data, function(err) {});
+    //   var base64Image = original_data.toString('base64');
+    //   var decodedImage = new Buffer(base64Image, 'base64');
+    //   fs.writeFile(`${__dirname}/img/image_decoded2.png`, decodedImage, function(err) {});
     // });
 
     const fileNames = ['profile1.jpg', 'profile2.png', 'profile3.png', 'profile4.jpg'];
@@ -86,7 +93,7 @@ describe('Update student password', () => {
       // register users
       users[i].save((err, saved) => {
         if (err) {
-          if (err) console.err(err);
+          if (err) console.log(err);
         }
         saveCount++;
         // Wait all saving is done
@@ -167,11 +174,11 @@ describe('Update student password', () => {
           done();
         });
     });
-    it('should return 201 with correct data', (done) => {
+    it('should return 401 if no type', (done) => {
       const USER_INDEX = 1;
       const DATA = {
         img: {
-          data: Base64Images[1],
+          data: 'test',
           delete: false,
         },
       };
@@ -181,10 +188,69 @@ describe('Update student password', () => {
         .set('x-access-token', userJWTs[USER_INDEX])
         .send(DATA)
         .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.have.property('message');
+          res.body.message.should.be.eql('No type');
+          done();
+        });
+    });
+    it('should return 401 if no type', (done) => {
+      const USER_INDEX = 1;
+      const DATA = {
+        img: {
+          data: 'test',
+          delete: true,
+        },
+      };
+      chai.request(`http://localhost:${port}`)
+        .put(URI)
+        .set('Content-Type', 'application/json')
+        .set('x-access-token', userJWTs[USER_INDEX])
+        .send(DATA)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.have.property('message');
+          res.body.message.should.be.eql('No type');
+          done();
+        });
+    });
+    it('should return 201 with correct data', (done) => {
+      const USER_INDEX = 1;
+      const DATA = {
+        img: {
+          data: Base64Images[1],
+          delete: false,
+          type: 'image/jpeg'
+        },
+      };
+      chai.request(`http://localhost:${port}`)
+        .put(URI)
+        .set('Content-Type', 'application/json')
+        .set('x-access-token', userJWTs[USER_INDEX])
+        .send(DATA)
+        .end((err, res) => {
+          console.log(res.body)
           res.should.have.status(201);
           res.body.should.have.property('message');
-          // res.body.message.should.be.eql('No delete boolean flag');
-          done();
+          res.body.message.should.be.eql('Image saved');
+          User.findOneUserByEmail(users[USER_INDEX].email, (err, foundUser) => {
+            // fs.readFile(`${__dirname}/img/profile1.jpg`, function(err, original_data){
+            // fs.writeFile('image_orig.jpg', original_data, function(err) {});
+            // var base64Image = original_data.toString('base64');
+            console.log(foundUser.img.data)
+            console.log(typeof foundUser.img.data)
+            // const decodedImage = new Buffer(foundUser.img.data, 'base64');
+            // const decodedImage = new Buffer.from(foundUser.img.data, 'base64');
+            const decodedImage = Buffer.from(foundUser.img.data, 'base64');
+            console.log(decodedImage)
+            console.log(typeof decodedImage)
+            // fs.writeFile(`${__dirname}/img/decoded${USER_INDEX}.png`, decodedImage, (err) => {
+            //   if (err) throw err;
+            //   else console.log('Done writing')
+            //   done();
+            // });
+            // });
+          });
         });
     });
   });
