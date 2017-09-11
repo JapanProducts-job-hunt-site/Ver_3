@@ -4,6 +4,8 @@
     "import"
     ],
     "env": {
-      "mocha": true
+      "mocha": true,
+      "jquery": true,
+      "browser": true
     }
 }
