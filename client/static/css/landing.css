@@ -51,8 +51,12 @@
         font-size: 14px;
         opacity: 0.5;
     }
-    .signup-container p::after {
+    .signup-container p:not(.password_validation)::after {
         content: ' *';
+        color: red;
+    }
+    .password_validation {
+        display: none;
         color: red;
     }
     .signup-container table input,
@@ -63,12 +67,14 @@
     }
     .companyname { width: 355px; }
     .email,
-    .password { width: calc(100% - 13px); }
+    .password,
+    .password_confirm { width: calc(100% - 13px); }
     .firstname,
     .lastname,
     .companyname,
     .email,
-    .password {
+    .password,
+    .password_confirm {
         border: 1px solid var(--blue-light-a);
         border-radius: 2px;
         background: #fff;
@@ -79,7 +85,8 @@
     .lastname:focus,
     .companyname:focus,
     .email:focus,
-    .password:focus { background: var(--blue-light-a); }
+    .password:focus,
+    .password_confirm:focus { background: var(--blue-light-a); }
     .forgot {
         font-size: 14px;
         font-style: italic;

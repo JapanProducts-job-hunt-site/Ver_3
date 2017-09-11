@@ -81,9 +81,7 @@
         color: var(--blue-light);
     }
     .entity p { margin: 10px 0; }
-    .entity .tags {
-        text-align: right;
-    }
+    .entity .tags { text-align: right; }
     .tags span::before { content: '#'; }
     .tags span {
         margin: 2px;

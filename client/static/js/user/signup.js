@@ -9,6 +9,15 @@ $( "form#signup" ).submit(function( event ) {
   var lastName = $("form#signup input.lastname").val();
   var email = $("form#signup input.email").val();
   var password = $("form#signup input.password").val();
+  var password_confirm = $("form#signup input.password_confirm").val();
+
+  if (password != password_confirm) {
+      $('.password_validation').fadeIn()
+      return false
+  } else {
+      $('.password_validation').fadeOut()
+      return true
+  }
 
   var method = "POST";
   var url = "api/register";

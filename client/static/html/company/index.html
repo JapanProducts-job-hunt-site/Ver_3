@@ -18,18 +18,18 @@
     <title>For Companies | Job Hunt Japan</title>
 
     <!-- CSS -->
-        <link rel="stylesheet" type="text/css" href="static/css/styles.css">
-        <link rel="stylesheet" type="text/css" href="static/css/landing.css">
+        <link rel="stylesheet" type="text/css" href="../static/css/styles.css">
+        <link rel="stylesheet" type="text/css" href="../static/css/landing.css">
 </head>
 
 <body>
     <div class="navbar">
         <a class="logo" href="">
-            <img src="static/img/job-hunt-logo.png" alt="Job Hunt Japan Logo">
+            <img src="../static/img/job-hunt-logo.png" alt="Job Hunt Japan Logo">
         </a>
         <p class="links">
-            <a href="">For Students</a>
-            <a href="">For Companies</a>
+            <a href="/">For Students</a>
+            <a href="/company">For Companies</a>
         </p>
     </div>
     <div class="navbar-break"></div>
@@ -54,13 +54,27 @@
                 <tr>
                     <td colspan="2">
                         <p>Email</p>
-                        <input class="email" type="text" name="email" required>
+                        <input class="email" type="email" name="email" required>
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
                         <p>Password</p>
                         <input class="password" type="password" name="password" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <p>Confirm Password</p>
+                        <input class="password_confirm" type="password" name="password_confirm" required>
+                        <p class="password_validation">Passwords do not match.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <p>Confirm Password</p>
+                        <input class="password_confirm" type="password" name="password_confirm" required>
+                        <p class="password_validation">Passwords do not match.</p>
                     </td>
                 </tr>
                 <tr>
@@ -121,7 +135,7 @@
 
     <!-- Load jQuery & .js file -->
         <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-        <script src="static/js/signup.js"></script>
+        <script src="../static/js/signup.js"></script>
 </body>
 
 </html>
