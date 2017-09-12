@@ -1,10 +1,10 @@
 <!--
-    Landing Page for Companies
+    Landing Page for Students
     Requirements:
-    * Explanation of this website (Example: Show the price comparing to going to Boston career forum)
+    * Explanation of this website (Example: Show the list of companies registered)
     * Sign In
     * Sign Up
-    * Link to Landing Page for Students
+    * Link to Landing Page for Companies
 -->
 
 <!DOCTYPE html>
@@ -15,7 +15,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
 
     <!-- <link rel="icon" href="img/favicon.png"> -->
-    <title>For Companies | Job Hunt Japan</title>
+    <title>For Students | Job Hunt Japan</title>
 
     <!-- CSS -->
         <link rel="stylesheet" type="text/css" href="static/css/styles.css">
@@ -41,14 +41,19 @@
             <table>
                 <tr>
                     <td colspan="2">
-                        <h4>New Company?</h4>
+                        <h4>New Student?</h4>
                         <h1>Sign Up</h1>
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="2">
-                        <p>Company Name</p>
-                        <input class="companyname" type="text" name="firstname" required>
+                    <td>
+                        <p>First Name</p>
+                        <input class="firstname" type="text" name="firstname" required>
+                    </td>
+                    <td>
+                        <p>Last Name</p>
+                        <input class="lastname" type="text" name="lastname" required>
+                    </td>
                     </td>
                 </tr>
                 <tr>
@@ -116,9 +121,12 @@
             Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
         </p>
         <br><br>
-        <h2>Boston Career Forum</h2>
+        <h2>Registered companies</h2>
         <p class="companies">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            <a class="companies" href=""><img src="" alt="company1"></a>
+            <a class="companies" href=""><img src="" alt="company2"></a>
+            <a class="companies" href=""><img src="" alt="company3"></a>
+            <a class="companies" href=""><img src="" alt="company4"></a>
         </p>
     </div>
 
