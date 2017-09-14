@@ -51,6 +51,12 @@ $( "form#signup" ).submit(function( event ) {
     console.log(data);
   })
   .fail(function (jqXHR) {
+    // Invoke error pop-up
+    $('.signin-container .error-bg').fadeIn(500)
+    $('.error-bg .retry').click(function() {
+      $('.signin-container .error-bg').fadeOut(500)
+    })
+
     console.log(jqXHR.responseJSON);
   })
 });
