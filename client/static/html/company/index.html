@@ -76,6 +76,14 @@
                     </td>
                 </tr>
             </table>
+        </form>
+        <!-- Error -->
+            <div class="error-bg">
+                <div class="error">
+                    <p class="message">Sign Up Failed...</p>
+                    <p class="retry">Retry</p>
+                </div>
+            </div>
     </div>
 
     <div class="signin-container">
@@ -90,14 +98,14 @@
                 <tr>
                     <td>
                         <p>Email</p>
-                        <input class="email" type="text" name="email">
+                        <input class="email" type="email" name="email" required>
                         <a class="forgot" href="">Forgot your email?</a>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <p>Password</p>
-                        <input class="password" type="password" name="password">
+                        <input class="password" type="password" name="password" required>
                         <a class="forgot" href="">Forgot your password?</a>
                     </td>
                 </tr>
@@ -108,6 +116,13 @@
                 </tr>
             </table>
         </form>
+        <!-- Error -->
+            <div class="error-bg">
+                <div class="error">
+                    <p class="message">Sign In Failed...</p>
+                    <p class="retry">Retry</p>
+                </div>
+            </div>
     </div>
 
     <div class="info">
@@ -127,8 +142,9 @@
     </footer>
 
     <!-- Load jQuery & .js file -->
-        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script src="modules/jquery/dist/jquery.min.js"></script>
         <script src="../static/js/signup.js"></script>
+        <script src="../static/js/signin.js"></script>
 </body>
 
 </html>

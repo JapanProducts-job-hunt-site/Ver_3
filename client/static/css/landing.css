@@ -22,6 +22,7 @@
     .signup-container,
     .signin-container {
         display: inline-block;
+        position: relative;
         vertical-align: top;
         margin: 20px 40px;
         border: 1px solid rgba(0,0,0, 0.2);
@@ -29,29 +30,18 @@
         background: rgba(255,255,255, 0.7);
         box-shadow: 0 5px 15px rgba(0,0,0, 0.1);
     }
-    @supports
-        (-webkit-backdrop-filter: var(--blur)) or
-        (-moz-backdrop-filter: var(--blur)) or
-        (backdrop-filter: var(--blur)) {
-        .signup-container,
-        .signin-container {
-            background: rgba(255,255,255, 0.7);
-            -webkit-backdrop-filter: var(--blur);
-            -moz-backdrop-filter: var(--blur);
-            backdrop-filter: var(--blur);
-        }
     .signup-container table,
     .signin-container table {
         text-align: left;
         border-collapse: separate;
         border-spacing: 20px;
     }
-    .signup-container p,
-    .signin-container p {
+    .signup-container :not(.error) p,
+    .signin-container :not(.error) p {
         font-size: 14px;
         opacity: 0.5;
     }
-    .signup-container p:not(.password-validation)::after {
+    .signup-container :not(.error) p:not(.password_validation)::after {
         content: ' *';
         color: red;
     }
@@ -75,7 +65,7 @@
     .email,
     .password,
     .password_confirm {
-        border: 1px solid var(--blue-light-a);
+        border: 1px solid var(--blue-light-a30);
         border-radius: 2px;
         background: #fff;
         color: var(--blue-dark);
@@ -86,11 +76,59 @@
     .companyname:focus,
     .email:focus,
     .password:focus,
-    .password_confirm:focus { background: var(--blue-light-a); }
+    .password_confirm:focus { background: var(--blue-light-a30); }
     .forgot {
         font-size: 14px;
         font-style: italic;
         color: var(--blue-light);
+    }
+
+/* Sign Up/In Error */
+    .error-bg {
+        display: none;
+        position: absolute;
+        left: 1px;
+        right: 1px;
+        top: 1px;
+        bottom: 1px;
+        border-radius: 4px;
+    }
+    .error {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 300px;
+        height: 100px;
+        border: 1px solid rgba(0,0,0, 0.2);
+        border-radius: 4px;
+        background: var(--blue-lingrad-a50);
+        box-shadow: 0 5px 15px rgba(0,0,0, 0.5);
+        opacity: 1 !important;
+    }
+    .error .message {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, calc(-50% - 25px));
+        color: #fff;
+    }
+    .error .retry {
+        cursor: pointer;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, calc(-50% + 25px));
+        padding: 5px 10px;
+        border: 1px solid rgba(255,255,255, 0.3);
+        border-radius: 4px;
+        background: rgba(255,255,255, 0.3);
+        transition: var(--transition-fast);
+    }
+    .error .retry:active {
+        transform:
+            translate(-50%, calc(-50% + 25px))
+            scale(0.9, 0.9);
     }
 
 /* Info / Explanation */
@@ -108,3 +146,27 @@
         height: 100px;
         margin: 10px 20px;
     }
+
+@supports
+    (-webkit-backdrop-filter: var(--blur)) or
+    (-moz-backdrop-filter: var(--blur)) or
+    (backdrop-filter: var(--blur)) {
+    .signup-container,
+    .signin-container {
+        background: rgba(255,255,255, 0.7);
+        -webkit-backdrop-filter: var(--blur);
+        -moz-backdrop-filter: var(--blur);
+        backdrop-filter: var(--blur);
+    }
+    .error {
+        background: var(--blue-lingrad-a50);
+        -webkit-backdrop-filter: var(--blur);
+        -moz-backdrop-filter: var(--blur);
+        backdrop-filter: var(--blur);
+    }
+    .error-bg {
+        -webkit-backdrop-filter: var(--blur);
+        -moz-backdrop-filter: var(--blur);
+        backdrop-filter: var(--blur);
+    }
+}

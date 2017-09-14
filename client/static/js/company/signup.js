@@ -5,7 +5,7 @@
 $( "form#signup" ).submit(function( event ) {
   event.preventDefault();
 
-  var name = $("form#signup input.name").val();
+  var name = $("form#signup input.companyname").val();
   var email = $("form#signup input.email").val();
   var password = $("form#signup input.password").val();
   var password_confirm = $("form#signup input.password_confirm").val();
@@ -48,6 +48,12 @@ $( "form#signup" ).submit(function( event ) {
     console.log(data);
   })
   .fail(function (jqXHR) {
+    // Invoke error pop-up
+    $('.signin-container .error-bg').fadeIn(500)
+    $('.error-bg .retry').click(function() {
+      $('.signin-container .error-bg').fadeOut(500)
+    })
+
     console.log(jqXHR.responseJSON);
   })
 });
