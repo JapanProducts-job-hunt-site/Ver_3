@@ -89,4 +89,4 @@
     .navbar .logo { left: 20px; }
     .navbar .links { right: 15px; }
     .navbar .links a { margin: 0 15px; }
-    .navbar-break { height: calc(60px + 80px); }
+    .navbar-break { height: calc(60px + 50px); }

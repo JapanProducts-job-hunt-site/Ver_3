@@ -51,14 +51,28 @@
         font-size: 14px;
         opacity: 0.5;
     }
+<<<<<<< HEAD
+    .signup-container p:not(.password_validation)::after {
+||||||| merged common ancestors
+    .signup-container p::after {
+=======
     .signup-container p:not(.password-validation)::after {
+>>>>>>> master
         content: ' *';
         color: red;
     }
+<<<<<<< HEAD
+    .password_validation {
+        display: none;
+        color: red;
+    }
+||||||| merged common ancestors
+=======
     .password-validation {
         display: none;
         color: red;
     }
+>>>>>>> master
     .signup-container table input,
     .signin-container table input {
         padding: 5px;
