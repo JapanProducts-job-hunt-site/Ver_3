@@ -11,14 +11,12 @@ $( "form#signup" ).submit(function( event ) {
   var password = $("form#signup input.password").val();
   var password_confirm = $("form#signup input.password_confirm").val();
 
-  // Password Validation
   if (password != password_confirm) {
-    $('.password-validation').fadeIn()
-    return false
-  }
-  else {
-      $('.password-validation').fadeOut()
-    return true
+      $('.password_validation').fadeIn()
+      return false
+  } else {
+      $('.password_validation').fadeOut()
+      return true
   }
 
   var method = "POST";

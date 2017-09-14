@@ -25,7 +25,7 @@
 <body>
     <div class="navbar">
         <a class="logo" href="">
-            <img src="static/img/job-hunt-logo.png" alt="Job Hunt Japan Logo">
+            <img src="../static/img/job-hunt-logo.png" alt="Job Hunt Japan Logo">
         </a>
         <p class="links">
             <a href="/">For Students</a>
