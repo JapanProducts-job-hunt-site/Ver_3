@@ -45,7 +45,7 @@
         content: ' *';
         color: red;
     }
-    .password_validation {
+    .password-validation {
         display: none;
         color: red;
     }
@@ -55,7 +55,7 @@
         outline: none;
         font-size: 16px;
     }
-    .companyname { width: 355px; }
+    .companyname{ width: 355px; }
     .email,
     .password,
     .password_confirm { width: calc(100% - 13px); }
@@ -138,9 +138,7 @@
         padding: 50px;
         background: #fff;
     }
-    .info em {
-        color: var(--blue-light);
-    }
+    .info em { color: var(--blue-light); }
     .explanation,
     .info h2,
     p.companies { margin: 20px 0 0 0; }
