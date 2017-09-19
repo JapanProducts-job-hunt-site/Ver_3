@@ -16,7 +16,6 @@ $( "form#signup" ).submit(function( event ) {
       return false
   } else {
       $('.password_validation').fadeOut()
-      return true
   }
 
   var method = "POST";
@@ -52,9 +51,9 @@ $( "form#signup" ).submit(function( event ) {
   })
   .fail(function (jqXHR) {
     // Invoke error pop-up
-    $('.signin-container .error-bg').fadeIn(500)
+    $('.signup-container .error-bg').fadeIn(500)
     $('.error-bg .retry').click(function() {
-      $('.signin-container .error-bg').fadeOut(500)
+      $('.signup-container .error-bg').fadeOut(500)
     })
 
     console.log(jqXHR.responseJSON);

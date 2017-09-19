@@ -55,7 +55,8 @@
         transition: var(--transition-fast);
         color: var(--blue-light);
     }
-    a:not(:matches(.logo, .companies)):hover {
+    a:not(.logo):hover,
+    a:not(.companies):hover {
         border-bottom: 2px solid;
     }
     input[type=submit] {

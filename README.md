@@ -262,3 +262,4 @@ x-access-token:JSON web token
 * Companies can click the button to notify students that they are interested
 
 # Database schema
+# Homescreens
