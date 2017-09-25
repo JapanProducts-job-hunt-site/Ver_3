@@ -45,9 +45,9 @@
         content: ' *';
         color: red;
     }
-    .password-validation {
-        display: none;
-        color: red;
+    .password_validation {
+        display: none ;
+        color: red ;
     }
     .signup-container table input,
     .signin-container table input {
