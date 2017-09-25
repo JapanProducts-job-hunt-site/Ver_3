@@ -47,10 +47,12 @@ $( "form#signup" ).submit(function( event ) {
     dataType: dataType,
   })
   .done(function (data) {
+    console.log("Success");
     console.log(data);
   })
   .fail(function (jqXHR) {
     // Invoke error pop-up
+    console.log("Fail");
     $('.signup-container .error-bg').fadeIn(500)
     $('.error-bg .retry').click(function() {
       $('.signup-container .error-bg').fadeOut(500)
