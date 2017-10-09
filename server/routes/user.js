@@ -88,7 +88,7 @@ exports.authenticate = (req, res) => {
         // In the JWT's payload(where all the data stored) send user object
         // when jwt.verify is called we can obtain user data by decoded.user
         // const token = jwt.sign({ user }, process.env.secret, {
-        const token = jwt.sign(authorizedUser, process.env.secret, {
+        const token = jwt.sign({ user: authorizedUser }, process.env.secret, {
           expiresIn: 86400, // expires in 24 hours
         });
         res.status(HTTPStatus.OK).json({
