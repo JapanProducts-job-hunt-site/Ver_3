@@ -8,6 +8,7 @@ exports.validateJWT = (req, res, next) => {
   // check header or url parameters or post parameters for token
   const token = req.body.token || req.params.token || req.headers['x-access-token'];
 
+  console.log("Token: " + token);
   // console.log('Token in middle\n' + token)
   // decode token
   if (token) {
