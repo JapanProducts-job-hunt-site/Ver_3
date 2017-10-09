@@ -1,6 +1,6 @@
 /*
     Stylesheet for
-    Landing Page for Students & Companies
+    Profile Page for Students & Companies
 */
 
 /* Navbar */
@@ -92,3 +92,15 @@
         font-size: 14px;
         font-style: italic;
     }
+
+@supports
+    (-webkit-backdrop-filter: var(--blur)) or
+    (-moz-backdrop-filter: var(--blur)) or
+    (backdrop-filter: var(--blur)) {
+    .navbar .dropdown .dd-content {
+        background: rgba(255,255,255, 0.7);
+        -webkit-backdrop-filter: var(--blur);
+        -moz-backdrop-filter: var(--blur);
+        backdrop-filter: var(--blur);
+    }
+}
