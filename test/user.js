@@ -563,7 +563,7 @@ describe('Update student information', () => {
   });
 
   const URI = '/api/users';
-  describe(`GET ${URI}`, () => {
+  describe(`PUT ${URI}`, () => {
     it('first name to "Updated first 1" and email "updated1@yuuki.com"', (done) => {
       const USER_INDEX = 1;
       const DATA = {

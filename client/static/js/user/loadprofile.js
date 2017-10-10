@@ -30,6 +30,9 @@ $(document).ready(function() {
    */
     .done(function (data) {
       console.log(data);
+
+      $('.profile .profile-info .name').html(`${data.firstName} ${data.lastName}`)
+      $('.profile .contact-info .email').html(data.email)
       // Store the token in localStorage
   })
   /*

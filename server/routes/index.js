@@ -34,6 +34,10 @@ router.get('/profile', (req, res) => {
   htmls.sendHtml(req, res, fileName);
 });
 
+router.get('/profile_setting', (req, res) => {
+  const fileName = 'user/profile_setting.html';
+  htmls.sendHtml(req, res, fileName);
+});
 /**
  * GET /company/
  * Send html for landing page
